@@ -12,6 +12,17 @@ DROP SCHEMA IF EXISTS "medic" ;
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS "medic";-- DEFAULT CHARACTER SET utf8 ;
 --USE "medic" ;
+
+-- -----------------------------------------------------
+-- Table "medic"."Persona"
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS "medic"."TipoUsuario" ;
+CREATE TABLE IF NOT EXISTS "medic"."TipoUsuario" (
+    "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "nombre" VARCHAR(45) NOT NULL,
+    "descripcion" VARCHAR(250) NOT NULL,
+PRIMARY KEY ("dni"));
+
 -- -----------------------------------------------------
 -- Table "medic"."Persona"
 -- -----------------------------------------------------
@@ -33,7 +44,7 @@ PRIMARY KEY ("dni"));
 DROP TABLE IF EXISTS "medic"."Usuario" ;
 CREATE TABLE IF NOT EXISTS "medic"."Usuario" (
     "dniPersona" INT NOT NULL,
-    "tipoUsuario" VARCHAR(45) NOT NULL,
+    "tipoUsuario" INT NOT NULL,
     "usuario" VARCHAR(50) NOT NULL,
     "contrasenia" VARCHAR(255) NOT NULL, -- Aumentado a 255 para almacenar hashes seguros (ej. SHA256)
     "token" VARCHAR(255) NOT NULL,       -- Nuevo campo para el token
@@ -354,7 +365,7 @@ $$;
 DROP PROCEDURE medic.upsert_usuario;
 CREATE OR REPLACE PROCEDURE medic.upsert_usuario(
     p_dniPersona INT,
-    p_tipoUsuario VARCHAR,
+    p_tipoUsuario INT,
     p_usuario VARCHAR,
     p_contrasenia_plain VARCHAR, -- contraseña original enviada desde Java (sin el token)
     p_actualizar_contrasenia BOOLEAN DEFAULT FALSE
@@ -365,37 +376,40 @@ DECLARE
     v_token UUID;
     v_contrasenia_hashed TEXT;
 BEGIN
-    -- Si el usuario ya existe y la contraseña no será actualizada
-    IF EXISTS (SELECT 1 FROM medic."Usuario" WHERE "dniPersona" = p_dniPersona) THEN
-        IF p_actualizar_contrasenia THEN
-            -- Generar nuevo token
-            v_token := gen_random_uuid();
-            -- Hash de la contraseña + token
-            v_contrasenia_hashed := crypt(p_contrasenia_plain || v_token, gen_salt('bf'));
-
-            UPDATE medic."Usuario"
-            SET "tipoUsuario" = p_tipoUsuario,
-                "usuario" = p_usuario,
-                "token" = v_token::text,
-                "contrasenia" = v_contrasenia_hashed
-            WHERE "dniPersona" = p_dniPersona;
+    --Si el tipo de usuario existe 
+    IF EXISTS (SELECT 1 FROM medic."TipoUsuario" WHERE "id" = p_tipoUsuario) THEN
+        -- Si el usuario ya existe y la contraseña no será actualizada
+        IF EXISTS (SELECT 1 FROM medic."Usuario" WHERE "dniPersona" = p_dniPersona) THEN
+            IF p_actualizar_contrasenia THEN
+                -- Generar nuevo token
+                v_token := gen_random_uuid();
+                -- Hash de la contraseña + token
+                v_contrasenia_hashed := crypt(p_contrasenia_plain || v_token, gen_salt('bf'));
+    
+                UPDATE medic."Usuario"
+                SET "tipoUsuario" = p_tipoUsuario,
+                    "usuario" = p_usuario,
+                    "token" = v_token::text,
+                    "contrasenia" = v_contrasenia_hashed
+                WHERE "dniPersona" = p_dniPersona;
+            ELSE
+                -- Actualización normal sin modificar la contraseña ni el token
+                UPDATE medic."Usuario"
+                SET "tipoUsuario" = p_tipoUsuario,
+                    "usuario" = p_usuario
+                WHERE "dniPersona" = p_dniPersona;
+            END IF;
         ELSE
-            -- Actualización normal sin modificar la contraseña ni el token
-            UPDATE medic."Usuario"
-            SET "tipoUsuario" = p_tipoUsuario,
-                "usuario" = p_usuario
-            WHERE "dniPersona" = p_dniPersona;
+            -- Insertar nuevo usuario
+            v_token := gen_random_uuid();
+            v_contrasenia_hashed := crypt(p_contrasenia_plain || v_token, gen_salt('bf'));
+    
+            INSERT INTO medic."Usuario" (
+                "dniPersona", "tipoUsuario", "usuario", "contrasenia", "token"
+            ) VALUES (
+                p_dniPersona, p_tipoUsuario, p_usuario, v_contrasenia_hashed, v_token::text
+            );
         END IF;
-    ELSE
-        -- Insertar nuevo usuario
-        v_token := gen_random_uuid();
-        v_contrasenia_hashed := crypt(p_contrasenia_plain || v_token, gen_salt('bf'));
-
-        INSERT INTO medic."Usuario" (
-            "dniPersona", "tipoUsuario", "usuario", "contrasenia", "token"
-        ) VALUES (
-            p_dniPersona, p_tipoUsuario, p_usuario, v_contrasenia_hashed, v_token::text
-        );
     END IF;
 END;
 $$;
