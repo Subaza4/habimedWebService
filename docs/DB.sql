@@ -14,20 +14,20 @@ CREATE SCHEMA IF NOT EXISTS "medic";-- DEFAULT CHARACTER SET utf8 ;
 --USE "medic" ;
 
 -- -----------------------------------------------------
--- Table "medic"."Persona"
+-- Table "medic"."persona"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."TipoUsuario" ;
-CREATE TABLE IF NOT EXISTS "medic"."TipoUsuario" (
+DROP TABLE IF EXISTS "medic"."tipousuario" ;
+CREATE TABLE IF NOT EXISTS "medic"."tipousuario" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "nombre" VARCHAR(45) NOT NULL,
     "descripcion" VARCHAR(250) NOT NULL,
 PRIMARY KEY ("dni"));
 
 -- -----------------------------------------------------
--- Table "medic"."Persona"
+-- Table "medic"."persona"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Persona" ;
-CREATE TABLE IF NOT EXISTS "medic"."Persona" (
+DROP TABLE IF EXISTS "medic"."persona" ;
+CREATE TABLE IF NOT EXISTS "medic"."persona" (
     "dni" INT NOT NULL,
     "nombres" VARCHAR(45) NOT NULL,
     "apellidos" VARCHAR(45) NOT NULL,
@@ -38,28 +38,29 @@ CREATE TABLE IF NOT EXISTS "medic"."Persona" (
 PRIMARY KEY ("dni"));
 
 -- -----------------------------------------------------
--- Table "medic"."Usuario"
+-- Table "medic"."usuario"
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Usuario" ;
-CREATE TABLE IF NOT EXISTS "medic"."Usuario" (
-    "dniPersona" INT NOT NULL,
-    "tipoUsuario" INT NOT NULL,
+DROP TABLE IF EXISTS "medic"."usuario" ;
+CREATE TABLE IF NOT EXISTS "medic"."usuario" (
+    "dnipersona" INT NOT NULL,
+    "tipousuario" INT NOT NULL,
     "usuario" VARCHAR(50) NOT NULL,
     "contrasenia" VARCHAR(255) NOT NULL, -- Aumentado a 255 para almacenar hashes seguros (ej. SHA256)
     "token" VARCHAR(255) NOT NULL,       -- Nuevo campo para el token
-    PRIMARY KEY ("dniPersona"),
-    CONSTRAINT "dniPersona_fk" -- Renombrado para evitar conflictos si ya existe
-    FOREIGN KEY ("dniPersona")
-    REFERENCES "medic"."Persona" ("dni")
+    "estado" boolean default false,      -- False por defecto (usuario inactivo)
+    PRIMARY KEY ("dnipersona"),
+    CONSTRAINT "dnipersona_fk" -- Renombrado para evitar conflictos si ya existe
+    FOREIGN KEY ("dnipersona")
+    REFERENCES "medic"."persona" ("dni")
 );
 
 -- -----------------------------------------------------
--- Table "medic"."Consultorio"
+-- Table "medic"."consultorio"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Consultorio" ;
-CREATE TABLE IF NOT EXISTS "medic"."Consultorio" (
-    "idConsultorio" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Esta es la modificación clave
+DROP TABLE IF EXISTS "medic"."consultorio" ;
+CREATE TABLE IF NOT EXISTS "medic"."consultorio" (
+    "idconsultorio" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Esta es la modificación clave
     "ruc" VARCHAR(11),
     "nombre" VARCHAR(45) NOT NULL,
     "ubicacion" VARCHAR(45) NOT NULL,
@@ -67,215 +68,202 @@ CREATE TABLE IF NOT EXISTS "medic"."Consultorio" (
     "telefono" VARCHAR(8) NULL
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Doctor_Trabaja_Consultorio"
+-- Table "medic"."doctor_trabaja_consultorio"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Doctor_Trabaja_Consultorio" ;
-CREATE TABLE IF NOT EXISTS "medic"."Doctor_Trabaja_Consultorio" (
-    "idDoctor" INT NOT NULL,
-    "idConsultorio" INT NOT NULL,
-    PRIMARY KEY ("idDoctor", "idConsultorio"), -- Clave primaria compuesta
+DROP TABLE IF EXISTS "medic"."doctor_trabaja_consultorio" ;
+CREATE TABLE IF NOT EXISTS "medic"."doctor_trabaja_consultorio" (
+    "iddoctor" INT NOT NULL,
+    "idconsultorio" INT NOT NULL,
+    PRIMARY KEY ("iddoctor", "idconsultorio"), -- Clave primaria compuesta
     CONSTRAINT "fk_doctor_usuario" -- Nombre más descriptivo para la FK
-        FOREIGN KEY ("idDoctor")
-        REFERENCES "medic"."Usuario" ("dniPersona"),
+        FOREIGN KEY ("iddoctor")
+        REFERENCES "medic"."usuario" ("dnipersona"),
     CONSTRAINT "fk_consultorio" -- Nombre más descriptivo para la FK
-        FOREIGN KEY ("idConsultorio")
-        REFERENCES "medic"."Consultorio" ("idConsultorio")
+        FOREIGN KEY ("idconsultorio")
+        REFERENCES "medic"."consultorio" ("idconsultorio")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Especialidad"
+-- Table "medic"."especialidad"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Especialidad" ;
-CREATE TABLE IF NOT EXISTS "medic"."Especialidad" (
-    "idEspecialidad" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Modificación clave aquí
+DROP TABLE IF EXISTS "medic"."especialidad" ;
+CREATE TABLE IF NOT EXISTS "medic"."especialidad" (
+    "idespecialidad" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Modificación clave aquí
     "nombre" VARCHAR(45) NOT NULL,
     "descripcion" VARCHAR(255) NULL -- Sugerencia: Aumentar longitud para descripciones más largas
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Servicio"
+-- Table "medic"."servicio"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Servicio" ;
-CREATE TABLE IF NOT EXISTS "medic"."Servicio" (
-    "idServicio" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- ID autoincremental
-    "idEspecialidad" INT NOT NULL,
+DROP TABLE IF EXISTS "medic"."servicio" ;
+CREATE TABLE IF NOT EXISTS "medic"."servicio" (
+    "idservicio" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- ID autoincremental
+    "idespecialidad" INT NOT NULL,
     "nombre" VARCHAR(100) NOT NULL, -- Aumentado a 100 para nombres de servicio
     "descripcion" VARCHAR(500) NULL, -- Aumentado para descripciones detalladas
     "riesgos" VARCHAR(500) NULL,     -- Aumentado para descripciones de riesgos
     CONSTRAINT "fk_especialidad_servicio" -- Nombre de la FK más descriptivo
-        FOREIGN KEY ("idEspecialidad")
-        REFERENCES "medic"."Especialidad" ("idEspecialidad")
+        FOREIGN KEY ("idespecialidad")
+        REFERENCES "medic"."especialidad" ("idespecialidad")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Horario_Doctor"
+-- Table "medic"."horario_doctor"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Horario_Doctor" ;
-CREATE TABLE IF NOT EXISTS "medic"."Horario_Doctor" (
-    "idHorarioDoctor" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Nuevo ID autoincremental para cada horario
-    "idDoctor" INT NOT NULL,
+DROP TABLE IF EXISTS "medic"."horario_doctor" ;
+CREATE TABLE IF NOT EXISTS "medic"."horario_doctor" (
+    "idhorariodoctor" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Nuevo ID autoincremental para cada horario
+    "iddoctor" INT NOT NULL,
     "dia_semana" VARCHAR(15) NOT NULL, -- Nuevo campo para el día de la semana (Lunes, Martes, etc.)
     "hora_inicio" TIME NOT NULL,       -- Nuevo campo para la hora de inicio
     "hora_fin" TIME NOT NULL,         -- Nuevo campo para la hora de fin
     "duracion_minutos" INT NULL,      -- Duración en minutos, más preciso que DECIMAL
     CONSTRAINT "fk_doctor_horario"
-        FOREIGN KEY ("idDoctor")
-        REFERENCES "medic"."Usuario" ("dniPersona")
+        FOREIGN KEY ("iddoctor")
+        REFERENCES "medic"."usuario" ("dnipersona")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Consultorio_has_Servicio"
+-- Table "medic"."consultorio_has_servicio"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Consultorio_has_Servicio" ;
-CREATE TABLE IF NOT EXISTS "medic"."Consultorio_has_Servicio" (
-    "idConsultorio" INT NOT NULL, -- Renombrado para consistencia
-    "idServicio" INT NOT NULL,    -- Renombrado para consistencia
-    PRIMARY KEY ("idConsultorio", "idServicio"),
+DROP TABLE IF EXISTS "medic"."consultorio_has_servicio" ;
+CREATE TABLE IF NOT EXISTS "medic"."consultorio_has_servicio" (
+    "idconsultorio" INT NOT NULL, -- Renombrado para consistencia
+    "idservicio" INT NOT NULL,    -- Renombrado para consistencia
+    PRIMARY KEY ("idconsultorio", "idservicio"),
     CONSTRAINT "fk_consultorio_servicio_consultorio" -- Nombre más conciso
-        FOREIGN KEY ("idConsultorio")
-        REFERENCES "medic"."Consultorio" ("idConsultorio"),
+        FOREIGN KEY ("idconsultorio")
+        REFERENCES "medic"."consultorio" ("idconsultorio"),
     CONSTRAINT "fk_consultorio_servicio_servicio"    -- Nombre más conciso
-        FOREIGN KEY ("idServicio")
-        REFERENCES "medic"."Servicio" ("idServicio")
+        FOREIGN KEY ("idservicio")
+        REFERENCES "medic"."servicio" ("idservicio")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Cita"
+-- Table "medic"."cita"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Cita" ;
-CREATE TABLE IF NOT EXISTS "medic"."Cita" (
-    "idCita" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- ID autoincremental
-    "idPaciente" INT NOT NULL,
-    "idDoctor" INT NOT NULL,
+DROP TABLE IF EXISTS "medic"."cita" ;
+CREATE TABLE IF NOT EXISTS "medic"."cita" (
+    "idcita" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- ID autoincremental
+    "idpaciente" INT NOT NULL,
+    "iddoctor" INT NOT NULL,
     "motivo" VARCHAR(255) NOT NULL,    -- Aumentado y hecho NOT NULL
     "fecha_hora_inicio" TIMESTAMP NOT NULL, -- Fecha y hora de inicio de la cita
     "fecha_hora_fin" TIMESTAMP NULL,    -- Fecha y hora de fin de la cita (puede ser calculable)
     "estado" VARCHAR(50) NOT NULL DEFAULT 'Pendiente', -- Estado de la cita (ej. Pendiente, Confirmada, Cancelada, Completada)
     "descripcion" VARCHAR(500) NULL,   -- Para notas adicionales o detalles del encuentro
     CONSTRAINT "fk_cita_paciente_usuario" -- Nombre de la FK más descriptivo
-        FOREIGN KEY ("idPaciente")
-        REFERENCES "medic"."Usuario" ("dniPersona"),
+        FOREIGN KEY ("idpaciente")
+        REFERENCES "medic"."usuario" ("dnipersona"),
     CONSTRAINT "fk_cita_doctor_usuario" -- Nombre de la FK más descriptivo
-        FOREIGN KEY ("idDoctor")
-        REFERENCES "medic"."Usuario" ("dniPersona")
+        FOREIGN KEY ("iddoctor")
+        REFERENCES "medic"."usuario" ("dnipersona")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Resenia"
+-- Table "medic"."resenia"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Resenia" ;
-CREATE TABLE IF NOT EXISTS "medic"."Resenia" (
-    "idResenia" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- ID autoincremental
-    "idDoctor" INT NOT NULL,                                 -- Cambiado a idDoctor y hecho NOT NULL
+DROP TABLE IF EXISTS "medic"."resenia" ;
+CREATE TABLE IF NOT EXISTS "medic"."resenia" (
+    "idresenia" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- ID autoincremental
+    "iddoctor" INT NOT NULL,                                 -- Cambiado a idDoctor y hecho NOT NULL
     "calificacion" DECIMAL(2,1) NOT NULL,                    -- Calificación (ej. 4.5), hecha NOT NULL
     "comentario" VARCHAR(1000) NULL,                         -- Comentario más largo
     "fecha_resenia" DATE NOT NULL DEFAULT CURRENT_DATE,      -- Fecha de la reseña, autocompletada
     CONSTRAINT "fk_resenia_doctor_usuario"                   -- Nombre de la FK más descriptivo
-        FOREIGN KEY ("idDoctor")
-        REFERENCES "medic"."Usuario" ("dniPersona")
+        FOREIGN KEY ("iddoctor")
+        REFERENCES "medic"."usuario" ("dnipersona")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Diagnostico"
+-- Table "medic"."diagnostico"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Diagnostico" ;
-CREATE TABLE IF NOT EXISTS "medic"."Diagnostico" (
-    "idDiagnostico" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Nuevo ID autoincremental para el diagnóstico
-    "idCita" INT NOT NULL,                                       -- Clave foránea a la cita
+DROP TABLE IF EXISTS "medic"."diagnostico" ;
+CREATE TABLE IF NOT EXISTS "medic"."diagnostico" (
+    "iddiagnostico" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Nuevo ID autoincremental para el diagnóstico
+    "idcita" INT NOT NULL,                                       -- Clave foránea a la cita
     "descripcion" VARCHAR(1000) NOT NULL,                        -- Descripción detallada del diagnóstico
     "fecha_diagnostico" DATE NOT NULL DEFAULT CURRENT_DATE,      -- Fecha en que se realizó el diagnóstico
     CONSTRAINT "fk_diagnostico_cita"                             -- Nombre de la FK más descriptivo
-        FOREIGN KEY ("idCita")
-        REFERENCES "medic"."Cita" ("idCita")
+        FOREIGN KEY ("idcita")
+        REFERENCES "medic"."cita" ("idcita")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Receta"
+-- Table "medic"."receta"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Receta" ;
-CREATE TABLE IF NOT EXISTS "medic"."Receta" (
-    "idReceta" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- New auto-incrementing ID for each recipe
-    "idCita" INT NOT NULL,                                   -- Foreign key to the Cita
+DROP TABLE IF EXISTS "medic"."receta" ;
+CREATE TABLE IF NOT EXISTS "medic"."receta" (
+    "idreceta" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- New auto-incrementing ID for each recipe
+    "idcita" INT NOT NULL,                                   -- Foreign key to the Cita
     "descripcion" VARCHAR(1000) NOT NULL,                    -- Detailed description of the prescription
     "fecha_receta" DATE NOT NULL DEFAULT CURRENT_DATE,       -- Date the prescription was issued
     CONSTRAINT "fk_receta_cita"                               -- More descriptive FK name
-        FOREIGN KEY ("idCita")
-        REFERENCES medic."Cita" ("idCita")
+        FOREIGN KEY ("idcita")
+        REFERENCES medic."cita" ("idcita")
         ON DELETE NO ACTION
         ON UPDATE NO ACTION                                 -- Standard PostgreSQL syntax for FK actions
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Recomendaciones"
+-- Table "medic"."recomendaciones"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Recomendaciones" ;
-CREATE TABLE IF NOT EXISTS "medic"."Recomendaciones" (
-    "idRecomendacion" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Nuevo ID autoincremental para cada recomendación
-    "idCita" INT NOT NULL,                                          -- Clave foránea a la cita
+DROP TABLE IF EXISTS "medic"."recomendaciones" ;
+CREATE TABLE IF NOT EXISTS "medic"."recomendaciones" (
+    "idrecomendacion" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Nuevo ID autoincremental para cada recomendación
+    "idcita" INT NOT NULL,                                          -- Clave foránea a la cita
     "descripcion" VARCHAR(1000) NOT NULL,                           -- Descripción detallada de la recomendación
     "fecha_recomendacion" DATE NOT NULL DEFAULT CURRENT_DATE,       -- Fecha en que se emitió la recomendación
     CONSTRAINT "fk_recomendacion_cita"                              -- Nombre de la FK más descriptivo
-        FOREIGN KEY ("idCita")
-        REFERENCES "medic"."Cita" ("idCita")
+        FOREIGN KEY ("idcita")
+        REFERENCES "medic"."cita" ("idcita")
 );
 
-
 -- -----------------------------------------------------
--- Table "medic"."Detalle_Pago"
+-- Table "medic"."detalle_pago"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Detalle_Pago" ;
-DROP TABLE IF EXISTS medic."Detalle_Pago";
+DROP TABLE IF EXISTS "medic"."detalle_pago" ;
+DROP TABLE IF EXISTS medic."detalle_pago";
 
-CREATE TABLE IF NOT EXISTS medic."Detalle_Pago" (
-    "idDetallePago" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- New auto-incrementing ID for each payment detail
-    "idCita" INT NOT NULL,                                       -- Foreign key to the Cita
+CREATE TABLE IF NOT EXISTS medic."detalle_pago" (
+    "iddetallepago" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- New auto-incrementing ID for each payment detail
+    "idcita" INT NOT NULL,                                       -- Foreign key to the Cita
     "monto" DECIMAL(10, 2) NOT NULL,                             -- Amount of the payment (e.g., 1234.56)
     "metodo_pago" VARCHAR(50) NOT NULL,                          -- Payment method (e.g., 'Tarjeta', 'Efectivo', 'Transferencia')
     "estado_pago" VARCHAR(50) NOT NULL DEFAULT 'Pendiente',      -- Status of the payment (e.g., 'Pendiente', 'Pagado', 'Reembolsado')
     "fecha_pago" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,   -- Date and time of the payment
     CONSTRAINT "fk_detalle_pago_cita"                            -- More descriptive FK name
-        FOREIGN KEY ("idCita")
-        REFERENCES medic."Cita" ("idCita")
+        FOREIGN KEY ("idcita")
+        REFERENCES medic."cita" ("idcita")
         ON DELETE NO ACTION
         ON UPDATE NO ACTION
 );
 
 -- -----------------------------------------------------
--- Table "medic"."Permisos_Historial"
+-- Table "medic"."permisos_historial"
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS "medic"."Permisos_Historial" ;
-CREATE TABLE IF NOT EXISTS "medic"."Permisos_Historial" (
-    "idPermisoHistorial" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Auto-incrementing primary key
-    "idDoctor" INT NOT NULL,                                          -- Doctor granting/receiving permission
-    "idPaciente" INT NOT NULL,                                        -- Patient whose history is involved
-    "fechaOtorgaPermiso" DATE NOT NULL DEFAULT CURRENT_DATE,          -- Date permission was granted (default to current date)
-    "fechaDeniegaPermiso" DATE NULL,                                  -- Date permission was revoked/denied
+DROP TABLE IF EXISTS "medic"."permisos_historial" ;
+CREATE TABLE IF NOT EXISTS "medic"."permisos_historial" (
+    "idpermisohistorial" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Auto-incrementing primary key
+    "iddoctor" INT NOT NULL,                                          -- Doctor granting/receiving permission
+    "idpaciente" INT NOT NULL,                                        -- Patient whose history is involved
+    "fechaotorgapermiso" DATE NOT NULL DEFAULT CURRENT_DATE,          -- Date permission was granted (default to current date)
+    "fechadeniegapermiso" DATE NULL,                                  -- Date permission was revoked/denied
     "estado" VARCHAR(50) NOT NULL DEFAULT 'Otorgado',                 -- Current status of the permission (e.g., 'Otorgado', 'Denegado', 'Expirado')
-    CONSTRAINT "uq_doctor_paciente_permiso" UNIQUE ("idDoctor", "idPaciente"), -- Optional: Ensure only one active permission record per doctor-patient pair
+    CONSTRAINT "uq_doctor_paciente_permiso" UNIQUE ("iddoctor", "idpaciente"), -- Optional: Ensure only one active permission record per doctor-patient pair
     CONSTRAINT "fk_permisos_historial_doctor"
-        FOREIGN KEY ("idDoctor")
-        REFERENCES "medic"."Usuario" ("dniPersona"),
+        FOREIGN KEY ("iddoctor")
+        REFERENCES "medic"."usuario" ("dnipersona"),
     CONSTRAINT "fk_permisos_historial_paciente"
-        FOREIGN KEY ("idPaciente")
-        REFERENCES "medic"."Usuario" ("dniPersona")
+        FOREIGN KEY ("idpaciente")
+        REFERENCES "medic"."usuario" ("dnipersona")
 );
-
 
 /*SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;*/
-
 
 --------------------------------------------------------------------------------------------------------------------------
 /******** STORE PROCEDURES DE LAS TABLAS MAESTRAS **********/
@@ -295,9 +283,9 @@ DECLARE
     v_contrasenia_hash TEXT;
 BEGIN
     -- Verificar si el usuario existe y obtener su token
-    SELECT "dniPersona", "token"
+    SELECT "dnipersona", "token"
     INTO v_dni, v_token
-    FROM medic."Usuario"
+    FROM medic."usuario"
     WHERE "usuario" = p_usuario;
 
     IF NOT FOUND THEN
@@ -309,8 +297,8 @@ BEGIN
     -- Verificar si la contraseña es válida
     SELECT "contrasenia"
     INTO v_contrasenia_hash
-    FROM medic."Usuario"
-    WHERE "dniPersona" = v_dni;
+    FROM medic."usuario"
+    WHERE "dnipersona" = v_dni;
 
     IF NOT (crypt(p_contrasenia || v_token, v_contrasenia_hash) = v_contrasenia_hash) THEN
         mensaje_out := 'ERROR: CONTRASENIA INCORRECTA';
@@ -322,9 +310,9 @@ BEGIN
     mensaje_out := 'OK';
     OPEN resultado_out FOR
         SELECT u.*, p.*
-        FROM medic."Usuario" u
-        JOIN medic."Persona" p ON u."dniPersona" = p."dni"
-        WHERE u."dniPersona" = v_dni;
+        FROM medic."usuario" u
+        JOIN medic."persona" p ON u."dnipersona" = p."dni"
+        WHERE u."dnipersona" = v_dni;
 END;
 $$;
 
@@ -342,8 +330,8 @@ CREATE OR REPLACE PROCEDURE medic.upsert_persona(
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM medic."Persona" WHERE "dni" = p_dni) THEN
-        UPDATE medic."Persona"
+    IF EXISTS (SELECT 1 FROM medic."persona" WHERE "dni" = p_dni) THEN
+        UPDATE medic."persona"
         SET "nombres" = p_nombres,
             "apellidos" = p_apellidos,
             "correo" = p_correo,
@@ -352,7 +340,7 @@ BEGIN
             "fecha_nacimiento" = p_fecha_nacimiento
         WHERE "dni" = p_dni;
     ELSE
-        INSERT INTO medic."Persona"(
+        INSERT INTO medic."persona"(
             "dni", "nombres", "apellidos", "correo", "celular", "direccion", "fecha_nacimiento"
         ) VALUES (
             p_dni, p_nombres, p_apellidos, p_correo, p_celular, p_direccion, p_fecha_nacimiento
@@ -377,35 +365,35 @@ DECLARE
     v_contrasenia_hashed TEXT;
 BEGIN
     --Si el tipo de usuario existe 
-    IF EXISTS (SELECT 1 FROM medic."TipoUsuario" WHERE "id" = p_tipoUsuario) THEN
+    IF EXISTS (SELECT 1 FROM medic."tipousuario" WHERE "id" = p_tipoUsuario) THEN
         -- Si el usuario ya existe y la contraseña no será actualizada
-        IF EXISTS (SELECT 1 FROM medic."Usuario" WHERE "dniPersona" = p_dniPersona) THEN
+        IF EXISTS (SELECT 1 FROM medic."usuario" WHERE "dnipersona" = p_dniPersona) THEN
             IF p_actualizar_contrasenia THEN
                 -- Generar nuevo token
                 v_token := gen_random_uuid();
                 -- Hash de la contraseña + token
                 v_contrasenia_hashed := crypt(p_contrasenia_plain || v_token, gen_salt('bf'));
     
-                UPDATE medic."Usuario"
-                SET "tipoUsuario" = p_tipoUsuario,
+                UPDATE medic."usuario"
+                SET "tipousuario" = p_tipoUsuario,
                     "usuario" = p_usuario,
                     "token" = v_token::text,
                     "contrasenia" = v_contrasenia_hashed
-                WHERE "dniPersona" = p_dniPersona;
+                WHERE "dnipersona" = p_dniPersona;
             ELSE
                 -- Actualización normal sin modificar la contraseña ni el token
-                UPDATE medic."Usuario"
-                SET "tipoUsuario" = p_tipoUsuario,
+                UPDATE medic."usuario"
+                SET "tipousuario" = p_tipoUsuario,
                     "usuario" = p_usuario
-                WHERE "dniPersona" = p_dniPersona;
+                WHERE "dnipersona" = p_dniPersona;
             END IF;
         ELSE
             -- Insertar nuevo usuario
             v_token := gen_random_uuid();
             v_contrasenia_hashed := crypt(p_contrasenia_plain || v_token, gen_salt('bf'));
     
-            INSERT INTO medic."Usuario" (
-                "dniPersona", "tipoUsuario", "usuario", "contrasenia", "token"
+            INSERT INTO medic."usuario" (
+                "dnipersona", "tipousuario", "usuario", "contrasenia", "token"
             ) VALUES (
                 p_dniPersona, p_tipoUsuario, p_usuario, v_contrasenia_hashed, v_token::text
             );
@@ -428,17 +416,17 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idConsultorio IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Consultorio" WHERE "idConsultorio" = p_idConsultorio
+        SELECT 1 FROM medic."consultorio" WHERE "idconsultorio" = p_idConsultorio
     ) THEN
-        UPDATE medic."Consultorio"
+        UPDATE medic."consultorio"
         SET "nombre" = p_nombre,
             "ubicacion" = p_ubicacion,
             "direccion" = p_direccion,
             "telefono" = p_telefono,
             --"ruc" = p_ruc
-        WHERE "idConsultorio" = p_idConsultorio;
+        WHERE "idconsultorio" = p_idConsultorio;
     ELSE
-        INSERT INTO medic."Consultorio"(
+        INSERT INTO medic."consultorio"(
             "nombre", "ubicacion", "direccion", "telefono", "ruc"
         ) VALUES (
             p_nombre, p_ubicacion, p_direccion, p_telefono, p_ruc
@@ -457,22 +445,21 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF EXISTS (
-        SELECT 1 FROM medic."Doctor_Trabaja_Consultorio"
-        WHERE "idDoctor" = p_idDoctor AND "idConsultorio" = p_idConsultorio
+        SELECT 1 FROM medic."doctor_trabaja_consultorio"
+        WHERE "iddoctor" = p_idDoctor AND "idconsultorio" = p_idConsultorio
     ) THEN
         -- En este caso, como la tabla solo tiene PKs y no más datos, no hay nada que actualizar
         -- Pero podrías lanzar un NOTICE o simplemente no hacer nada
         RAISE NOTICE 'La relación ya existe. No se requiere actualización.';
     ELSE
-        INSERT INTO medic."Doctor_Trabaja_Consultorio"(
-            "idDoctor", "idConsultorio"
+        INSERT INTO medic."doctor_trabaja_consultorio"(
+            "iddoctor", "idconsultorio"
         ) VALUES (
             p_idDoctor, p_idConsultorio
         );
     END IF;
 END;
 $$;
-
 
 --REGISTRAR ESPECIALIDADES
 DROP PROCEDURE medic.upsert_especialidad;
@@ -485,14 +472,14 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idEspecialidad IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Especialidad" WHERE "idEspecialidad" = p_idEspecialidad
+        SELECT 1 FROM medic."especialidad" WHERE "idespecialidad" = p_idEspecialidad
     ) THEN
-        UPDATE medic."Especialidad"
+        UPDATE medic."especialidad"
         SET "nombre" = p_nombre,
             "descripcion" = p_descripcion
-        WHERE "idEspecialidad" = p_idEspecialidad;
+        WHERE "idespecialidad" = p_idEspecialidad;
     ELSE
-        INSERT INTO medic."Especialidad"(
+        INSERT INTO medic."especialidad"(
             "nombre", "descripcion"
         ) VALUES (
             p_nombre, p_descripcion
@@ -514,17 +501,17 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idServicio IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Servicio" WHERE "idServicio" = p_idServicio
+        SELECT 1 FROM medic."servicio" WHERE "idservicio" = p_idServicio
     ) THEN
-        UPDATE medic."Servicio"
-        SET "idEspecialidad" = p_idEspecialidad,
+        UPDATE medic."servicio"
+        SET "idespecialidad" = p_idEspecialidad,
             "nombre" = p_nombre,
             "descripcion" = p_descripcion,
             "riesgos" = p_riesgos
-        WHERE "idServicio" = p_idServicio;
+        WHERE "idservicio" = p_idServicio;
     ELSE
-        INSERT INTO medic."Servicio"(
-            "idEspecialidad", "nombre", "descripcion", "riesgos"
+        INSERT INTO medic."servicio"(
+            "idespecialidad", "nombre", "descripcion", "riesgos"
         ) VALUES (
             p_idEspecialidad, p_nombre, p_descripcion, p_riesgos
         );
@@ -546,18 +533,18 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idHorarioDoctor IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Horario_Doctor" WHERE "idHorarioDoctor" = p_idHorarioDoctor
+        SELECT 1 FROM medic."horario_doctor" WHERE "idhorariodoctor" = p_idHorarioDoctor
     ) THEN
-        UPDATE medic."Horario_Doctor"
-        SET "idDoctor" = p_idDoctor,
+        UPDATE medic."horario_doctor"
+        SET "iddoctor" = p_idDoctor,
             "dia_semana" = p_dia_semana,
             "hora_inicio" = p_hora_inicio,
             "hora_fin" = p_hora_fin,
             "duracion_minutos" = p_duracion_minutos
-        WHERE "idHorarioDoctor" = p_idHorarioDoctor;
+        WHERE "idhorariodoctor" = p_idHorarioDoctor;
     ELSE
-        INSERT INTO medic."Horario_Doctor"(
-            "idDoctor", "dia_semana", "hora_inicio", "hora_fin", "duracion_minutos"
+        INSERT INTO medic."horario_doctor"(
+            "iddoctor", "dia_semana", "hora_inicio", "hora_fin", "duracion_minutos"
         ) VALUES (
             p_idDoctor, p_dia_semana, p_hora_inicio, p_hora_fin, p_duracion_minutos
         );
@@ -575,13 +562,13 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF EXISTS (
-        SELECT 1 FROM medic."Consultorio_has_Servicio"
-        WHERE "idConsultorio" = p_idConsultorio AND "idServicio" = p_idServicio
+        SELECT 1 FROM medic."consultorio_has_servicio"
+        WHERE "idconsultorio" = p_idConsultorio AND "idservicio" = p_idServicio
     ) THEN
         RAISE NOTICE 'La relación ya existe. No se requiere actualización.';
     ELSE
-        INSERT INTO medic."Consultorio_has_Servicio"(
-            "idConsultorio", "idServicio"
+        INSERT INTO medic."consultorio_has_servicio"(
+            "idconsultorio", "idservicio"
         ) VALUES (
             p_idConsultorio, p_idServicio
         );
@@ -605,20 +592,20 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idCita IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Cita" WHERE "idCita" = p_idCita
+        SELECT 1 FROM medic."cita" WHERE "idcita" = p_idCita
     ) THEN
-        UPDATE medic."Cita"
-        SET "idPaciente" = p_idPaciente,
-            "idDoctor" = p_idDoctor,
+        UPDATE medic."cita"
+        SET "idpaciente" = p_idPaciente,
+            "iddoctor" = p_idDoctor,
             "motivo" = p_motivo,
             "fecha_hora_inicio" = p_fecha_hora_inicio,
             "fecha_hora_fin" = p_fecha_hora_fin,
             "estado" = p_estado,
             "descripcion" = p_descripcion
-        WHERE "idCita" = p_idCita;
+        WHERE "idcita" = p_idCita;
     ELSE
-        INSERT INTO medic."Cita"(
-            "idPaciente", "idDoctor", "motivo", "fecha_hora_inicio", "fecha_hora_fin", "estado", "descripcion"
+        INSERT INTO medic."cita"(
+            "idpaciente", "iddoctor", "motivo", "fecha_hora_inicio", "fecha_hora_fin", "estado", "descripcion"
         ) VALUES (
             p_idPaciente, p_idDoctor, p_motivo, p_fecha_hora_inicio, p_fecha_hora_fin, p_estado, p_descripcion
         );
@@ -639,17 +626,17 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idResenia IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Resenia" WHERE "idResenia" = p_idResenia
+        SELECT 1 FROM medic."resenia" WHERE "idresenia" = p_idResenia
     ) THEN
-        UPDATE medic."Resenia"
-        SET "idDoctor" = p_idDoctor,
+        UPDATE medic."resenia"
+        SET "iddoctor" = p_idDoctor,
             "calificacion" = p_calificacion,
             "comentario" = p_comentario,
             "fecha_resenia" = p_fecha_resenia
-        WHERE "idResenia" = p_idResenia;
+        WHERE "idresenia" = p_idResenia;
     ELSE
-        INSERT INTO medic."Resenia"(
-            "idDoctor", "calificacion", "comentario", "fecha_resenia"
+        INSERT INTO medic."resenia"(
+            "iddoctor", "calificacion", "comentario", "fecha_resenia"
         ) VALUES (
             p_idDoctor, p_calificacion, p_comentario, p_fecha_resenia
         );
@@ -669,16 +656,16 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idDiagnostico IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Diagnostico" WHERE "idDiagnostico" = p_idDiagnostico
+        SELECT 1 FROM medic."diagnostico" WHERE "iddiagnostico" = p_idDiagnostico
     ) THEN
-        UPDATE medic."Diagnostico"
-        SET "idCita" = p_idCita,
+        UPDATE medic."diagnostico"
+        SET "idcita" = p_idCita,
             "descripcion" = p_descripcion,
             "fecha_diagnostico" = p_fecha_diagnostico
-        WHERE "idDiagnostico" = p_idDiagnostico;
+        WHERE "iddiagnostico" = p_idDiagnostico;
     ELSE
-        INSERT INTO medic."Diagnostico"(
-            "idCita", "descripcion", "fecha_diagnostico"
+        INSERT INTO medic."diagnostico"(
+            "idcita", "descripcion", "fecha_diagnostico"
         ) VALUES (
             p_idCita, p_descripcion, p_fecha_diagnostico
         );
@@ -698,16 +685,16 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idReceta IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Receta" WHERE "idReceta" = p_idReceta
+        SELECT 1 FROM medic."receta" WHERE "idreceta" = p_idReceta
     ) THEN
-        UPDATE medic."Receta"
-        SET "idCita" = p_idCita,
+        UPDATE medic."receta"
+        SET "idcita" = p_idCita,
             "descripcion" = p_descripcion,
             "fecha_receta" = p_fecha_receta
-        WHERE "idReceta" = p_idReceta;
+        WHERE "idreceta" = p_idReceta;
     ELSE
-        INSERT INTO medic."Receta"(
-            "idCita", "descripcion", "fecha_receta"
+        INSERT INTO medic."receta"(
+            "idcita", "descripcion", "fecha_receta"
         ) VALUES (
             p_idCita, p_descripcion, p_fecha_receta
         );
@@ -727,16 +714,16 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idRecomendacion IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Recomendaciones" WHERE "idRecomendacion" = p_idRecomendacion
+        SELECT 1 FROM medic."recomendaciones" WHERE "idrecomendacion" = p_idRecomendacion
     ) THEN
-        UPDATE medic."Recomendaciones"
-        SET "idCita" = p_idCita,
+        UPDATE medic."recomendaciones"
+        SET "idcita" = p_idCita,
             "descripcion" = p_descripcion,
             "fecha_recomendacion" = p_fecha_recomendacion
-        WHERE "idRecomendacion" = p_idRecomendacion;
+        WHERE "idrecomendacion" = p_idRecomendacion;
     ELSE
-        INSERT INTO medic."Recomendaciones"(
-            "idCita", "descripcion", "fecha_recomendacion"
+        INSERT INTO medic."recomendaciones"(
+            "idcita", "descripcion", "fecha_recomendacion"
         ) VALUES (
             p_idCita, p_descripcion, p_fecha_recomendacion
         );
@@ -758,18 +745,18 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idPermisoHistorial IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."Permisos_Historial" WHERE "idPermisoHistorial" = p_idPermisoHistorial
+        SELECT 1 FROM medic."permisos_historial" WHERE "idpermisohistorial" = p_idPermisoHistorial
     ) THEN
-        UPDATE medic."Permisos_Historial"
-        SET "idDoctor" = p_idDoctor,
-            "idPaciente" = p_idPaciente,
-            "fechaOtorgaPermiso" = p_fechaOtorgaPermiso,
-            "fechaDeniegaPermiso" = p_fechaDeniegaPermiso,
+        UPDATE medic."permisos_historial"
+        SET "iddoctor" = p_idDoctor,
+            "idpaciente" = p_idPaciente,
+            "fechaotorgapermiso" = p_fechaOtorgaPermiso,
+            "fechadeniegapermiso" = p_fechaDeniegaPermiso,
             "estado" = p_estado
-        WHERE "idPermisoHistorial" = p_idPermisoHistorial;
+        WHERE "idpermisohistorial" = p_idPermisoHistorial;
     ELSE
-        INSERT INTO medic."Permisos_Historial"(
-            "idDoctor", "idPaciente", "fechaOtorgaPermiso", "fechaDeniegaPermiso", "estado"
+        INSERT INTO medic."permisos_historial"(
+            "iddoctor", "idpaciente", "fechaotorgapermiso", "fechadeniegapermiso", "estado"
         ) VALUES (
             p_idDoctor, p_idPaciente, p_fechaOtorgaPermiso, p_fechaDeniegaPermiso, p_estado
         );
@@ -789,8 +776,8 @@ CREATE OR REPLACE PROCEDURE medic.insert_detalle_pago(
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    INSERT INTO medic."Detalle_Pago" (
-        "idCita", "monto", "metodo_pago", "estado_pago", "fecha_pago"
+    INSERT INTO medic."detalle_pago" (
+        "idcita", "monto", "metodo_pago", "estado_pago", "fecha_pago"
     ) VALUES (
         p_idCita, p_monto, p_metodo_pago, p_estado_pago, p_fecha_pago
     );

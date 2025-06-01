@@ -1,0 +1,45 @@
+package com.habimed.habimedWebService.persona.domain.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.habimed.habimedWebService.persona.domain.model.Persona;
+import com.habimed.habimedWebService.persona.domain.parameter.personaRequest.PersonaRequest;
+
+
+public interface PersonaService {
+
+    /**
+     * Retrieves all persons
+     * @return List of all persons
+     */
+    List<Persona> getAllPersonas();
+
+    /**
+     * Retrieves a person by its ID
+     * @param id The person ID
+     * @return Optional containing the person if found, empty otherwise
+     */
+    Optional<Persona> getPersonaById(Long dni);
+
+    /**
+     * Saves a new person
+     * @param person The person to save
+     * @return The saved person with generated ID
+     */
+    int savePersona(PersonaRequest persona);
+
+    /**
+     * Persona an existing product
+     * @param product The product to persona
+     * @return true if persona successfully, false otherwise
+     */
+    boolean updatePersona(Persona persona);
+
+    /**
+     * Deletes a product by its ID
+     * @param id The product ID to delete
+     * @return true if deleted successfully, false otherwise
+     */
+    boolean deletePersona(Long dni);
+}

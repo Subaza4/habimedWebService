@@ -1,0 +1,13 @@
+[HTTP Request]
+   ↓
+[Rest Controller] (adapters.in.rest)
+   ↓
+[Use Case Interface] (domain.port.in)
+   ↓
+[Use Case Impl] (application.service)
+   ↓
+[Repository Interface] (domain.port.out)
+   ↓
+[Repository Impl] (adapters.out.postgres.repository)
+   ↓
+[JPA Entity ↔ Domain Model] (via Mapper)
