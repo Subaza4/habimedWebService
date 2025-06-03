@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.habimed.habimedWebService.usuario.domain.parameter.usuarioRequest.UsuarioRequest;
+import com.habimed.habimedWebService.usuario.domain.parameter.request.UsuarioRequest;
 import com.habimed.habimedWebService.usuario.repository.dto.UsuarioDTO;
 
 

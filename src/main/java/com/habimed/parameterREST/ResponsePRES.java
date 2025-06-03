@@ -1,6 +1,5 @@
 package com.habimed.parameterREST;
 
-
 public class ResponsePRES {
     private String Status;
     private Object Salida;

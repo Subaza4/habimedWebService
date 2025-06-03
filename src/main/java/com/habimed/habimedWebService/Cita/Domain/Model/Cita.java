@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 // Importaciones para las anotaciones de validación
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.FutureOrPresent; // Para fechas y horas en el futuro o presente
 

@@ -1,12 +1,12 @@
 package com.habimed.habimedWebService.detallePago.domain.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoAllArgsConstructor;
 
 @AllArgsConstructor
-@Getter
-@Setter
+@NoAllArgsConstructor
+@Data
 public class DetallePago {
     
 }

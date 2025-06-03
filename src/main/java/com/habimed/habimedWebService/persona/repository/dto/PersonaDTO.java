@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.habimed.habimedWebService.persona.domain.model.Persona;
 
 public class PersonaDTO {
-    // Row mapper for Product
+    // Row mapper
     public RowMapper<Persona> productRowMapper() {
         return (rs, rowNum) -> {
             Persona persona = new Persona();

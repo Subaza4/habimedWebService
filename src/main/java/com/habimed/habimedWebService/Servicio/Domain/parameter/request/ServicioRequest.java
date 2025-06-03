@@ -1,4 +1,4 @@
-package com.habimed.habimedWebService.servicio.domain.parameter.servicioRequest;
+package com.habimed.habimedWebService.servicio.domain.parameter.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -6,10 +6,11 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Map;
 
-@Data                // Genera getters, setters, toString, equals y hashCode
-@NoArgsConstructor   // Genera un constructor sin argumentos
-@AllArgsConstructor  // Genera un constructor con todos los argumentos
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ServicioRequest {
     private Integer idservicio; // idservicio INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 
@@ -25,5 +26,21 @@ public class ServicioRequest {
 
     @Size(max = 500, message = "La descripción de riesgos debe tener máximo 500 caracteres.")
     private String riesgos; // riesgos VARCHAR(500) NULL
-}
+
+
+    public Map<String, String> getValuesOfConditions() {
+        Map<String, String> conditions = new java.util.HashMap<>();
+        if (idservicio != null && idservicio > 0)
+            conditions.put("idservicio", String.valueOf(idservicio));
+        if (idespecialidad != null && idespecialidad > 0)
+            conditions.put("idespecialidad", String.valueOf(idespecialidad));
+        if (nombre != null && !nombre.isEmpty())
+            conditions.put("nombre", nombre);
+        if (descripcion != null && !descripcion.isEmpty())
+            conditions.put("descripcion", descripcion);
+        if (riesgos != null && !riesgos.isEmpty())
+            conditions.put("riesgos", riesgos);
+
+        return conditions;
+    }
 }

@@ -2,7 +2,7 @@ package com.habimed.habimedWebService.usuario.domain.service;
 
 import java.util.List;
 
-import com.habimed.habimedWebService.usuario.domain.parameter.usuarioRequest.UsuarioRequest;
+import com.habimed.habimedWebService.usuario.domain.parameter.request.UsuarioRequest;
 import com.habimed.habimedWebService.usuario.repository.dto.UsuarioDTO;
 
 public interface UsuarioService {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.habimed.habimedWebService.usuario.domain.parameter.usuarioRequest.UsuarioRequest;
+import com.habimed.habimedWebService.usuario.domain.parameter.request.UsuarioRequest;
 import com.habimed.habimedWebService.usuario.domain.service.UsuarioService;
 import com.habimed.habimedWebService.usuario.repository.dto.UsuarioDTO;
 import com.habimed.parameterREST.PeticionREST;

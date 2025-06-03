@@ -1,7 +1,6 @@
 package com.habimed.habimedWebService.persona.repository;
 
 import java.sql.PreparedStatement;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package com.habimed.habimedWebService.usuario.domain.parameter.usuarioRequest;
+package com.habimed.habimedWebService.usuario.domain.parameter.request;
 
 import java.util.Map;
 

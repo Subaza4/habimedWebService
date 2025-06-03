@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
 import com.habimed.habimedWebService.consultorio.domain.parameter.consultorioRequest.ConsultorioRequest;
 import com.habimed.habimedWebService.consultorio.repository.dto.ConsultorioDTO;
 

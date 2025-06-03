@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.tipoUsuario.repository.TipoUsuarioRepository;
-import com.habimed.habimedWebService.usuario.domain.parameter.usuarioRequest.UsuarioRequest;
+import com.habimed.habimedWebService.usuario.domain.parameter.request.UsuarioRequest;
 import com.habimed.habimedWebService.usuario.repository.UsuarioRepository;
 import com.habimed.habimedWebService.usuario.repository.dto.UsuarioDTO;
 

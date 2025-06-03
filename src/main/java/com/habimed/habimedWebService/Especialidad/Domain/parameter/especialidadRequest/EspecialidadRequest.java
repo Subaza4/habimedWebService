@@ -1,4 +1,4 @@
-package com.habimed.habimedWebService.especialidad.domain.parameter.tipoUsuarioRequest;
+package com.habimed.habimedWebService.especialidad.domain.parameter.especialidadRequest;
 
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoUsuarioRequest {
+public class EspecialidadRequest {
 
     private Integer idespecialidad;
 

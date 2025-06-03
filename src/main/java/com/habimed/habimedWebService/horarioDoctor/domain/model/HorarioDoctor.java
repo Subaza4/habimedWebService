@@ -35,5 +35,4 @@ public class HorarioDoctor {
     @NotNull(message = "La duración en minutos no puede ser nula.")
     // Puedes añadir @Min(1) si la duración debe ser al menos 1 minuto
     private Integer duracionMinutos; // duracion_minutos INT NULL (aunque en tu DDL es NULL, se hace NOT NULL aquí para sentido de negocio)
-                                     // Si en la DB es NULL, puedes quitar @NotNull.
 }
