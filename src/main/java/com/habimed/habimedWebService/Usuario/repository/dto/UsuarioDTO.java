@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.habimed.habimedWebService.tipoUsuario.domain.model.TipoUsuario;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +21,7 @@ public class UsuarioDTO {
     private boolean estado;
     
 
-    public RowMapper<UsuarioDTO> productRowMapper() {
+    public RowMapper<UsuarioDTO> usuarioRowMapper() {
         return (rs, rowNum) -> {
             UsuarioDTO usuario = new UsuarioDTO();
             usuario.setDniPersona(rs.getLong("dnipersona"));

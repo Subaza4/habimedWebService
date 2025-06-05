@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.habimed.habimedWebService.usuario.domain.parameter.request.UsuarioRequest;
 import com.habimed.habimedWebService.usuario.repository.dto.UsuarioDTO;
 
-
-
 @Repository
 public class UsuarioRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -46,13 +44,13 @@ public class UsuarioRepository {
             query.append(condition);
         }
         
-        return jdbcTemplate.query(query.toString(), dto.productRowMapper());
+        return jdbcTemplate.query(query.toString(), dto.usuarioRowMapper());
     }
 
     // Find usuario
     /* public UsuarioDTO getUsuario(String dni) {
         String sql = "SELECT * FROM medic.\"usuario\" us INNER JOIN medic.\"tipousuario\" tu ON us.\"tipousuarioid\" = tu.\"id\" WHERE us.\"dnipersona\" = ?";
-        return jdbcTemplate.query(sql, dto.productRowMapper(), dni);
+        return jdbcTemplate.query(sql, dto.usuarioRowMapper(), dni);
     } */
 
     // Save usuario usando un stored procedure y obteniendo un parámetro de salida
