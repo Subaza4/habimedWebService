@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.habimed.habimedWebService.servicio.domain.parameter.request.ServicioRequest;
-import com.habimed.habimedWebService.servicio.domain.parameter.response.ServicioResponse;
+import com.habimed.habimedWebService.servicio.dto.ServicioRequest;
+import com.habimed.habimedWebService.servicio.dto.ServicioResponse;
 import com.habimed.habimedWebService.servicio.repository.ServicioRepository;
 
 @Service

@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.habimed.habimedWebService.consultorio.domain.parameter.consultorioRequest.ConsultorioRequest;
+import com.habimed.habimedWebService.consultorio.dto.ConsultorioDTO;
+import com.habimed.habimedWebService.consultorio.dto.ConsultorioRequest;
 import com.habimed.habimedWebService.consultorio.repository.ConsultorioRepository;
-import com.habimed.habimedWebService.consultorio.repository.dto.ConsultorioDTO;
 
 @Service
 public class ConsultorioServiceImpl implements ConsultorioService {

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.persona.domain.model.Persona;
-import com.habimed.habimedWebService.persona.domain.parameter.personaRequest.PersonaRequest;
+import com.habimed.habimedWebService.persona.dto.PersonaRequest;
 import com.habimed.habimedWebService.persona.repository.PersonaRepository;
 
 @Service

@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.parameter.request.DoctorTrabajaConsultorioRequest;
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.parameter.response.DoctorTrabajaConsultorioResponse;
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.repository.dto.DoctorTrabajaConsultorioDTO;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioDTO;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioResponse;
 
 @Repository
 public class DoctorTrabajaConsultorioRepository {

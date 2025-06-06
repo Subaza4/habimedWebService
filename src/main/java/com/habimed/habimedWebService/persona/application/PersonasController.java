@@ -1,8 +1,8 @@
 package com.habimed.habimedWebService.persona.application;
 
 import com.habimed.habimedWebService.persona.domain.model.Persona;
-import com.habimed.habimedWebService.persona.domain.parameter.personaRequest.PersonaRequest;
 import com.habimed.habimedWebService.persona.domain.service.PersonaService;
+import com.habimed.habimedWebService.persona.dto.PersonaRequest;
 import com.habimed.parameterREST.PeticionREST; // Mantén esta si tu clase base la usa
 import com.habimed.parameterREST.ResponsePRES; // Importa tu clase ResponsePRES
 

@@ -7,12 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.habimed.habimedWebService.persona.domain.model.Persona;
-import com.habimed.habimedWebService.persona.domain.parameter.personaRequest.PersonaRequest;
 import com.habimed.habimedWebService.tipoUsuario.domain.model.TipoUsuario;
 import com.habimed.habimedWebService.tipoUsuario.domain.service.TipoUsuarioService;
 import com.habimed.parameterREST.PeticionREST;

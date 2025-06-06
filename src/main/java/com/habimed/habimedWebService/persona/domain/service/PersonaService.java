@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.habimed.habimedWebService.persona.domain.model.Persona;
-import com.habimed.habimedWebService.persona.domain.parameter.personaRequest.PersonaRequest;
+import com.habimed.habimedWebService.persona.dto.PersonaRequest;
 
 
 public interface PersonaService {

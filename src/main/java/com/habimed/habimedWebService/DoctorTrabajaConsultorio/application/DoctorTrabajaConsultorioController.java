@@ -3,9 +3,9 @@ package com.habimed.habimedWebService.doctorTrabajaConsultorio.application;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.parameter.request.DoctorTrabajaConsultorioRequest;
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.parameter.response.DoctorTrabajaConsultorioResponse;
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.service.DoctorTrabajaConsultorioService;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioResponse;
 import com.habimed.parameterREST.PeticionREST;
 import com.habimed.parameterREST.ResponsePRES;
 

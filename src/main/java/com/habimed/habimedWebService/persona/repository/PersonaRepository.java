@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.habimed.habimedWebService.persona.domain.model.Persona;
-import com.habimed.habimedWebService.persona.domain.parameter.personaRequest.PersonaRequest;
-import com.habimed.habimedWebService.persona.repository.dto.PersonaDTO;
+import com.habimed.habimedWebService.persona.dto.PersonaDTO;
+import com.habimed.habimedWebService.persona.dto.PersonaRequest;
 
 @Repository
 public class PersonaRepository {

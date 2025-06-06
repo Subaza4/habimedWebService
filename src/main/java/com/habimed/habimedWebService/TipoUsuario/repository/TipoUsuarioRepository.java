@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.habimed.habimedWebService.tipoUsuario.domain.model.TipoUsuario;
-import com.habimed.habimedWebService.tipoUsuario.repository.dto.TipoUsuarioDTO;
+import com.habimed.habimedWebService.tipoUsuario.dto.TipoUsuarioDTO;
 
 @Repository
 public class TipoUsuarioRepository {

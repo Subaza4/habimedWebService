@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
-import com.habimed.habimedWebService.especialidad.domain.parameter.especialidadRequest.EspecialidadRequest;
-import com.habimed.habimedWebService.especialidad.repository.dto.EspecialidadDTO;
+import com.habimed.habimedWebService.especialidad.dto.EspecialidadDTO;
+import com.habimed.habimedWebService.especialidad.dto.EspecialidadRequest;
 
 @Repository
 public class EspecialidadRepository {

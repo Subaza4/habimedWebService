@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Diagnostico {
-    private Integer idCita;
-    private Integer idPaciente;
-    private Integer idDoctor;
-    private String motivo;
-    private LocalDateTime fechaHoraInicio;
-    private LocalDateTime fechaHoraFin;
-    private String estado;
+    private Integer iddiagnostico;
+    private Integer idcita;
     private String descripcion;
+    private LocalDate fecha_diagnostico;
 }

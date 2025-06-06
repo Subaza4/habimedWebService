@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.habimed.habimedWebService.consultorio.domain.parameter.consultorioRequest.ConsultorioRequest;
 import com.habimed.habimedWebService.consultorio.domain.service.ConsultorioService;
-import com.habimed.habimedWebService.consultorio.repository.dto.ConsultorioDTO;
+import com.habimed.habimedWebService.consultorio.dto.ConsultorioDTO;
+import com.habimed.habimedWebService.consultorio.dto.ConsultorioRequest;
 import com.habimed.parameterREST.PeticionREST;
 import com.habimed.parameterREST.ResponsePRES;
 

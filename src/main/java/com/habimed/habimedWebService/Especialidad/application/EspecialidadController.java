@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
-import com.habimed.habimedWebService.especialidad.domain.parameter.especialidadRequest.EspecialidadRequest;
 import com.habimed.habimedWebService.especialidad.domain.service.EspecialidadService;
 import com.habimed.habimedWebService.especialidad.domain.service.EspecialidadServiceImpl;
+import com.habimed.habimedWebService.especialidad.dto.EspecialidadRequest;
 import com.habimed.parameterREST.PeticionREST;
 import com.habimed.parameterREST.ResponsePRES;
 

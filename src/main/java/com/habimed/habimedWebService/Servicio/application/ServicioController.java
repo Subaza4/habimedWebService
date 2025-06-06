@@ -3,9 +3,9 @@ package com.habimed.habimedWebService.servicio.application;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.habimed.habimedWebService.servicio.domain.parameter.request.ServicioRequest;
-import com.habimed.habimedWebService.servicio.domain.parameter.response.ServicioResponse;
 import com.habimed.habimedWebService.servicio.domain.service.ServicioService;
+import com.habimed.habimedWebService.servicio.dto.ServicioRequest;
+import com.habimed.habimedWebService.servicio.dto.ServicioResponse;
 import com.habimed.parameterREST.PeticionREST;
 import com.habimed.parameterREST.ResponsePRES;
 

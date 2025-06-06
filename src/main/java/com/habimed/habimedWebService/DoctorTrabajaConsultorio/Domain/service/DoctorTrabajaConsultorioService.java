@@ -1,8 +1,9 @@
 package com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.service;
 
 import java.util.List;
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.parameter.response.DoctorTrabajaConsultorioResponse;
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.parameter.request.DoctorTrabajaConsultorioRequest;
+
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioResponse;
 
 public interface DoctorTrabajaConsultorioService {
 

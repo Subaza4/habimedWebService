@@ -1,8 +1,8 @@
 package com.habimed.habimedWebService.consultorio.domain.service;
 import java.util.List;
 
-import com.habimed.habimedWebService.consultorio.domain.parameter.consultorioRequest.ConsultorioRequest;
-import com.habimed.habimedWebService.consultorio.repository.dto.ConsultorioDTO;
+import com.habimed.habimedWebService.consultorio.dto.ConsultorioDTO;
+import com.habimed.habimedWebService.consultorio.dto.ConsultorioRequest;
 
 public interface ConsultorioService {
     

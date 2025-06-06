@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
-import com.habimed.habimedWebService.especialidad.domain.parameter.especialidadRequest.EspecialidadRequest;
+import com.habimed.habimedWebService.especialidad.dto.EspecialidadRequest;
 import com.habimed.habimedWebService.especialidad.repository.EspecialidadRepository;
 
 @Service
