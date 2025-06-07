@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorRequest;
-import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorResponse;
+import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorDTO;
 import com.habimed.habimedWebService.horarioDoctor.repository.HorarioDoctorRepository;
 
 @Service
@@ -20,12 +20,12 @@ public class HorarioDoctorServiceImpl implements HorarioDoctorService {
     }
 
     @Override
-    public List<HorarioDoctorResponse> getAllHorarios(HorarioDoctorRequest request) {
+    public List<HorarioDoctorDTO> getAllHorarios(HorarioDoctorRequest request) {
         return this.horarioDoctorRepository.getAllHorarios(request);
     }
 
     @Override
-    public HorarioDoctorResponse getHorarioById(Integer idhorariodoctor) {
+    public HorarioDoctorDTO getHorarioById(Integer idhorariodoctor) {
         return this.horarioDoctorRepository.getHorarioById(idhorariodoctor);
     }
 

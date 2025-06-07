@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "medic"."tipousuario" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "nombre" VARCHAR(45) NOT NULL,
     "descripcion" VARCHAR(250) NOT NULL,
-PRIMARY KEY ("dni"));
+PRIMARY KEY ("id"));
 
 -- -----------------------------------------------------
 -- Table "medic"."persona"

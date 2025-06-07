@@ -1,5 +1,6 @@
 package com.habimed.habimedWebService.consultorioTieneServicio.application;
 
+import com.habimed.parameterREST.ResponseREST;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,7 +8,6 @@ import com.habimed.habimedWebService.consultorioTieneServicio.domain.service.Con
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioDTO;
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioRequest;
 import com.habimed.parameterREST.PeticionREST;
-import com.habimed.parameterREST.ResponsePRES;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ public class ConsultorioTieneServicioController extends PeticionREST{
     }
 
     @PostMapping("/getAllConsultoriosServicios")
-    public ResponseEntity<ResponsePRES> getAllConsultoriosServicios(@RequestBody ConsultorioTieneServicioRequest request) {
-        ResponsePRES response = new ResponsePRES();
+    public ResponseEntity<ResponseREST> getAllConsultoriosServicios(@RequestBody ConsultorioTieneServicioRequest request) {
+        ResponseREST response = new ResponseREST();
         List<ConsultorioTieneServicioDTO> consultoriosServicios = consultorioTieneServicioService.getAllConsultoriosServicios(request);
         if(consultoriosServicios != null && !consultoriosServicios.isEmpty()) {
             response.setSalida(consultoriosServicios);
@@ -44,8 +44,8 @@ public class ConsultorioTieneServicioController extends PeticionREST{
     }
  
     @PostMapping("/getConsultorioServicioById")
-    public ResponseEntity<ResponsePRES> getConsultoriosServiciosById(@RequestBody ConsultorioTieneServicioRequest request) {
-        ResponsePRES response = new ResponsePRES();
+    public ResponseEntity<ResponseREST> getConsultoriosServiciosById(@RequestBody ConsultorioTieneServicioRequest request) {
+        ResponseREST response = new ResponseREST();
         ConsultorioTieneServicioDTO consultorioServicio = consultorioTieneServicioService.getConsultoriosServiciosById(request);
         if (consultorioServicio != null) {
             response.setSalida(consultorioServicio);
@@ -59,8 +59,8 @@ public class ConsultorioTieneServicioController extends PeticionREST{
     }
 
     @PostMapping("/setConsultorioTieneServicio")
-    public ResponseEntity<ResponsePRES> setConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
-        ResponsePRES response = new ResponsePRES();
+    public ResponseEntity<ResponseREST> setConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
+        ResponseREST response = new ResponseREST();
         Integer result = consultorioTieneServicioService.setConsultorioTieneServicio(request);
         if (result != null && result > 0) {
             response.setSalida(result);
@@ -74,8 +74,8 @@ public class ConsultorioTieneServicioController extends PeticionREST{
     }
 
     @PostMapping("/deleteConsultorioTieneServicio")
-    public ResponseEntity<ResponsePRES> deleteConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
-        ResponsePRES response = new ResponsePRES();
+    public ResponseEntity<ResponseREST> deleteConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
+        ResponseREST response = new ResponseREST();
         boolean result = consultorioTieneServicioService.deleteConsultorioTieneServicio(request);
         if (result) {
             response.setSalidaMsg("Consultorio y servicio eliminados correctamente.");

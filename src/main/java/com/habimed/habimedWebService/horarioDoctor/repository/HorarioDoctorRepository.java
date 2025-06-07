@@ -7,24 +7,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorRequest;
-import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorResponse;
+import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorDTO;
 
 @Repository
 public class HorarioDoctorRepository {
+
     private final JdbcTemplate jdbcTemplate;
-    private final HorarioDoctorResponse dto = new HorarioDoctorResponse();
+    private final HorarioDoctorDTO dto = new HorarioDoctorDTO();
 
     @Autowired
     public HorarioDoctorRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<HorarioDoctorResponse> getAllHorarios(HorarioDoctorRequest request) {
+    public List<HorarioDoctorDTO> getAllHorarios(HorarioDoctorRequest request) {
         String sql = "SELECT * FROM medic.\"horariodoctor\"";
         return jdbcTemplate.query(sql, dto.horarioDoctorRowMapper());
     }
 
-    public HorarioDoctorResponse getHorarioById(Integer idhorariodoctor) {
+    public HorarioDoctorDTO getHorarioById(Integer idhorariodoctor) {
         String sql = "SELECT * FROM medic.\"horariodoctor\" WHERE idhorariodoctor = ?";
         return jdbcTemplate.queryForObject(sql, dto.horarioDoctorRowMapper(), idhorariodoctor);
     }

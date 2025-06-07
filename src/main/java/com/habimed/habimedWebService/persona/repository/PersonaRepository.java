@@ -1,10 +1,14 @@
 package com.habimed.habimedWebService.persona.repository;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +28,9 @@ public class PersonaRepository {
     }
 
     // Find all personas
-    public List<Persona> findAll() {
-        String sql = "SELECT * FROM medic.\"persona\"";
+    public List<Persona> findAll(PersonaRequest request) {
+        String sql = "SELECT * FROM medic.\"persona\" "+ request.buildConditions();
+
         return jdbcTemplate.query(sql, dto.productRowMapper());
     }
 
@@ -41,40 +46,51 @@ public class PersonaRepository {
     }
 
     // Save new persona
-    public int save(PersonaRequest persona) {
-
-        String sql = "INSERT INTO medic.\"persona\" (dni, nombre, apellidos, correo, celular, fecha_nacimiento) VALUES (?, ?, ?, ?, ?, ?)";
-        int rowsAffected = jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setLong(1, persona.getDni());
-            ps.setString(2, persona.getNombre());
-            ps.setString(3, persona.getApellidos());
-            ps.setString(4, persona.getCorreo());
-            ps.setString(5, persona.getCelular());
-            ps.setDate(6, persona.getFecha_nacimiento());
-            return ps;
-        });
-        return rowsAffected;
-    }
-
-    // Update persona
-    public boolean update(Persona persona) {
-        /* String sql = "UPDATE medic.\"productos\" SET \"nombre\" = ?, \"descripcion\" = ?, \"precio\" = ?, \"stock\" = ? WHERE \"id\" = ?";
-        int rowsAffected = jdbcTemplate.update(sql,
-                persona.getNombre(),
-                persona.getDescripcion(),
-                persona.getPrecio(),
-                persona.getStock(),
-                persona.getId());
-        return rowsAffected > 0; */
-        return true;
+    public int setPersona(PersonaRequest persona) {
+        String sql = "CALL medic.\"upsert_persona\"(?, ?, ?, ?, ?, ?, ?, ?)";
+        int[] resultado = new int[1];
+        
+        try {
+            // Lambda
+            jdbcTemplate.execute((ConnectionCallback<Void>) connection -> {
+                try (CallableStatement cs = connection.prepareCall(sql)) {
+                    // Validar persona
+                    if (persona == null) {
+                        throw new IllegalArgumentException("La persona no puede ser null");
+                    }
+                    // Establecer parámetros de entrada
+                    cs.setLong(1, persona.getDni());
+                    cs.setString(2, persona.getNombre());
+                    cs.setString(3, persona.getApellidos());
+                    cs.setString(4, persona.getCorreo());
+                    cs.setString(5, persona.getCelular());
+                    cs.setString(6, persona.getDireccion());
+                    cs.setDate(7, persona.getFecha_nacimiento());
+                    // Registrar el parámetro de salida
+                    cs.registerOutParameter(8, Types.INTEGER);
+                    cs.execute();
+                    
+                    // Obtener el resultado
+                    resultado[0] = cs.getInt(8);
+                    return null;
+                }
+            });
+            
+            return resultado[0];
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar la persona", e);
+        }
     }
 
     // Delete persona
     public boolean deleteById(Long id) {
-        /* String sql = "DELETE FROM medic.\"persona\" WHERE id = ?";
-        int rowsAffected = jdbcTemplate.update(sql, id);
-        return rowsAffected > 0; */
-        return true;
+        try{
+            String sql = "DELETE FROM medic.\"persona\" WHERE id = ?";
+            int rowsAffected = jdbcTemplate.update(sql, id);
+            return rowsAffected > 0;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

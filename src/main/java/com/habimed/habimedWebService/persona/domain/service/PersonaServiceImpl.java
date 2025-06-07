@@ -21,8 +21,8 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
-    public List<Persona> getAllPersonas() {
-        return personaRepository.findAll();
+    public List<Persona> getAllPersonas(PersonaRequest request) {
+        return personaRepository.findAll(request);
     }
 
     @Override
@@ -31,13 +31,8 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
-    public int savePersona(PersonaRequest persona) {
-        return personaRepository.save(persona);
-    }
-
-    @Override
-    public boolean updatePersona(Persona persona) {
-        return personaRepository.update(persona);
+    public int setPersona(PersonaRequest persona) {
+        return personaRepository.setPersona(persona);
     }
 
     @Override

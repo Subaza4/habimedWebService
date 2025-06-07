@@ -13,7 +13,7 @@ public interface PersonaService {
      * Retrieves all persons
      * @return List of all persons
      */
-    List<Persona> getAllPersonas();
+    List<Persona> getAllPersonas(PersonaRequest request);
 
     /**
      * Retrieves a person by its ID
@@ -27,14 +27,7 @@ public interface PersonaService {
      * @param person The person to save
      * @return The saved person with generated ID
      */
-    int savePersona(PersonaRequest persona);
-
-    /**
-     * Persona an existing product
-     * @param product The product to persona
-     * @return true if persona successfully, false otherwise
-     */
-    boolean updatePersona(Persona persona);
+    int setPersona(PersonaRequest persona);
 
     /**
      * Deletes a product by its ID

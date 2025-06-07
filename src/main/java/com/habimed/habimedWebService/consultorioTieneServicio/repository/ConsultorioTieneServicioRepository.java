@@ -5,7 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioDTO;
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioRequest;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ConsultorioTieneServicioRepository {
 
     private final JdbcTemplate jdbcTemplate;

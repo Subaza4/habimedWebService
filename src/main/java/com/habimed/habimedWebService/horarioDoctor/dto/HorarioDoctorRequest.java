@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.horarioDoctor.dto;
 
 import java.time.LocalTime;
 
+import com.habimed.parameterREST.RequestREST;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HorarioDoctorRequest {
+public class HorarioDoctorRequest extends RequestREST {
     private Integer idhorariodoctor; // idhorariodoctor INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 
     @NotNull(message = "El ID del doctor no puede ser nulo.")
