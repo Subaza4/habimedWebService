@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestREST {
+    private Integer idUsuario;
     private Integer pagina;
     private Integer num_elementos;
 }

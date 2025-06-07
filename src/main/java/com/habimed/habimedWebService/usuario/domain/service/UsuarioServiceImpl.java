@@ -26,17 +26,29 @@ public class UsuarioServiceImpl implements UsuarioService {
         return this.usuarioRepository.getListUsuarios(request);
     }
 
-    /* @Override
-    public UsuarioDTO getUsuario(String dni) {
-        return this.usuarioRepository.getUsuario(dni);
-    } */
+    @Override
+    public UsuarioDTO getUsuario(Integer dni) {
+        UsuarioDTO usuario = this.usuarioRepository.getUsuario(dni);
+        usuario.setTipoUsuario(this.tipoUsuarioRepository.getDetalleTipoUsuario(usuario.getIdTipoUsuario()));
+        return usuario;
+    }
 
     @Override
     public Integer setUsuario(UsuarioRequest request){
+        /*
+         1. **Códigos de retorno**:
+            - 1: Inserción exitosa
+            - 2: Actualización exitosa
+            - 3: Usuario no existe
+            - 4: Parámetros nulos
+            - 5: DNI nulo
+            - 6: DNI no existe
+            - 7: Tipo usuario no existe
+         */
         //Primero validar si el tipo de usuario existe
         Integer valid = tipoUsuarioRepository.existTipoUsuario(request.getIdTipoUsuario());
         if(valid == 1){
-            return 0; // Tipo de usuario no existe
+            return 7; // Tipo de usuario no existe
         }else{
             Integer respuesta = this.usuarioRepository.setUsuario(request);
 

@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.usuario.dto;
 
 import java.util.Map;
 
+import com.habimed.habimedWebService.tipoUsuario.domain.model.TipoUsuario;
 import org.springframework.jdbc.core.RowMapper;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class UsuarioDTO {
     private String contrasenia;
     private String token;
     private boolean estado;
+    private TipoUsuario tipoUsuario;
     
 
     public RowMapper<UsuarioDTO> usuarioRowMapper() {

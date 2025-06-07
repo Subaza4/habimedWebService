@@ -48,25 +48,35 @@ public class UsuarioRepository {
     }
 
     // Find usuario
-    /* public UsuarioDTO getUsuario(String dni) {
-        String sql = "SELECT * FROM medic.\"usuario\" us INNER JOIN medic.\"tipousuario\" tu ON us.\"tipousuarioid\" = tu.\"id\" WHERE us.\"dnipersona\" = ?";
-        return jdbcTemplate.query(sql, dto.usuarioRowMapper(), dni);
-    } */
+    public UsuarioDTO getUsuario(Integer dni) {
+        String sql = "SELECT * FROM medic.\"usuario\" us WHERE us.\"dnipersona\" = ?";
+        return jdbcTemplate.query(sql, dto.usuarioRowMapper(), dni).get(0);
+    }
 
     // Save usuario usando un stored procedure y obteniendo un parámetro de salida
     public Integer setUsuario(UsuarioRequest usuario) {
         return jdbcTemplate.execute(
             (CallableStatementCreator) connection -> {
-                CallableStatement cs = connection.prepareCall("{call mi_procedimiento(?, ?, ?, ?)}");
-                cs.setString(1, usuario.getDniPersona().toString());
-                cs.setInt(2, usuario.getIdTipoUsuario());
-                cs.setString(3, usuario.getContrasenia());
-                cs.registerOutParameter(4, Types.INTEGER);
+                CallableStatement cs = connection.prepareCall(
+                    "{? = call medic.upsert_usuario(?, ?, ?, ?, ?, ?, ?)}");
+                
+                // Registrar el parámetro de retorno
+                cs.registerOutParameter(1, Types.INTEGER);
+                
+                // Parámetros de entrada
+                cs.setNull(2, Types.INTEGER);  // p_idusuario (null para inserción)
+                cs.setLong(3, usuario.getDniPersona());  // p_dnipersona
+                cs.setInt(4, usuario.getIdTipoUsuario());  // p_tipousuario
+                cs.setString(5, usuario.getUsuario());  // p_usuario
+                cs.setString(6, usuario.getContrasenia());  // p_contrasenia_plain
+                cs.setBoolean(7, false);  // p_actualizar_contrasenia
+                cs.setBoolean(8, true);  // p_estado
+                
                 return cs;
             },
             (CallableStatementCallback<Integer>) cs -> {
                 cs.execute();
-                return cs.getInt(4); // Retorna el valor del parámetro de salida (entero)
+                return cs.getInt(1);  // Obtener el valor de retorno
             }
         );
     }

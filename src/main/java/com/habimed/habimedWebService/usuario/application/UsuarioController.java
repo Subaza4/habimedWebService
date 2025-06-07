@@ -41,25 +41,51 @@ public class UsuarioController extends PeticionREST{
         }
     }
 
+    /*
+     1. **Códigos de retorno**:
+        - 1: Inserción exitosa
+        - 2: Actualización exitosa
+        - 3: Usuario no existe
+        - 4: Parámetros nulos
+        - 5: DNI nulo
+        - 6: DNI no existe
+        - 7: Tipo usuario no existe
+     */
     @PostMapping("/setUsuario")
     public boolean setUsuario(@RequestBody UsuarioRequest request) {
         ResponseREST response = new ResponseREST();
-        Integer respuesta =  this.usuarioService.setUsuario(request);
+        Integer respuesta = this.usuarioService.setUsuario(request);
         if (respuesta == 1) {
             response.setStatus(STATUS_OK);
-            response.setSalidaMsg("usuario creado exitosamente.");
+            response.setSalidaMsg("Inserción exitosa");
             return true;
         } else if (respuesta == 2) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("usuario actualizado exitosamente.");
+            response.setStatus(STATUS_OK);
+            response.setSalidaMsg("Actualización exitosa");
             return true;
-        } else if(respuesta == 0){
+        } else if (respuesta == 3) {
             response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Tipo de usuario no existe.");
+            response.setSalidaMsg("Usuario no existe");
             return false;
-        }else{
+        } else if (respuesta == 4) {
             response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al crear o actualizar el usuario.");
+            response.setSalidaMsg("Parámetros nulos");
+            return false;
+        } else if (respuesta == 5) {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("DNI nulo");
+            return false;
+        } else if (respuesta == 6) {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("DNI no existe");
+            return false;
+        } else if (respuesta == 7) {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("Tipo usuario no existe");
+            return false;
+        } else {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("Error al crear o actualizar el usuario");
             return false;
         }
     }

@@ -25,6 +25,11 @@ public class TipoUsuarioRepository {
         return jdbcTemplate.query(sql, dto.tipoUsuarioRowMapper());
     }
 
+        public TipoUsuario getDetalleTipoUsuario(Integer id) {
+        String sql = "SELECT * FROM medic.\"tipousuario\" WHERE \"id\" = ?";
+        return jdbcTemplate.query(sql, dto.tipoUsuarioRowMapper(), id).get(0);
+    }
+
     public Integer existTipoUsuario(Integer id) {
         String sql = "SELECT 1 FROM medic.\"tipousuario\" WHERE \"id\" = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> dto.existeUsuarioMapper(rs), id);

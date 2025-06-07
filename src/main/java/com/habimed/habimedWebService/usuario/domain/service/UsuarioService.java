@@ -15,7 +15,7 @@ public interface UsuarioService {
     /**
      * Obtener los datos un usuario por su id o username
     */
-    // UsuarioDTO getUsuario();
+    UsuarioDTO getUsuario(Integer dni);
 
     /**
      * Actualizar los datos de un usuario

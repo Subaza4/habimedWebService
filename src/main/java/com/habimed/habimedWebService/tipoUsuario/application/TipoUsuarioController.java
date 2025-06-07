@@ -33,14 +33,14 @@ public class TipoUsuarioController extends PeticionREST {
 
         if (listTipoUsuario.isEmpty()) {
             response.setStatus(STATUS_KO);
-            response.setSalidaMsg("No se encontraron personas");
+            response.setSalidaMsg("Sin tipo de usuario.");
             response.setSalida(new ArrayList<>());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); // O HttpStatus.OK, según tu preferencia
+            return ResponseEntity.ok(response); // O HttpStatus.OK, según tu preferencia
         } else {
             response.setStatus(STATUS_OK);
             response.setSalida(listTipoUsuario);
-            response.setSalidaMsg("Personas encontradas exitosamente."); // Opcional
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response.setSalidaMsg(""); // Opcional
+            return ResponseEntity.ok(response);
         }
     }
 
