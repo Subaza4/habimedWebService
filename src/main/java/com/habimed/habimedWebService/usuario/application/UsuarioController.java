@@ -52,42 +52,49 @@ public class UsuarioController extends PeticionREST{
         - 7: Tipo usuario no existe
      */
     @PostMapping("/setUsuario")
-    public boolean setUsuario(@RequestBody UsuarioRequest request) {
+    public ResponseEntity<ResponseREST> setUsuario(@RequestBody UsuarioRequest request) {
         ResponseREST response = new ResponseREST();
         Integer respuesta = this.usuarioService.setUsuario(request);
         if (respuesta == 1) {
             response.setStatus(STATUS_OK);
             response.setSalidaMsg("Inserción exitosa");
-            return true;
         } else if (respuesta == 2) {
             response.setStatus(STATUS_OK);
             response.setSalidaMsg("Actualización exitosa");
-            return true;
         } else if (respuesta == 3) {
             response.setStatus(STATUS_KO);
             response.setSalidaMsg("Usuario no existe");
-            return false;
         } else if (respuesta == 4) {
             response.setStatus(STATUS_KO);
             response.setSalidaMsg("Parámetros nulos");
-            return false;
         } else if (respuesta == 5) {
             response.setStatus(STATUS_KO);
             response.setSalidaMsg("DNI nulo");
-            return false;
         } else if (respuesta == 6) {
             response.setStatus(STATUS_KO);
             response.setSalidaMsg("DNI no existe");
-            return false;
         } else if (respuesta == 7) {
             response.setStatus(STATUS_KO);
             response.setSalidaMsg("Tipo usuario no existe");
-            return false;
         } else {
             response.setStatus(STATUS_KO);
             response.setSalidaMsg("Error al crear o actualizar el usuario");
-            return false;
         }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/deleteUsuario")
+    public ResponseEntity<ResponseREST> deleteUsuario(@RequestBody String dni) {
+        ResponseREST response = new ResponseREST();
+        boolean respuesta = this.usuarioService.deleteUsuario(dni);
+        if (respuesta) {
+            response.setStatus(STATUS_OK);
+            response.setSalidaMsg("Usuario eliminado exitosamente");
+        } else {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("Ocurrió un error al eliminar el usuario");
+        }
+        return ResponseEntity.ok(response);
     }
     
 }
