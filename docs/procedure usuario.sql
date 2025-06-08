@@ -1,3 +1,65 @@
+-- Función para validar si un token existe en la tabla medic.login
+-- y retornar su estado (TRUE/FALSE).
+-- Si el token no existe, retorna FALSE.
+CREATE OR REPLACE FUNCTION medic.validar_token_estado(
+    p_token VARCHAR(255) -- Parámetro de entrada: El token a validar
+)
+    RETURNS BOOLEAN -- Retornará TRUE si el token existe y su estado, o FALSE si no existe
+AS $$
+DECLARE
+    v_estado BOOLEAN; -- Variable para almacenar el estado del token encontrado
+BEGIN
+    -- Intentar seleccionar el estado del token.
+    -- Limit 1 se usa por eficiencia, asumiendo que el token es único o que solo nos interesa el primero.
+    SELECT estado INTO v_estado
+    FROM medic."login" WHERE token = p_token LIMIT 1;
+
+    -- Verificar si se encontró un registro.
+    IF FOUND THEN
+        -- Si se encontró, retorna el estado del registro.
+        RETURN v_estado;
+    ELSE
+        -- Si no se encontró ningún registro con el token, retorna FALSE.
+        RETURN FALSE;
+    END IF;
+
+EXCEPTION
+    -- Bloque de manejo de errores. Captura cualquier excepción que ocurra.
+    WHEN OTHERS THEN
+        -- Levanta una excepción con un mensaje más descriptivo y el error original de PostgreSQL.
+        RAISE EXCEPTION 'Error inesperado en medic.validar_token_estado: %', SQLERRM;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Función para realizar el logout de un usuario.
+-- Acepta un token de sesión como entrada.
+-- Si el token existe y el estado es TRUE, actualiza el estado a FALSE.
+CREATE OR REPLACE FUNCTION medic.logout_usuario(
+    p_token VARCHAR(255) -- Parámetro de entrada: El token de sesión a invalidar
+)
+    RETURNS VOID -- Esta función no retorna un valor, solo realiza una acción
+AS $$
+BEGIN
+    -- Actualizar el estado del registro de login a FALSE
+    -- Solo si el token coincide Y el estado actual es TRUE.
+    -- La cláusula WHERE asegura que solo se actualicen los registros válidos.
+    UPDATE medic."login"
+    SET
+        estado = FALSE          -- Cambiar el estado a inactivo (logged out)
+    WHERE
+        estado = TRUE AND    -- Asegurarse de que solo se inactiven tokens activos
+        token = p_token;     -- Coincidencia con el token proporcionado
+
+EXCEPTION
+    -- Bloque de manejo de errores. Captura cualquier excepción que ocurra durante la ejecución.
+    WHEN OTHERS THEN
+        -- Levanta una excepción con un mensaje más descriptivo y el error original de PostgreSQL.
+        -- Esto es útil para depuración en caso de problemas inesperados.
+        RAISE EXCEPTION 'Error inesperado en medic.logout_usuario: %', SQLERRM;
+END;
+$$ LANGUAGE plpgsql;
+
 /*
  Genera un stored procedure que me permita verificar si mi usuario y contraseña son correctos
  1. Buscar en la tabla usuario un registro con el mismo usuario y capturar en una variable el valor del token
@@ -45,7 +107,7 @@ BEGIN
         v_contrasenia_hash_db,
         v_token_usuario_db
     FROM
-        medic.usuario u
+        medic."usuario" u
     WHERE
         u.usuario = p_usuario;
 
@@ -78,7 +140,7 @@ BEGIN
     v_fecha_expiracion := CURRENT_TIMESTAMP + INTERVAL '1 hour';
 
     --    c. Insertar una nueva línea en la tabla 'medic.login'
-    INSERT INTO medic.login (
+    INSERT INTO medic."login" (
         idusuario,
         token,
         estado,
