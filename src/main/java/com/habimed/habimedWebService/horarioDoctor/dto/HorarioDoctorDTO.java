@@ -16,7 +16,9 @@ public class HorarioDoctorDTO {
 
     private Integer iddoctor;
 
-    private String nombreDoctor; // Para incluir el nombre del doctor en la respuesta
+    private String nombreCompletoDoctor; // Para incluir el nombre del doctor en la respuesta
+
+    private String correoDoctor; // Para incluir el nombre del doctor en la respuesta
 
     private String diaSemana;
 
@@ -33,12 +35,14 @@ public class HorarioDoctorDTO {
             HorarioDoctorDTO horario = new HorarioDoctorDTO();
             horario.setIdhorariodoctor(rs.getInt("idhorariodoctor"));
             horario.setIddoctor(rs.getInt("iddoctor"));
-            horario.setNombreDoctor(rs.getString("nombredoctor"));
             horario.setDiaSemana(rs.getString("dia_semana"));
             horario.setNombreDiaSemana(rs.getString("nombre_dia_semana"));
             horario.setHoraInicio(rs.getTime("hora_inicio").toLocalTime());
             horario.setHoraFin(rs.getTime("hora_fin").toLocalTime());
             horario.setDuracionMinutos(rs.getInt("duracion_minutos"));
+            horario.setNombreCompletoDoctor(rs.getString("nombres") + " " + rs.getString("apellidos") + " (" + rs.getString("ruc") + ")");
+            horario.setCorreoDoctor(rs.getString("correo"));
+
             return horario;
         };
     }

@@ -36,7 +36,7 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
         try{
             List<Persona> personas = personaService.getAllPersonas(request);
             if (personas.isEmpty()) {
-                response.setStatus(STATUS_OK);
+                response.setStatus(STATUS_KO);
                 response.setSalidaMsg("No se encontraron personas");
                 response.setSalida(new ArrayList<>());
             } else {

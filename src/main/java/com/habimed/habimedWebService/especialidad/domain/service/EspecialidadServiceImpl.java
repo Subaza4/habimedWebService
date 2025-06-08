@@ -14,8 +14,8 @@ public class EspecialidadServiceImpl implements EspecialidadService {
     private EspecialidadRepository especialidadRepository;
 
     @Override
-    public List<Especialidad> getEspecialidades(){
-        return especialidadRepository.getEspecialidades();
+    public List<Especialidad> getEspecialidades(EspecialidadRequest request){
+        return especialidadRepository.getEspecialidades(request);
     }
 
     @Override
@@ -25,11 +25,6 @@ public class EspecialidadServiceImpl implements EspecialidadService {
 
     @Override
     public Integer setEspecialidad(EspecialidadRequest request) {
-        return especialidadRepository.setEspecialidad(request);
-    }
-
-    @Override
-    public Integer updateEspecialidad(EspecialidadRequest request) {
         return especialidadRepository.setEspecialidad(request);
     }
 

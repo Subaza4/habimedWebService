@@ -9,7 +9,7 @@ public interface HorarioDoctorService {
 
     List<HorarioDoctorDTO> getAllHorarios(HorarioDoctorRequest request);
     
-    HorarioDoctorDTO getHorarioById(Integer idhorariodoctor);
+    /*HorarioDoctorDTO getHorarioById(Integer idhorariodoctor);*/
 
     Integer setHorario(HorarioDoctorRequest request);
 

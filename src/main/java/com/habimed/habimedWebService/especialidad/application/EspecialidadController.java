@@ -27,78 +27,95 @@ public class EspecialidadController extends PeticionREST{
         this.especialidadService = especialidadService;
     }
 
-
     @PostMapping("/getEspecialidades")
     public ResponseEntity<ResponseREST> getEspecialidades(@RequestBody @Valid EspecialidadRequest request) {
         ResponseREST response = new ResponseREST();
-        List<Especialidad> especialidad = especialidadService.getEspecialidades();
-        if(especialidad.isEmpty()) {
-            response.setSalidaMsg("No se encontraron especialidades");
+        try{
+            List<Especialidad> especialidad = especialidadService.getEspecialidades(request);
+            if(especialidad.isEmpty()) {
+                response.setSalidaMsg("No se encontraron especialidades");
+                response.setStatus(STATUS_OK);
+            }else{
+                response.setStatus(STATUS_OK);
+                response.setSalida(especialidad);
+            }
+        }catch(Exception e) {
             response.setStatus(STATUS_KO);
-        }else{
-            response.setStatus(STATUS_OK);
-            response.setSalida(especialidad);
+            response.setSalidaMsg("Error al obtener las especialidades");
+            response.setSalida(e.getMessage());
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("getEspecialidad")
-    public ResponseEntity<ResponseREST> getEspecialidad(@RequestBody String id) {
+    public ResponseEntity<ResponseREST> getEspecialidad(@RequestBody EspecialidadRequest request) {
         ResponseREST response = new ResponseREST();
-        Especialidad especialidad = especialidadService.getEspecialidad(Integer.parseInt(id));
-        
-        if(especialidad != null && especialidad.getIdespecialidad() != null) {
-            response.setStatus(STATUS_OK);
-            response.setSalida(especialidad);
-            response.setSalidaMsg("Especialidad encontrada");
-        } else {
+        try{
+            if(request.getIdespecialidad() == null || request.getIdespecialidad() == 0) {
+                response.setStatus(STATUS_OK);
+                response.setSalidaMsg("Necesario campo id para obtener la especialidad");
+            }else{
+                Especialidad especialidad = especialidadService.getEspecialidad(request.getIdespecialidad());
+                if(especialidad != null && especialidad.getIdespecialidad() != null) {
+                    response.setStatus(STATUS_OK);
+                    response.setSalida(especialidad);
+                } else {
+                    response.setStatus(STATUS_OK);
+                    response.setSalidaMsg("No se encontró la especialidad con ID: " + request.getIdespecialidad());
+                }
+            }
+        } catch (Exception e) {
             response.setStatus(STATUS_KO);
-            response.setSalidaMsg("No se encontró la especialidad con ID: " + id);
-
+            response.setSalidaMsg("Error al obtener la especialidad");
+            response.setSalida(e.getMessage());
         }
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ResponseREST> createEspecialidad(@RequestBody @Valid EspecialidadRequest request) {
+    @PostMapping("/setEspecialidad")
+    public ResponseEntity<ResponseREST> setEspecialidad(@RequestBody @Valid EspecialidadRequest request) {
         ResponseREST response = new ResponseREST();
-        Integer idEspecilidad = especialidadService.setEspecialidad(request);
-        if(idEspecilidad != null && idEspecilidad > 0) {
-            response.setStatus(STATUS_OK);
-            response.setSalidaMsg("Especialidad creada correctamente con ID: " + idEspecilidad);
-        } else {
+        try{
+            Integer idEspecilidad = especialidadService.setEspecialidad(request);
+            if(idEspecilidad == 1) {
+                response.setStatus(STATUS_OK);
+                response.setSalidaMsg("Especialidad creada correctamente");
+            } else if(idEspecilidad == 2) {
+                response.setStatus(STATUS_OK);
+                response.setSalidaMsg("Especialidad actualizada correctamente");
+            } else {
+                response.setStatus(STATUS_KO);
+                response.setSalidaMsg("Error al guardar los datos de la especialidad");
+                response.setSalida(idEspecilidad);
+            }
+        }catch(Exception e) {
             response.setStatus(STATUS_KO);
-            response.setSalidaMsg("No se pudo crear la especialidad");
+            response.setSalidaMsg("Error al crear la especialidad");
         }
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/update")
-    public ResponseEntity<ResponseREST> updateEspecialidad(@RequestBody @Valid EspecialidadRequest request) {
-        ResponseREST response = new ResponseREST();
-        Integer idEspecialidad = especialidadService.setEspecialidad(request);
-
-        if(idEspecialidad != null && idEspecialidad > 0) {
-            response.setStatus(STATUS_OK);
-            response.setSalidaMsg("Especialidad modificada correctamente");
-        } else {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("No se pudo modifcar la especialidad");
-        }
-
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/delete")
     public ResponseEntity<ResponseREST> deleteEspecialidad(@RequestBody @Valid EspecialidadRequest request) {
         ResponseREST response = new ResponseREST();
-        boolean isDeleted = especialidadService.deleteEspecialidad(request.getIdespecialidad());
-        if(isDeleted) {
-            response.setStatus(STATUS_OK);
-            response.setSalidaMsg("Especialidad eliminada correctamente");
-        } else {
+        try{
+            if(request.getIdespecialidad() != null && request.getIdespecialidad() > 0) {
+                if(especialidadService.deleteEspecialidad(request.getIdespecialidad())) {
+                    response.setStatus(STATUS_OK);
+                    response.setSalidaMsg("Especialidad eliminada correctamente");
+                } else {
+                    response.setStatus(STATUS_KO);
+                    response.setSalidaMsg("No se pudo eliminar la especialidad");
+                }
+            }else{
+                response.setStatus(STATUS_KO);
+                response.setSalidaMsg("Necesario campo id para eliminar la especialidad");
+            }
+        }catch (Exception e) {
             response.setStatus(STATUS_KO);
-            response.setSalidaMsg("No se pudo eliminar la especialidad");
+            response.setSalidaMsg("Error al eliminar la especialidad");
+            response.setSalida(e.getMessage());
         }
         return ResponseEntity.ok(response);
     }

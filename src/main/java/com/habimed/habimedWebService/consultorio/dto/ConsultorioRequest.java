@@ -1,7 +1,5 @@
 package com.habimed.habimedWebService.consultorio.dto;
 
-import java.util.Map;
-
 import com.habimed.parameterREST.RequestREST;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -33,23 +31,27 @@ public class ConsultorioRequest extends RequestREST {
     @Size(max = 8, message = "El teléfono debe tener máximo 8 caracteres.")
     private String telefono;
 
-
-    public Map<String, String> getValuesOfConditions() {
-        Map<String, String> conditions = new java.util.HashMap<>();
-        if (idconsultorio != null && idconsultorio > 0)
-            conditions.put("idconsultorio", String.valueOf(idconsultorio));
-        if (ruc != null && !ruc.isEmpty())
-            conditions.put("ruc", ruc);
-        if (nombre != null && !nombre.isEmpty())
-            conditions.put("nombre", nombre);
-        if (ubicacion != null && !ubicacion.isEmpty())
-            conditions.put("ubicacion", ubicacion);
-        if (direccion != null && !direccion.isEmpty())
-            conditions.put("direccion", direccion);
-        if (telefono != null && !telefono.isEmpty())
-            conditions.put("telefono", telefono);
-
-        return conditions;
+    public String getConditions(){
+        StringBuilder conditions = new StringBuilder("WHERE 1=1");
+        if (idconsultorio != null || idconsultorio > 0) {
+            conditions.append(" AND idconsultorio = ").append(idconsultorio);
+        }
+        if (ruc != null && !ruc.isEmpty()) {
+            conditions.append(" AND ruc LIKE '%").append(ruc).append("%'");
+        }
+        if (nombre != null && !nombre.isEmpty()) {
+            conditions.append(" AND nombre LIKE '%").append(nombre).append("%'");
+        }
+        if(ubicacion != null && !ubicacion.isEmpty()){
+            conditions.append(" AND ubicacion LIKE '%").append(ubicacion).append("%'");
+        }
+        if(direccion != null && !direccion.isEmpty()){
+            conditions.append(" AND direccion LIKE '%").append(direccion).append("%'");
+        }
+        if(telefono != null && !telefono.isEmpty()){
+            conditions.append(" AND telefono LIKE '%").append(telefono).append("%'");
+        }
+        return conditions.toString();
     }
 
 }

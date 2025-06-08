@@ -1,5 +1,6 @@
 package com.habimed.habimedWebService.horarioDoctor.dto;
 
+import java.sql.Time;
 import java.time.LocalTime;
 
 import com.habimed.parameterREST.RequestREST;
@@ -21,9 +22,23 @@ public class HorarioDoctorRequest extends RequestREST {
     @Size(max = 15, message = "El día de la semana debe tener máximo 15 caracteres.")
     private String diaSemana;
 
-    private LocalTime horaInicio; 
+    private Time horaInicio;
 
-    private LocalTime horaFin;
+    private Time horaFin;
 
     private Integer duracionMinutos;
+
+    public String getConditions() {
+        StringBuilder conditions = new StringBuilder("WHERE 1=1");
+        if (idhorariodoctor != null) {
+            conditions.append(" AND idhorariodoctor = ").append(idhorariodoctor);
+        }
+        if (iddoctor != null) {
+            conditions.append(" AND iddoctor = ").append(iddoctor);
+        }
+        if (diaSemana != null && !diaSemana.isEmpty()) {
+            conditions.append(" AND dia_semana LIKE '%").append(diaSemana).append("%' ");
+        }
+        return conditions.toString();
+    }
 }

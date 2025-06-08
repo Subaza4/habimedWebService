@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.usuario.domain.service;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.usuario.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioDTO getUsuario(Integer dni) {
+    public UsuarioDTO getUsuario(Long dni) {
         UsuarioDTO usuario = this.usuarioRepository.getUsuario(dni);
         usuario.setTipoUsuario(this.tipoUsuarioRepository.getDetalleTipoUsuario(usuario.getIdTipoUsuario()));
         return usuario;
@@ -61,4 +62,32 @@ public class UsuarioServiceImpl implements UsuarioService {
         //return this.usuarioRepository.deleteUsuario(dni);
         return false;
     }
+
+    @Override
+    public UsuarioDTO loginUser (LoginRequest request){
+        if(request.getUsuario() == null || request.getContrasenia() == null){
+            return null;
+        }
+        UsuarioDTO respuesta = this.usuarioRepository.loginUser(request);
+        return respuesta;
+    }
+
+    @Override
+    public boolean logoutUser (String token){
+        Boolean respuesta = false;
+        if(token != null && !token.equals("")){
+            respuesta = this.usuarioRepository.logoutUser(token);
+        }
+        return respuesta;
+    }
+
+    @Override
+    public Boolean validateToken(String token){
+        Boolean respuesta = false;
+        if(token != null && !token.equals("")){
+            respuesta = this.usuarioRepository.validateToken(token);
+        }
+        return respuesta;
+    }
+
 }

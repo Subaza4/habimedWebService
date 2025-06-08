@@ -7,13 +7,11 @@ import com.habimed.habimedWebService.especialidad.dto.EspecialidadRequest;
 
 public interface EspecialidadService {
     
-    List<Especialidad> getEspecialidades();
+    List<Especialidad> getEspecialidades(EspecialidadRequest request);
 
     Especialidad getEspecialidad(Integer idEspecialidad);
 
     Integer setEspecialidad(EspecialidadRequest especialidad);
     
-    Integer updateEspecialidad(EspecialidadRequest especialidad);
-
     boolean deleteEspecialidad(Integer idEspecialidad);
 }

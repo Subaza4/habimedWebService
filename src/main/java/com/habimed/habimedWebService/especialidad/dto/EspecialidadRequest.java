@@ -18,4 +18,15 @@ public class EspecialidadRequest extends RequestREST {
 
     @Size(max = 255, message = "La descripción de la especialidad debe tener máximo 255 caracteres.")
     private String descripcion;
+
+    public String getValuesOfConditions() {
+        StringBuilder conditions = new StringBuilder("WHERE 1=1");
+        if (idespecialidad != null) {
+            conditions.append(" AND idespecialidad = ").append(idespecialidad);
+        }
+        if (nombre != null && !nombre.isEmpty()) {
+            conditions.append(" AND nombre LIKE '%").append(nombre).append("%'");
+        }
+        return conditions.toString();
+    }
 }

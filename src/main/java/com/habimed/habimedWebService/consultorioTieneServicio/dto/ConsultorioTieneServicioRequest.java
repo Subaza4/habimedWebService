@@ -12,13 +12,13 @@ public class ConsultorioTieneServicioRequest extends RequestREST {
     private Integer idconsultorio;
     private Integer idservicio;
 
-    public String getValuesOfConditions() {
+    public String getConditions(String alias) {
         StringBuilder conditions = new StringBuilder("WHERE 1=1");
         if (idconsultorio != null) {
-            conditions.append(" AND idconsultorio = ").append(idconsultorio);
+            conditions.append(" AND ").append(alias).append(".\"idconsultorio\" = ").append(idconsultorio);
         }
         if (idservicio != null) {
-            conditions.append(" AND idservicio = ").append(idservicio);
+            conditions.append(" AND ").append(alias).append(".\"idservicio\" = ").append(idservicio);
         }
         return conditions.toString();
     }

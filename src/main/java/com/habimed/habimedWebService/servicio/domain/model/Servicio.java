@@ -1,5 +1,6 @@
 package com.habimed.habimedWebService.servicio.domain.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class Servicio {
 
     private Integer idservicio; // idservicio INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
-
+    @NotNull(message = "El ID de especialidad no puede ser nulo.")
     private Integer idespecialidad; // idespecialidad INT NOT NULL (Clave foránea)
 
     private String nombre; // nombre VARCHAR(100) NOT NULL

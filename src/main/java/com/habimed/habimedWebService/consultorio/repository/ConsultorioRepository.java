@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import com.habimed.habimedWebService.consultorio.dto.ConsultorioDTO;
 import com.habimed.habimedWebService.consultorio.dto.ConsultorioRequest;
+import java.sql.CallableStatement;
+import java.sql.Types;
+import org.springframework.jdbc.core.ConnectionCallback;
 
 @Repository
 public class ConsultorioRepository {
@@ -21,28 +24,48 @@ public class ConsultorioRepository {
     }
 
     public List<ConsultorioDTO> getAllConsultorios(ConsultorioRequest request) {
-        String sql = "SELECT idconsultorio, ruc, nombre, ubicacion, direccion, telefono FROM medic.\"consultorio\" ";
-        sql += request.getValuesOfConditions();
-        List<ConsultorioDTO> consultorios = jdbcTemplate.query(sql, dto.consultorioRowMapper);
-        return consultorios;
+        String sql = "SELECT idconsultorio, ruc, nombre, ubicacion, direccion, telefono FROM medic.\"consultorio\" " +
+                request.getConditions() + " OFFSET ? LIMIT ?";
+        Integer size = request.getNum_elementos();
+        Integer pagina = (request.getPagina() -1 ) * size;
+        return jdbcTemplate.query(sql, dto.consultorioRowMapper, pagina, size);
     }
 
     public ConsultorioDTO getConsultorio(Integer id) {
         String sql = "SELECT idconsultorio, ruc, nombre, ubicacion, direccion, telefono FROM medic.\"consultorio\" WHERE idconsultorio = ? ";
         
-        ConsultorioDTO consultorio = jdbcTemplate.queryForObject(sql, dto.consultorioRowMapper, id);
-        return consultorio;
+        return jdbcTemplate.queryForObject(sql, dto.consultorioRowMapper, id);
     }
 
-    public Integer setConsultorio(ConsultorioRequest consultorio) {
-        String sql = "INSERT INTO medic.\"consultorio\" (ruc, nombre, ubicacion, direccion, telefono) VALUES (?, ?, ?, ?, ?) RETURNING idconsultorio";
-        return jdbcTemplate.queryForObject(sql, Integer.class, consultorio.getRuc(), consultorio.getNombre(), consultorio.getUbicacion(), consultorio.getDireccion(), consultorio.getTelefono());
-    }
-
-    public boolean updateConsultorio(ConsultorioRequest consultorio) {
-        String sql = "UPDATE medic.\"consultorio\" SET ruc = ?, nombre = ?, ubicacion = ?, direccion = ?, telefono = ? WHERE idconsultorio = ?";
-        int rowsAffected = jdbcTemplate.update(sql, consultorio.getRuc(), consultorio.getNombre(), consultorio.getUbicacion(), consultorio.getDireccion(), consultorio.getTelefono(), consultorio.getIdconsultorio());
-        return rowsAffected > 0;
+    public int setConsultorio(ConsultorioRequest consultorio) {
+        String sql = "CALL medic.\"upsert_consultorio\"(?, ?, ?, ?, ?, ?, ?)";
+        int[] resultado = new int[1];
+        try {
+            jdbcTemplate.execute((ConnectionCallback<Void>) connection -> {
+                try (CallableStatement cs = connection.prepareCall(sql)) {
+                    // Validar consultorio
+                    if (consultorio == null) {
+                        throw new IllegalArgumentException("El consultorio no puede ser null");
+                    }
+                    // Establecer parámetros de entrada
+                    cs.setInt(1, consultorio.getIdconsultorio());
+                    cs.setString(2, consultorio.getNombre());
+                    cs.setString(3, consultorio.getUbicacion());
+                    cs.setString(4, consultorio.getDireccion());
+                    cs.setString(5, consultorio.getTelefono());
+                    cs.setString(6, consultorio.getRuc());
+                    // Registrar el parámetro de salida
+                    cs.registerOutParameter(7, Types.INTEGER);
+                    cs.execute();
+                    // Obtener el resultado
+                    resultado[0] = cs.getInt(7);
+                    return null;
+                }
+            });
+            return resultado[0];
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el consultorio", e);
+        }
     }
 
     public boolean deleteConsultorio(Integer id) {

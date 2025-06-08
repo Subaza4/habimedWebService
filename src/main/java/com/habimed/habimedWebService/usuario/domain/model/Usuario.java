@@ -4,19 +4,12 @@ import com.habimed.habimedWebService.tipoUsuario.domain.model.TipoUsuario;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Usuario {
-    public Usuario(Long dni, String usuario, String contrasenia, String token, TipoUsuario tipoUsuario) {
-        setDniPersona(dni);
-        setTipoUsuario(tipoUsuario);
-        setUsuario(usuario);
-        setContrasenia(contrasenia);
-        setToken(token);
-    }
     //dniPersona,tipoUsuario,usuario,contrasenia,token
     private Long dniPersona;
     @NotNull

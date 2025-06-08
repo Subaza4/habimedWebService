@@ -16,7 +16,8 @@ public class DetallePagoDTO {
     private Long idDetallePago;
     private Long idCita; // Solo el ID de la cita para referencia
     private String motivoCita; // Campo de Cita
-    private LocalDateTime fechaHoraCita; // Campo de Cita
+    private LocalDateTime fechaCita; // Campo de Cita
+    private String nombreconsultorio;
     private BigDecimal monto;
     private String metodoPago;
     private String estadoPago;
@@ -29,10 +30,11 @@ public class DetallePagoDTO {
     public RowMapper<DetallePagoDTO> detallePagoDTORowMapper() {
         return (rs, rowNum) -> {
             DetallePagoDTO detallePago = new DetallePagoDTO();
-            detallePago.setIdDetallePago(rs.getLong("id_detalle_pago"));
-            detallePago.setIdCita(rs.getLong("id_cita"));
+            detallePago.setIdDetallePago(rs.getLong("iddetallepago"));
+            detallePago.setIdCita(rs.getLong("idcita"));
             detallePago.setMotivoCita(rs.getString("motivo_cita"));
-            detallePago.setFechaHoraCita(rs.getObject("fecha_hora_cita", LocalDateTime.class));
+            detallePago.setFechaCita(rs.getObject("fecha_cita", LocalDateTime.class));
+            detallePago.setNombreconsultorio(rs.getString("nombreconsultorio"));
             detallePago.setMonto(rs.getBigDecimal("monto"));
             detallePago.setMetodoPago(rs.getString("metodo_pago"));
             detallePago.setEstadoPago(rs.getString("estado_pago"));

@@ -24,10 +24,10 @@ public class HorarioDoctorServiceImpl implements HorarioDoctorService {
         return this.horarioDoctorRepository.getAllHorarios(request);
     }
 
-    @Override
+    /*@Override
     public HorarioDoctorDTO getHorarioById(Integer idhorariodoctor) {
         return this.horarioDoctorRepository.getHorarioById(idhorariodoctor);
-    }
+    }*/
 
     @Override
     public Integer setHorario(HorarioDoctorRequest request) {

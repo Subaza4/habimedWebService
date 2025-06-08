@@ -1,7 +1,5 @@
 package com.habimed.habimedWebService.doctorTrabajaConsultorio.dto;
 
-import java.util.Map;
-
 import com.habimed.parameterREST.RequestREST;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,13 +12,12 @@ public class DoctorTrabajaConsultorioRequest extends RequestREST {
     private int idDoctor;
     private int idConsultorio;
 
-    public Map<String, String> getValuesOfConditions(){
-        Map<String, String> conditions = new java.util.HashMap<>();
+    public String getConditions(String alias){
+        StringBuilder conditions = new StringBuilder("WHERE 1=1");
         if(idDoctor > 0)
-            conditions.put("iddoctor", String.valueOf(idDoctor));
+            conditions.append(" AND ").append(alias).append(".\"iddoctor\" = ").append(idDoctor);
         if(idConsultorio > 0)
-            conditions.put("idconsultorio", String.valueOf(idConsultorio));
-
-        return conditions;
+            conditions.append(" AND ").append(alias).append(".\"idconsultorio\" = ").append(idConsultorio);
+        return conditions.toString();
     }
 }

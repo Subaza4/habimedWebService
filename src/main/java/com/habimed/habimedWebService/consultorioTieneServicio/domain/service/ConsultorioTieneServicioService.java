@@ -9,7 +9,7 @@ public interface ConsultorioTieneServicioService {
     
     List<ConsultorioTieneServicioDTO> getAllConsultoriosServicios(ConsultorioTieneServicioRequest request);
 
-    ConsultorioTieneServicioDTO getConsultoriosServiciosById(ConsultorioTieneServicioRequest request);
+    /*ConsultorioTieneServicioDTO getConsultoriosServiciosById(ConsultorioTieneServicioRequest request);*/
 
     Integer setConsultorioTieneServicio(ConsultorioTieneServicioRequest request);
     

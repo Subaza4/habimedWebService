@@ -148,169 +148,265 @@ $$;
 
 --REGISTRAR CONSULTORIOS
 CREATE OR REPLACE PROCEDURE medic.upsert_consultorio(
-    p_idConsultorio INT DEFAULT NULL,
-    p_nombre VARCHAR,
-    p_ubicacion VARCHAR,
-    p_direccion VARCHAR,
-    p_telefono VARCHAR,
-    p_ruc VARCHAR
+    p_idConsultorio INT DEFAULT 0,
+    p_nombre VARCHAR DEFAULT '',
+    p_ubicacion VARCHAR DEFAULT '',
+    p_direccion VARCHAR DEFAULT '',
+    p_telefono VARCHAR DEFAULT '',
+    p_ruc VARCHAR DEFAULT '',
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF p_idConsultorio IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."consultorio" WHERE "idconsultorio" = p_idConsultorio
-    ) THEN
-UPDATE medic."consultorio"
-SET "nombre" = p_nombre,
-    "ubicacion" = p_ubicacion,
-    "direccion" = p_direccion,
-    "telefono" = p_telefono,
-    "ruc" = p_ruc
-WHERE "idconsultorio" = p_idConsultorio;
-ELSE
-        INSERT INTO medic."consultorio"(
-            "nombre", "ubicacion", "direccion", "telefono", "ruc"
-        ) VALUES (
-            p_nombre, p_ubicacion, p_direccion, p_telefono, p_ruc
-        );
-END IF;
+    -- Validar parámetros requeridos
+    IF p_nombre IS NULL OR p_ruc IS NULL THEN
+        p_resultado := 0;
+        RETURN;
+    END IF;
+
+    BEGIN
+        IF p_idConsultorio IS NOT NULL AND EXISTS (
+            SELECT 1 FROM medic."consultorio" WHERE "idconsultorio" = p_idConsultorio
+        ) THEN
+            UPDATE medic."consultorio"
+            SET "nombre" = p_nombre,
+                "ubicacion" = p_ubicacion,
+                "direccion" = p_direccion,
+                "telefono" = p_telefono,
+                "ruc" = p_ruc
+            WHERE "idconsultorio" = p_idConsultorio;
+            p_resultado := 2; -- Actualización realizada
+        ELSE
+            INSERT INTO medic."consultorio"("nombre", "ubicacion", "direccion", "telefono", "ruc")
+            VALUES (p_nombre, p_ubicacion, p_direccion, p_telefono, p_ruc);
+            p_resultado := 1; -- Inserción realizada
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            p_resultado := 0; -- Error en la operación
+    END;
 END;
 $$;
 
 --TRABAJA EN UN CONSULTORIO
 CREATE OR REPLACE PROCEDURE medic.upsert_doctor_trabaja_consultorio(
-    p_idDoctor INT,
-    p_idConsultorio INT
+    IN p_idDoctor INT,
+    IN p_idConsultorio INT,
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF EXISTS (
-        SELECT 1 FROM medic."doctor_trabaja_consultorio"
-        WHERE "iddoctor" = p_idDoctor AND "idconsultorio" = p_idConsultorio
-    ) THEN
-        RAISE NOTICE 'La relación ya existe. No se requiere actualización.';
-ELSE
-        INSERT INTO medic."doctor_trabaja_consultorio"(
-            "iddoctor", "idconsultorio"
-        ) VALUES (
-            p_idDoctor, p_idConsultorio
-        );
-END IF;
+    -- Validar parámetros requeridos
+    IF p_idDoctor IS NULL OR p_idConsultorio IS NULL THEN
+        p_resultado := 0;
+        RETURN;
+    END IF;
+
+    BEGIN
+        IF EXISTS (
+            SELECT 1 FROM medic."doctor_trabaja_consultorio"
+            WHERE "iddoctor" = p_idDoctor AND "idconsultorio" = p_idConsultorio
+        ) THEN
+            -- La relación ya existe, actualizar otros campos si fuera necesario
+            -- En este caso no hay otros campos para actualizar
+            p_resultado := 2; -- Registro ya existente
+            RETURN;
+        ELSE
+            -- Insertar nueva relación
+            INSERT INTO medic."doctor_trabaja_consultorio"("iddoctor", "idconsultorio")
+            VALUES (p_idDoctor, p_idConsultorio);
+            p_resultado := 1; -- Inserción realizada
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            p_resultado := 0; -- Error en la operación
+    END;
 END;
 $$;
 
 --REGISTRAR ESPECIALIDADES
 CREATE OR REPLACE PROCEDURE medic.upsert_especialidad(
     p_idEspecialidad INT DEFAULT NULL,
-    p_nombre VARCHAR,
-    p_descripcion VARCHAR
+    p_nombre VARCHAR DEFAULT NULL,
+    p_descripcion VARCHAR DEFAULT NULL,
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
     IF p_idEspecialidad IS NOT NULL AND EXISTS (
         SELECT 1 FROM medic."especialidad" WHERE "idespecialidad" = p_idEspecialidad
     ) THEN
-UPDATE medic."especialidad"
-SET "nombre" = p_nombre,
-    "descripcion" = p_descripcion
-WHERE "idespecialidad" = p_idEspecialidad;
-ELSE
-        INSERT INTO medic."especialidad"(
-            "nombre", "descripcion"
-        ) VALUES (
-            p_nombre, p_descripcion
-        );
-END IF;
+        UPDATE medic."especialidad"
+        SET "nombre" = p_nombre,
+            "descripcion" = p_descripcion
+        WHERE "idespecialidad" = p_idEspecialidad;
+        p_resultado := 2; -- Actualización realizada
+    ELSE
+        INSERT INTO medic."especialidad"("nombre", "descripcion")
+        VALUES (p_nombre, p_descripcion);
+        p_resultado := 1; -- Inserción realizada
+    END IF;
 END;
 $$;
 
 --REGISTRAR SERVICIOS
 CREATE OR REPLACE PROCEDURE medic.upsert_servicio(
     p_idServicio INT DEFAULT NULL,
-    p_idEspecialidad INT,
-    p_nombre VARCHAR,
-    p_descripcion VARCHAR,
-    p_riesgos VARCHAR
+    p_idEspecialidad INT DEFAULT NULL,
+    p_nombre VARCHAR DEFAULT NULL,
+    p_descripcion VARCHAR DEFAULT NULL,
+    p_riesgos VARCHAR DEFAULT NULL,
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF p_idServicio IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."servicio" WHERE "idservicio" = p_idServicio
-    ) THEN
-UPDATE medic."servicio"
-SET "idespecialidad" = p_idEspecialidad,
-    "nombre" = p_nombre,
-    "descripcion" = p_descripcion,
-    "riesgos" = p_riesgos
-WHERE "idservicio" = p_idServicio;
-ELSE
-        INSERT INTO medic."servicio"(
-            "idespecialidad", "nombre", "descripcion", "riesgos"
-        ) VALUES (
-            p_idEspecialidad, p_nombre, p_descripcion, p_riesgos
-        );
-END IF;
+    -- Validar parámetros requeridos
+    IF p_idEspecialidad IS NULL OR p_nombre IS NULL THEN
+        p_resultado := 0; -- Error: parámetros requeridos faltantes
+        RETURN;
+    END IF;
+
+    BEGIN
+        IF p_idServicio IS NOT NULL AND EXISTS (
+            SELECT 1 FROM medic."servicio" WHERE "idservicio" = p_idServicio
+        ) THEN
+            UPDATE medic."servicio"
+            SET "idespecialidad" = p_idEspecialidad,
+                "nombre" = p_nombre,
+                "descripcion" = p_descripcion,
+                "riesgos" = p_riesgos
+            WHERE "idservicio" = p_idServicio;
+            p_resultado := 2; -- Actualización realizada
+        ELSE
+            INSERT INTO medic."servicio"(
+                "idespecialidad", "nombre", "descripcion", "riesgos"
+            ) VALUES (
+                         p_idEspecialidad, p_nombre, p_descripcion, p_riesgos
+                     );
+            p_resultado := 1; -- Inserción realizada
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            p_resultado := 0; -- Error en la operación
+    END;
 END;
 $$;
 
 --REGISTRAR HORARIO DEL DOCTOR
 CREATE OR REPLACE PROCEDURE medic.upsert_horario_doctor(
-    p_idHorarioDoctor INT DEFAULT NULL,
-    p_idDoctor INT,
-    p_dia_semana VARCHAR,
-    p_hora_inicio TIME,
-    p_hora_fin TIME,
-    p_duracion_minutos INT
+    IN p_idHorarioDoctor INT DEFAULT 0,
+    IN p_idDoctor INT DEFAULT 0,
+    IN p_dia_semana VARCHAR DEFAULT 'LUNES',
+    IN p_hora_inicio TIME DEFAULT '00:00:00',
+    IN p_hora_fin TIME DEFAULT '00:00:00',
+    IN p_duracion_minutos INT DEFAULT 60,
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF p_idHorarioDoctor IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."horario_doctor" WHERE "idhorariodoctor" = p_idHorarioDoctor
+    -- Validar parámetros requeridos
+    IF p_idDoctor IS NULL OR p_dia_semana IS NULL OR p_hora_inicio IS NULL OR p_hora_fin IS NULL THEN
+        p_resultado := 0;
+        RETURN;
+    END IF;
+
+    -- Verificar solapamiento de horarios
+    IF EXISTS (
+        SELECT 1
+        FROM medic."horario_doctor"
+        WHERE "iddoctor" = p_idDoctor
+          AND "dia_semana" = p_dia_semana
+          AND "idhorariodoctor" != COALESCE(p_idHorarioDoctor, -1)
+          AND (
+            -- Caso 1: El nuevo horario comienza durante otro horario existente
+            (p_hora_inicio BETWEEN "hora_inicio" AND "hora_fin")
+                OR
+                -- Caso 2: El nuevo horario termina durante otro horario existente
+            (p_hora_fin BETWEEN "hora_inicio" AND "hora_fin")
+                OR
+                -- Caso 3: El nuevo horario engloba completamente a otro horario existente
+            (p_hora_inicio <= "hora_inicio" AND p_hora_fin >= "hora_fin")
+            )
     ) THEN
-UPDATE medic."horario_doctor"
-SET "iddoctor" = p_idDoctor,
-    "dia_semana" = p_dia_semana,
-    "hora_inicio" = p_hora_inicio,
-    "hora_fin" = p_hora_fin,
-    "duracion_minutos" = p_duracion_minutos
-WHERE "idhorariodoctor" = p_idHorarioDoctor;
-ELSE
-        INSERT INTO medic."horario_doctor"(
-            "iddoctor", "dia_semana", "hora_inicio", "hora_fin", "duracion_minutos"
-        ) VALUES (
-            p_idDoctor, p_dia_semana, p_hora_inicio, p_hora_fin, p_duracion_minutos
-        );
-END IF;
+        -- Si hay solapamiento, retornar 0
+        p_resultado := 3;
+        RETURN;
+    END IF;
+
+    BEGIN
+        IF p_idHorarioDoctor IS NOT NULL AND EXISTS (
+            SELECT 1 FROM medic."horario_doctor" WHERE "idhorariodoctor" = p_idHorarioDoctor
+        ) THEN
+            -- Actualización
+            UPDATE medic."horario_doctor"
+            SET "iddoctor" = p_idDoctor,
+                "dia_semana" = p_dia_semana,
+                "hora_inicio" = p_hora_inicio,
+                "hora_fin" = p_hora_fin,
+                "duracion_minutos" = p_duracion_minutos
+            WHERE "idhorariodoctor" = p_idHorarioDoctor;
+
+            p_resultado := 2; -- Actualización realizada
+        ELSE
+            -- Inserción
+            INSERT INTO medic."horario_doctor"(
+                "iddoctor", "dia_semana", "hora_inicio", "hora_fin", "duracion_minutos"
+            ) VALUES (
+                         p_idDoctor, p_dia_semana, p_hora_inicio, p_hora_fin, p_duracion_minutos
+                     );
+
+            p_resultado := 1; -- Inserción realizada
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            p_resultado := 0; -- Error en la operación
+    END;
 END;
 $$;
 
 --REGISTRAR CONSULTORIO TIENE SERVICIOS
 CREATE OR REPLACE PROCEDURE medic.upsert_consultorio_has_servicio(
-    p_idConsultorio INT,
-    p_idServicio INT
+    IN p_idConsultorio INT,
+    IN p_idServicio INT,
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF EXISTS (
-        SELECT 1 FROM medic."consultorio_has_servicio"
-        WHERE "idconsultorio" = p_idConsultorio AND "idservicio" = p_idServicio
-    ) THEN
-        RAISE NOTICE 'La relación ya existe. No se requiere actualización.';
-ELSE
-        INSERT INTO medic."consultorio_has_servicio"(
-            "idconsultorio", "idservicio"
-        ) VALUES (
-            p_idConsultorio, p_idServicio
-        );
-END IF;
+    -- Validar parámetros requeridos
+    IF p_idConsultorio IS NULL OR p_idServicio IS NULL THEN
+        p_resultado := 0;
+        RETURN;
+    END IF;
+
+    BEGIN
+        -- Verificar si ya existe la relación
+        IF EXISTS (
+            SELECT 1 FROM medic."consultorio_has_servicio"
+            WHERE "idconsultorio" = p_idConsultorio
+              AND "idservicio" = p_idServicio
+        ) THEN
+            -- La relación ya existe
+            p_resultado := 3;
+            RETURN;
+        ELSE
+            -- Insertar nueva relación
+            INSERT INTO medic."consultorio_has_servicio"("idconsultorio", "idservicio")
+            VALUES (p_idConsultorio,p_idServicio);
+            p_resultado := 1; -- Inserción exitosa
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            p_resultado := 0; -- Error en la operación
+    END;
 END;
 $$;
+
 
 --REGISTRA UNA CITA
 CREATE OR REPLACE PROCEDURE medic.upsert_cita(
@@ -496,19 +592,59 @@ $$;
 
 --REGISTRA DETALLE PAGO
 CREATE OR REPLACE PROCEDURE medic.insert_detalle_pago(
-    p_idCita INT,
+    p_idcita INT,
     p_monto DECIMAL,
     p_metodo_pago VARCHAR,
     p_estado_pago VARCHAR DEFAULT 'Pendiente',
-    p_fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    p_fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
+DECLARE
+    v_estado_actual VARCHAR;
 BEGIN
-INSERT INTO medic."detalle_pago" (
-    "idcita", "monto", "metodo_pago", "estado_pago", "fecha_pago"
-) VALUES (
-             p_idCita, p_monto, p_metodo_pago, p_estado_pago, p_fecha_pago
-         );
+    -- Verificar si ya existe un detalle_pago para esta cita
+    SELECT estado_pago INTO v_estado_actual
+    FROM medic.detalle_pago
+    WHERE idcita = p_idcita;
+
+    IF v_estado_actual IS NULL THEN
+        -- No existe registro, realizar inserción
+        INSERT INTO medic.detalle_pago (
+            idcita,
+            monto,
+            metodo_pago,
+            estado_pago,
+            fecha_pago
+        ) VALUES (
+                     p_idcita,
+                     p_monto,
+                     p_metodo_pago,
+                     p_estado_pago,
+                     p_fecha_pago
+                 );
+        p_resultado := 1; -- Código para inserción exitosa
+    ELSE
+        -- Ya existe un registro
+        IF v_estado_actual = 'Pagado' THEN
+            -- No permitir actualización si ya está pagado
+            p_resultado := 3; -- Código para operación no permitida
+        ELSE
+            -- Actualizar el registro existente
+            UPDATE medic.detalle_pago
+            SET monto = p_monto,
+                metodo_pago = p_metodo_pago,
+                estado_pago = p_estado_pago,
+                fecha_pago = p_fecha_pago
+            WHERE idcita = p_idcita;
+            p_resultado := 2; -- Código para actualización exitosa
+        END IF;
+    END IF;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        p_resultado := 0; -- Código para error
+        RAISE NOTICE 'Error: %', SQLERRM;
 END;
 $$;

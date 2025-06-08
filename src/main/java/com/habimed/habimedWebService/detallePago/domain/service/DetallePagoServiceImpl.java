@@ -7,6 +7,8 @@ import com.habimed.habimedWebService.detallePago.dto.DetallePagoRequest;
 import com.habimed.habimedWebService.detallePago.repository.DetallePagoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DetallePagoServiceImpl implements DetallePagoService {
 
@@ -18,9 +20,9 @@ public class DetallePagoServiceImpl implements DetallePagoService {
     }
 
     @Override
-    public DetallePagoDTO getDetallePago(DetallePagoRequest request) {
+    public List<DetallePagoDTO> getDetallePago(DetallePagoRequest request) {
         // Implement the logic to retrieve all DetallePago based on the request
-        return detallePagoRepository.findAll(request);
+        return detallePagoRepository.getDetallePago(request);
     }
 
     @Override

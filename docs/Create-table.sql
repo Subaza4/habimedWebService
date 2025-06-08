@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS "medic"."usuario" (
 -- Table "medic"."consultorio"
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS "medic"."login"(
+    "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "idusuario" INT NOT NULL,
     "token" VARCHAR(255) NOT NULL,
     "estado" BOOLEAN DEFAULT TRUE,

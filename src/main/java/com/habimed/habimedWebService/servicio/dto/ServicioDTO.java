@@ -1,7 +1,6 @@
 package com.habimed.habimedWebService.servicio.dto;
 
-import java.util.Map;
-
+import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
 import org.springframework.jdbc.core.RowMapper;
 
 import lombok.AllArgsConstructor;
@@ -22,37 +21,21 @@ public class ServicioDTO {
 
     private String riesgos; // riesgos VARCHAR(500) NULL
 
-    public RowMapper<ServicioResponse> getServicioRowMapper() {
+    private Especialidad especialidad;
+
+    public RowMapper<ServicioDTO> getServicioRowMapper() {
         return (rs, rowNum) -> {
-            ServicioResponse servicio = new ServicioResponse();
+            ServicioDTO servicio = new ServicioDTO();
             servicio.setIdservicio(rs.getInt("idservicio"));
             servicio.setNombre(rs.getString("nombre"));
             servicio.setDescripcion(rs.getString("descripcion"));
             servicio.setRiesgos(rs.getString("riesgos"));
             servicio.setIdespecialidad(rs.getInt("idespecialidad"));
+            Especialidad especialidad1 = new Especialidad();
+            especialidad1.setIdespecialidad(rs.getInt("idespecialidad"));
+            especialidad1.setNombre(rs.getString("especialidad_nombre"));
+            especialidad1.setDescripcion(rs.getString("especialidad_descripcion"));
             return servicio;
         };
-    }
-//repositorio
-    public String buildCondition(Map<String, String> conditions) {
-        if (conditions == null || conditions.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder(" WHERE ");
-        boolean first = true;
-        for (Map.Entry<String, String> entry : conditions.entrySet()) {
-            if (!first) {
-                sb.append(" AND ");
-            }
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if ("idservicio".equalsIgnoreCase(key) || "idespecialidad".equalsIgnoreCase(key)) {
-                sb.append(key).append(" = ").append(value);
-            } else {
-                sb.append(key).append(" LIKE '%").append(value).append("%'");
-            }
-            first = false;
-        }
-        return sb.toString();
     }
 }

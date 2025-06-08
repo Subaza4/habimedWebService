@@ -1,10 +1,8 @@
 package com.habimed.habimedWebService.persona.repository;
 
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +27,13 @@ public class PersonaRepository {
 
     // Find all personas
     public List<Persona> findAll(PersonaRequest request) {
-        String sql = "SELECT * FROM medic.\"persona\" "+ request.buildConditions();
+        String sql = "SELECT * FROM medic.\"persona\" " + request.buildConditions() + " OFFSET ? LIMIT ?";
+        //paginar resultados
+        Integer size = request.getNum_elementos();
+        Integer pagina = (request.getPagina() - 1) * size;
+        // Example query: SELECT * FROM medic."persona" WHERE nombre LIKE '%John%' OFFSET 0 LIMIT 10
 
-        return jdbcTemplate.query(sql, dto.productRowMapper());
+        return jdbcTemplate.query(sql, dto.productRowMapper(), pagina, size);
     }
 
     // Find persona by ID

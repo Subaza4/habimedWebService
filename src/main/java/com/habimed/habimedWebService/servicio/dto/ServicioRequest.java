@@ -44,4 +44,24 @@ public class ServicioRequest extends RequestREST {
 
         return conditions;
     }
+
+    public String getConditions(){
+        StringBuilder conditions = new StringBuilder("WHERE 1=1");
+        if (idservicio != null) {
+            conditions.append(" AND idservicio = ").append(idservicio);
+        }
+        if (idespecialidad != null) {
+            conditions.append(" AND idespecialidad = ").append(idespecialidad);
+        }
+        if (nombre != null && !nombre.isEmpty()) {
+            conditions.append(" AND nombre LIKE '%").append(nombre).append("%'");
+        }
+        if (descripcion != null && !descripcion.isEmpty()) {
+            conditions.append(" AND descripcion LIKE '%").append(descripcion).append("%'");
+        }
+        if (riesgos != null && !riesgos.isEmpty()) {
+            conditions.append(" AND riesgos LIKE '%").append(riesgos).append("%'");
+        }
+        return conditions.toString();
+    }
 }

@@ -12,8 +12,6 @@ public interface ConsultorioService {
     
     Integer setConsultorio(ConsultorioRequest request);
 
-    boolean updateConsultorio(ConsultorioRequest request);
-
     boolean deleteConsultorio(Integer id);
     
 }

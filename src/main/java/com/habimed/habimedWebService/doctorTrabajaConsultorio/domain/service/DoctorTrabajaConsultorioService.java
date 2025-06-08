@@ -2,16 +2,16 @@ package com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.service;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioDTO;
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
-import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioResponse;
 
 public interface DoctorTrabajaConsultorioService {
 
-    List<DoctorTrabajaConsultorioResponse> getAllDoctorsTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+    List<DoctorTrabajaConsultorioDTO> getAllDoctorsTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
     
-    DoctorTrabajaConsultorioResponse getDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+    /*DoctorTrabajaConsultorioResponse getDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);*/
 
-    Integer createDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+    Integer setDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
 
     boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
     

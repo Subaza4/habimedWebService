@@ -2,7 +2,10 @@ package com.habimed.habimedWebService.usuario.application;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.resenia.repository.ReseniaRepository;
+import com.habimed.habimedWebService.usuario.dto.LoginRequest;
 import com.habimed.parameterREST.ResponseREST;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,11 +20,13 @@ import com.habimed.parameterREST.PeticionREST;
 @RestController
 @RequestMapping("/seguridad")
 public class UsuarioController extends PeticionREST{
-    
+
+    private final ReseniaRepository reseniaRepository;
     private UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioService usuarioService){
+    public UsuarioController(UsuarioService usuarioService, ReseniaRepository reseniaRepository){
         this.usuarioService = usuarioService;
+        this.reseniaRepository = reseniaRepository;
     }
 
     @PostMapping("/getUsuarios")
@@ -39,6 +44,25 @@ public class UsuarioController extends PeticionREST{
             response.setSalidaMsg("Usuarios encontrados exitosamente.");
             return ResponseEntity.ok(response);
         }
+    }
+    @PostMapping("/getUsuario")
+    public ResponseEntity<ResponseREST> getUsuario(@RequestBody UsuarioRequest request){
+        ResponseREST response = new ResponseREST();
+        if(request.getDniPersona().describeConstable().isEmpty()){
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("El DNI es obligatorio");
+        }else{
+            UsuarioDTO usuario = this.usuarioService.getUsuario(request.getDniPersona());
+            if(usuario == null){
+                response.setStatus(STATUS_KO);
+                response.setSalidaMsg("No se encontró el usuario con DNI: " + request.getDniPersona());
+            }else{
+                response.setStatus(STATUS_OK);
+                response.setSalida(usuario);
+                response.setSalidaMsg("Usuario encontrado");
+            }
+        }
+        return ResponseEntity.ok(response);
     }
 
     /*
@@ -96,5 +120,50 @@ public class UsuarioController extends PeticionREST{
         }
         return ResponseEntity.ok(response);
     }
-    
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseREST> login(@RequestBody LoginRequest request){
+        ResponseREST response = new ResponseREST();
+        if(request.getUsuario() == null || request.getContrasenia() == null ||
+            request.getUsuario().isEmpty() || request.getContrasenia().isEmpty()){
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("El usuario y/o contraseña no pueden estar en blanco");
+        }else {
+            UsuarioDTO usuario = this.usuarioService.loginUser(request);
+            if (usuario == null) {
+                response.setStatus(STATUS_KO);
+                response.setSalidaMsg("Usuario no encontrado");
+            } else {
+                response.setStatus(STATUS_OK);
+                response.setSalidaMsg("Usuario encontrado");
+                response.setSalida(usuario);
+            }
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseREST> logout(@RequestBody LoginRequest request){
+        ResponseREST response = new ResponseREST();
+        try{
+            if(request.getToken() == null || request.getToken().isEmpty()){
+                response.setStatus(STATUS_KO);
+                response.setSalidaMsg("Necesario el token para desloguear el usuario");
+            }else {
+                if(this.usuarioService.logoutUser(request.getToken())){
+                    response.setStatus(STATUS_OK);
+                    response.setSalidaMsg("Usuario deslogueado exitosamente");
+                }else{
+                    response.setStatus(STATUS_KO);
+                    response.setSalidaMsg("No se pudo desloguear al usuario");
+                }
+            }
+        } catch (Exception e) {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("Error al desloguear el usuario");
+            response.setSalida(e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }

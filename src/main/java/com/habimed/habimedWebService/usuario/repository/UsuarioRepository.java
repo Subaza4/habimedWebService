@@ -1,13 +1,13 @@
 package com.habimed.habimedWebService.usuario.repository;
 
 import java.sql.CallableStatement;
+import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.List;
 
+import com.habimed.habimedWebService.usuario.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.CallableStatementCallback;
-import org.springframework.jdbc.core.CallableStatementCreator;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
 import com.habimed.habimedWebService.usuario.dto.UsuarioDTO;
@@ -48,7 +48,7 @@ public class UsuarioRepository {
     }
 
     // Find usuario
-    public UsuarioDTO getUsuario(Integer dni) {
+    public UsuarioDTO getUsuario(Long dni) {
         String sql = "SELECT * FROM medic.\"usuario\" us WHERE us.\"dnipersona\" = ?";
         return jdbcTemplate.query(sql, dto.usuarioRowMapper(), dni).get(0);
     }
@@ -79,5 +79,78 @@ public class UsuarioRepository {
                 return cs.getInt(1);  // Obtener el valor de retorno
             }
         );
+    }
+
+    public boolean deleteUsuario(Integer id){
+        String sql = "DELETE FROM medic.\"usuario\" WHERE id = ?";
+        return jdbcTemplate.update(sql, id) > 0;
+    }
+
+    public boolean logoutUser(String token) {
+        String sql = "{call medic.logout_usuario(?)}";
+        
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.execute(
+                    (PreparedStatementCreator) connection -> {
+                        CallableStatement cs = connection.prepareCall(sql);
+                        cs.setString(1, token);
+                        return cs;
+                    },
+                    cs -> {
+                        cs.execute();
+                        return true;
+                    }
+            ));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Boolean validateToken(String token) {
+        String sql = "SELECT medic.validar_token_estado(?)";
+        
+        return jdbcTemplate.execute(
+                (PreparedStatementCreator) connection -> {
+                    CallableStatement cs = connection.prepareCall(sql);
+                    cs.setString(1, token);
+                    return cs;
+                },
+            cs -> {
+                ResultSet rs = cs.executeQuery();
+                return rs.next() ? rs.getBoolean(1) : false;
+            }
+        );
+    }
+
+    public UsuarioDTO loginUser(LoginRequest request) {
+        String sql = "SELECT medic.verificar_credenciales(?, ?)";
+        
+        try {
+            String token = jdbcTemplate.execute(
+                    (PreparedStatementCreator) connection -> {
+                        CallableStatement cs = connection.prepareCall(sql);
+                        cs.setString(1, request.getUsuario());
+                        cs.setString(2, request.getContrasenia());
+                        return cs;
+                    },
+                cs -> {
+                    ResultSet rs = cs.executeQuery();
+                    return rs.next() ? rs.getString(1) : null;
+                }
+            );
+
+            if (token == null || "1".equals(token) || "2".equals(token)) {
+                return null;
+            }
+
+            UsuarioDTO usuario = new UsuarioDTO();
+            usuario.setUsuario(request.getUsuario());
+            usuario.setToken(token);
+            usuario.setEstado(true);
+            return usuario;
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

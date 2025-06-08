@@ -24,10 +24,10 @@ public class ConsultorioTieneServicioServiceImpl implements ConsultorioTieneServ
         return repository.getAllConsultoriosServicios(request);
     }
 
-    @Override
+    /*@Override
     public ConsultorioTieneServicioDTO getConsultoriosServiciosById(ConsultorioTieneServicioRequest request) {
         return repository.getConsultorioServicioById(request);
-    }
+    }*/
 
     @Override
     public Integer setConsultorioTieneServicio(ConsultorioTieneServicioRequest request) {

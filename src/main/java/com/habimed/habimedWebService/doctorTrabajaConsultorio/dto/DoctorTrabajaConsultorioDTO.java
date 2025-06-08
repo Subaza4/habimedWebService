@@ -1,13 +1,24 @@
 package com.habimed.habimedWebService.doctorTrabajaConsultorio.dto;
 
-import java.util.Map;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DoctorTrabajaConsultorioDTO {
-    public RowMapper<DoctorTrabajaConsultorioResponse> doctorTrabajaConsultorioResponseRowMapper() {
+    private int idDoctor;
+    private int idConsultorio;
+    private String nombreDoctor;
+    private String nombreConsultorio;
+    private String apellidoDoctor;
+    private String rucConsultorio;
+
+    public RowMapper<DoctorTrabajaConsultorioDTO> doctorTrabajaConsultorioResponseRowMapper() {
         return (rs, rowNum) -> {
-            DoctorTrabajaConsultorioResponse response = new DoctorTrabajaConsultorioResponse();
+            DoctorTrabajaConsultorioDTO response = new DoctorTrabajaConsultorioDTO();
             response.setIdDoctor(rs.getInt("iddoctor")); 
             response.setIdConsultorio(rs.getInt("idconsultorio")); 
             response.setNombreDoctor(rs.getString("nombredoctor"));
@@ -18,25 +29,4 @@ public class DoctorTrabajaConsultorioDTO {
         };
     }
 
-    public static String buildCondition(Map<String, String> conditions) {
-        if (conditions == null || conditions.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder(" WHERE ");
-        boolean first = true;
-        for (Map.Entry<String, String> entry : conditions.entrySet()) {
-            if (!first) {
-                sb.append(" AND ");
-            }
-
-            if ("idDoctor".equalsIgnoreCase(entry.getKey()) || "idConsultorio".equalsIgnoreCase(entry.getKey())) {
-                sb.append(entry.getKey()).append(" = ").append(entry.getValue()); // Asumimos que son INT, no necesitan comillas
-            } else {
-                System.err.println("Advertencia: Clave de condición no reconocida para DoctorTrabajaConsultorio: " + entry.getKey());
-                continue; // Pasa a la siguiente entrada del mapa
-            }
-            first = false;
-        }
-        return sb.toString();
-    }
 }
