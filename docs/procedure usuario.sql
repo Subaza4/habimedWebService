@@ -1,4 +1,112 @@
 /*
+ Genera un stored procedure que me permita verificar si mi usuario y contraseña son correctos
+ 1. Buscar en la tabla usuario un registro con el mismo usuario y capturar en una variable el valor del token
+ 2. En caso de no encontrar un usuario devolver una cadena con un valor de 1.
+ 3. En caso encontrar un usuario, se deberá concatenar a la contrasenia + token y aplicar un método de cifrado
+    para posteriormente evaluar si la cadena resultante es la misma que la que se tiene en la columna contrasenia de la
+    tabla usuario con ese mismo usuario
+ 4. En caso de que la contraseña sea diferente se deberá devolver un valor de dos
+ 5. En caso de que la contraseña sea correcta entonces se deberá inseratr una linea en la tabla login
+ 5.1 El valor a insertar deberá tener:
+        - el id del usuario
+        - la fecha actual con la hora
+        - deberá generar un nuevo token inmutable de tipo varchar
+        - se deberá registrar la fecha actual adicionando una hora
+        - se deberá setear el valor del estado en true
+5.2 En caso de que el usuario y contraseña sean correctos y se haya insertado el registro en la tabla se deberá
+    retornar el mismo valor del token generado que se guardó en la tabla login para posteriormente poder validar la
+    vigencia de ese token desde otro servicio.
+*/
+-- Función para verificar las credenciales de un usuario
+-- Retorna el token de sesión (VARCHAR) si las credenciales son correctas,
+-- o un código de error ('1' si el usuario no existe, '2' si la contraseña es incorrecta).
+CREATE OR REPLACE FUNCTION medic.verificar_credenciales(
+    p_usuario VARCHAR(50),          -- Parámetro de entrada: Nombre de usuario
+    p_contrasenia_plana VARCHAR(255) -- Parámetro de entrada: Contraseña en texto plano
+)
+    RETURNS VARCHAR(255) -- Retornará el nuevo token de sesión o un código de error
+AS $$
+DECLARE
+    v_id_usuario         INT;           -- Variable para almacenar el ID del usuario
+    v_contrasenia_hash_db VARCHAR(255); -- Variable para almacenar la contraseña hash de la base de datos
+    v_token_usuario_db   VARCHAR(255); -- Variable para almacenar el token (salt) de la tabla 'usuario'
+    v_contrasenia_concatenada TEXT;     -- Variable para concatenar la contraseña plana y el token (salt)
+    v_nuevo_token_login  VARCHAR(255); -- Variable para el nuevo token de sesión que se guardará en 'login'
+    v_fecha_expiracion   TIMESTAMP;    -- Variable para la fecha de expiración del nuevo token
+BEGIN
+    -- 1. Buscar en la tabla 'medic.usuario' un registro con el 'p_usuario'
+    -- y capturar el 'idusuario', 'contrasenia' (hash), y 'token' (salt)
+    SELECT
+        u.idusuario,
+        u.contrasenia,
+        u.token
+    INTO
+        v_id_usuario,
+        v_contrasenia_hash_db,
+        v_token_usuario_db
+    FROM
+        medic.usuario u
+    WHERE
+        u.usuario = p_usuario;
+
+    -- 2. En caso de no encontrar un usuario, devolver una cadena con un valor de '1'
+    IF NOT FOUND THEN
+        RETURN '1'; -- Código de error: Usuario no encontrado
+    END IF;
+
+    -- 3. En caso de encontrar un usuario:
+    --    a. Concatenar la 'p_contrasenia_plana' con el 'v_token_usuario_db' (que actúa como salt)
+    --    Esta concatenación debe ser EXACTAMENTE la misma que en tu upsert_usuario antes de hashear.
+    v_contrasenia_concatenada := p_contrasenia_plana || v_token_usuario_db;
+
+    --    b. Aplicar el método de cifrado (hashing) para verificar.
+    --    IMPORTANTE: Utilizamos crypt() con la contraseña concatenada y el hash almacenado.
+    --    La función crypt() extraerá el salt del v_contrasenia_hash_db y lo usará para hashear
+    --    v_contrasenia_concatenada. Si el resultado es igual a v_contrasenia_hash_db, la contraseña es correcta.
+    --    Asegúrate de que la extensión 'pgcrypto' esté habilitada en tu base de datos.
+    IF crypt(v_contrasenia_concatenada, v_contrasenia_hash_db) <> v_contrasenia_hash_db THEN
+        RETURN '2'; -- Código de error: Contraseña incorrecta
+    END IF;
+
+    -- 5. En caso de que la contraseña sea correcta:
+    --    a. Generar un nuevo token inmutable para la tabla 'medic.login'.
+    --       Usamos MD5(RANDOM()::TEXT) para un token aleatorio. Si prefieres UUIDs,
+    --       puedes usar GEN_RANDOM_UUID() si la extensión uuid-ossp está instalada.
+    v_nuevo_token_login := MD5(RANDOM()::TEXT);
+
+    --    b. Calcular la fecha de expiración (fecha actual + 1 hora)
+    v_fecha_expiracion := CURRENT_TIMESTAMP + INTERVAL '1 hour';
+
+    --    c. Insertar una nueva línea en la tabla 'medic.login'
+    INSERT INTO medic.login (
+        idusuario,
+        token,
+        estado,
+        fecha_creacion,
+        fecha_expiracion
+    )
+    VALUES (
+               v_id_usuario,           -- ID del usuario autenticado
+               v_nuevo_token_login,    -- El token de sesión generado para este login
+               TRUE,                   -- Estado del login: activo
+               CURRENT_TIMESTAMP,      -- Fecha y hora de creación del registro de login
+               v_fecha_expiracion      -- Fecha y hora de expiración del token de sesión
+           );
+
+    -- 5.2. Si el usuario y contraseña son correctos y se ha insertado el registro,
+    --      retornar el valor del nuevo token generado para la tabla 'medic.login'.
+    RETURN v_nuevo_token_login;
+
+EXCEPTION
+    -- Bloque de manejo de errores. Captura cualquier excepción que ocurra.
+    WHEN OTHERS THEN
+        -- Levanta una excepción con un mensaje más descriptivo y el error original de PostgreSQL.
+        RAISE EXCEPTION 'Error inesperado en medic.verificar_credenciales: %', SQLERRM;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
  1. **Códigos de retorno**:
     - 1: Inserción exitosa
     - 2: Actualización exitosa

@@ -48,6 +48,19 @@ CREATE TABLE IF NOT EXISTS "medic"."usuario" (
 -- -----------------------------------------------------
 -- Table "medic"."consultorio"
 -- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS "medic"."login"(
+    "idusuario" INT NOT NULL,
+    "token" VARCHAR(255) NOT NULL,
+    "estado" BOOLEAN DEFAULT TRUE,
+    "fecha_creacion" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "fecha_expiracion" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "fk_usuario" FOREIGN KEY ("idusuario")
+        REFERENCES "medic"."usuario" ("idusuario")
+);
+
+-- -----------------------------------------------------
+-- Table "medic"."consultorio"
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS "medic"."consultorio" (
     "idconsultorio" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "ruc" VARCHAR(11),
