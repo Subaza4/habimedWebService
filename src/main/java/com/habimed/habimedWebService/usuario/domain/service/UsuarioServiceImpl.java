@@ -90,4 +90,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         return respuesta;
     }
 
+    @Override
+    public UsuarioDTO getUsuarioByToken(String token){
+        return this.usuarioRepository.getUsuarioByToken(token);
+    }
 }

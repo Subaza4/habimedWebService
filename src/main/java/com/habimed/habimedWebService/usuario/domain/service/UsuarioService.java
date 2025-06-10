@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.usuario.domain.service;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.cita.dto.CitaRequest;
 import com.habimed.habimedWebService.usuario.dto.LoginRequest;
 import com.habimed.habimedWebService.usuario.dto.UsuarioDTO;
 import com.habimed.habimedWebService.usuario.dto.UsuarioRequest;
@@ -38,4 +39,5 @@ public interface UsuarioService {
     */
     boolean deleteUsuario(String dni);
 
+    UsuarioDTO getUsuarioByToken(String token);
 }

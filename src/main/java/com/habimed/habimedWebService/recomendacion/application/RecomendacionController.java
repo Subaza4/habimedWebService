@@ -14,4 +14,21 @@ public class RecomendacionController {
     public RecomendacionController(RecomendacionService recomendacionService) {
         this.recomendacionService = recomendacionService;
     }
+
+    /*
+      getRecomendaciones por id de la cita tanto para pacientes como doctores
+     */
+
+
+
+    /*
+      setRecomendaciones solo por los doctores
+     */
+
+
+
+    /*
+      No se pueden eliminar las recomendaciones
+     */
+
 }

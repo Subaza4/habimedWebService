@@ -17,5 +17,17 @@ public class RecetaController extends PeticionREST {
         this.recetaService = recetaService;
     }
 
+    /*
+      getReceta por id de cita
+     */
+
+    /*
+      saveReceta solo por doctores y está asociado a una cita
+     */
+
+
+    /*
+      No se puede eliminar ni editar las recetas
+     */
 
 }

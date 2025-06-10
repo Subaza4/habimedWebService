@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioDTO {
+    private Integer idusuario;
     private Long dniPersona;
     private Integer idTipoUsuario;
     private String nombreTipoUsuario;
@@ -26,6 +27,7 @@ public class UsuarioDTO {
     public RowMapper<UsuarioDTO> usuarioRowMapper() {
         return (rs, rowNum) -> {
             UsuarioDTO usuario = new UsuarioDTO();
+            usuario.setIdusuario(rs.getInt("idusuario"));
             usuario.setDniPersona(rs.getLong("dnipersona"));
             usuario.setNombreTipoUsuario(rs.getString("nombreusuario"));
             usuario.setUsuario(nombreTipoUsuario);;

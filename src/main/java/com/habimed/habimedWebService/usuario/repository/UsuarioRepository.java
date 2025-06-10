@@ -153,4 +153,13 @@ public class UsuarioRepository {
             return null;
         }
     }
+
+    public UsuarioDTO getUsuarioByToken(String token) {
+        String sql = "select u.* from medic.\"login\" l " +
+                " INNER JOIN medic.\"usuario\" u on u.idusuario = l.idusuario" +
+                "where l.estado=true AND l.token=? ";
+        return jdbcTemplate.query(sql, dto.usuarioRowMapper(), token).get(0);
+
+    }
+
 }

@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.ConnectionCallback;
+
+import java.sql.CallableStatement;
+import java.sql.Timestamp;
+import java.sql.Types;
 
 @Repository
 public class CitaRepository {
@@ -71,17 +76,42 @@ public class CitaRepository {
     }
 
     public Integer setCita(CitaRequest cita) {
-        String sql = "INSERT INTO medic.\"cita\" (fecha_hora_inicio, estado, idpaciente, iddoctor) VALUES (?, ?, ?, ?) RETURNING idcita";
-        return jdbcTemplate.queryForObject(sql, Integer.class, 
-            cita.getFechainicio(), 
-            cita.getEstado(), 
-            cita.getIdusuario(), 
-            cita.getIddoctorconsultorio());
+        String sql = "CALL medic.\"upsert_cita\"(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int[] resultado = new int[1];
+        
+        try {
+            jdbcTemplate.execute((ConnectionCallback<Void>) connection -> {
+                try (CallableStatement cs = connection.prepareCall(sql)) {
+                    // Validar cita
+                    if (cita == null) {
+                        throw new IllegalArgumentException("La cita no puede ser null");
+                    }
+                    // Establecer parámetros de entrada
+                    cs.setObject(1, cita.getIdcita(), Types.INTEGER);
+                    cs.setInt(2, cita.getIdusuario());
+                    cs.setInt(3, cita.getIddoctorconsultorio());
+                    cs.setString(4, cita.getMotivo());
+                    cs.setTimestamp(5, cita.getFechainicio());
+                    cs.setTimestamp(6, cita.getFechafin());
+                    cs.setString(7, cita.getEstado());
+                    cs.setString(8, cita.getDescripcion());
+                    // Registrar el parámetro de salida
+                    cs.registerOutParameter(9, Types.INTEGER);
+                    cs.execute();
+                    // Obtener el resultado
+                    resultado[0] = cs.getInt(9);
+                    return null;
+                }
+            });
+            return resultado[0];
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar la cita", e);
+        }
     }
 
-    public boolean deleteCita(Integer id) {
-        String sql = "DELETE FROM medic.\"cita\" WHERE idcita = ?";
-        int rowsAffected = jdbcTemplate.update(sql, id);
+    public boolean deleteCita(Integer id, Integer idDoctor) {
+        String sql = "DELETE FROM medic.\"cita\" WHERE idcita = ? AND iddoctor = ?";
+        int rowsAffected = jdbcTemplate.update(sql, id, idDoctor);
         return rowsAffected > 0;
     }
 }

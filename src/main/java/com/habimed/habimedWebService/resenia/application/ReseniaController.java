@@ -16,5 +16,18 @@ public class ReseniaController extends PeticionREST {
         this.reseniaService = reseniaService;
     }
 
+    /*
+     getListResenias por consultorio
+     */
+
+
+    /*
+     setResenia solo por pacientes a un consultorio con el que haya tenido una cita en los ultimos 7 dias
+     */
+
+
+    /*
+     deleteResenia solo por el usuario que la registró y el usuario consultor
+     */
 
 }

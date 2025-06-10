@@ -77,15 +77,20 @@ public class CitaController extends PeticionREST {
     @PostMapping("deleteCita")
     public ResponseEntity<ResponseREST> deleteCita(@RequestBody CitaRequest request) {
         ResponseREST responseREST = new ResponseREST();
-        boolean deleted = citaService.deleteCita(request.getIdcita());
-        if (deleted) {
-            responseREST.setStatus(STATUS_OK);
-            responseREST.setSalidaMsg("Cita eliminada exitosamente.");
-        } else {
+        try {
+            boolean deleted = citaService.deleteCita(request);
+            if (deleted) {
+                responseREST.setStatus(STATUS_OK);
+                responseREST.setSalidaMsg("Cita eliminada exitosamente.");
+            } else {
+                responseREST.setStatus(STATUS_KO);
+                responseREST.setSalidaMsg("Error al eliminar la cita.");
+            }
+        }catch (Exception e) {
             responseREST.setStatus(STATUS_KO);
             responseREST.setSalidaMsg("Error al eliminar la cita.");
+            responseREST.setSalida(e.getMessage());
         }
-
         return ResponseEntity.ok(responseREST);
     }
 }

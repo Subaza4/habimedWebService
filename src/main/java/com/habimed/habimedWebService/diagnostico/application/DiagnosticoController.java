@@ -25,6 +25,9 @@ public class DiagnosticoController extends PeticionREST {
         this.diagnosticoService = diagnosticoService;
     }
 
+    /*
+      getDiagnostico solo por id de la cita y el id del doctor
+     */
     @PostMapping("/getDiagnosticos")
     public ResponseEntity<ResponseREST> getDiagnosticos(DiagnosticoRequest request) {
         ResponseREST response = new ResponseREST();
@@ -39,4 +42,12 @@ public class DiagnosticoController extends PeticionREST {
         return ResponseEntity.ok(response);
     }
 
+    /*
+      SetDiagnostico solo puede realizar el usuario del doctor que atiende a la persona que reservó su cita
+     */
+
+
+    /*
+      No se puede eliminar un diagnostico
+     */
 }

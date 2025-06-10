@@ -2,6 +2,9 @@ package com.habimed.habimedWebService.cita.domain.service;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.usuario.domain.service.UsuarioService;
+import com.habimed.habimedWebService.usuario.dto.UsuarioDTO;
+import com.habimed.habimedWebService.usuario.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +14,16 @@ import com.habimed.habimedWebService.cita.repository.CitaRepository;
 
 @Service
 public class CitaServiceImpl implements CitaService{
-    
+
+    private final UsuarioService usuarioService;
     private CitaRepository citaRepository;
+    private UsuarioService UsuarioService;
     
     @Autowired
-    public CitaServiceImpl(CitaRepository citaRepository) {
+    public CitaServiceImpl(CitaRepository citaRepository, UsuarioService usuarioService) {
         this.citaRepository = citaRepository;
+        this.usuarioService = usuarioService;
+        this.UsuarioService = usuarioService;
     }
 
     @Override
@@ -35,7 +42,13 @@ public class CitaServiceImpl implements CitaService{
     }
 
     @Override
-    public boolean deleteCita(Integer id) {
-        return citaRepository.deleteCita(id);
+    public boolean deleteCita(CitaRequest cita) {
+        if(cita.getIdcita() != null && cita.getIdcita() > 0){
+            UsuarioDTO usuario = this.usuarioService.getUsuarioByToken(cita.getToken());
+            if(usuario != null && usuario.getIdusuario() > 0){
+                return citaRepository.deleteCita(cita.getIdcita(), usuario.getIdusuario());
+            }
+        }
+        return false;
     }
 }

@@ -1,7 +1,11 @@
 package com.habimed.habimedWebService.cita.dto;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
+import com.habimed.parameterREST.RequestREST;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +15,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CitaRequest {
+public class CitaRequest extends RequestREST {
     private Integer idcita;
     private Integer idusuario;
     private Integer iddoctorconsultorio;
-    private Date fechainicio;
-    private Date fechafin;
+    private Timestamp fechainicio;
+    private Timestamp fechafin;
+    private String motivo;
+    private String descripcion;
     private String estado;
     private String estadopago;
 

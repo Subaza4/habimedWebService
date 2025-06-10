@@ -410,37 +410,78 @@ $$;
 
 --REGISTRA UNA CITA
 CREATE OR REPLACE PROCEDURE medic.upsert_cita(
-    p_idCita INT DEFAULT NULL,
-    p_idPaciente INT,
-    p_idDoctor INT,
-    p_motivo VARCHAR,
-    p_fecha_hora_inicio TIMESTAMP,
-    p_fecha_hora_fin TIMESTAMP,
+    p_idCita INT DEFAULT 0,
+    p_idPaciente INT DEFAULT 0,
+    p_idDoctor INT DEFAULT 0,
+    p_motivo VARCHAR DEFAULT '',
+    p_fecha_hora_inicio TIMESTAMP DEFAULT NOW(),
+    p_fecha_hora_fin TIMESTAMP DEFAULT NOW(),
     p_estado VARCHAR DEFAULT 'Pendiente',
-    p_descripcion VARCHAR
+    p_descripcion VARCHAR DEFAULT '',
+    INOUT p_resultado INT DEFAULT 0
 )
-LANGUAGE plpgsql
+    LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF p_idCita IS NOT NULL AND EXISTS (
-        SELECT 1 FROM medic."cita" WHERE "idcita" = p_idCita
-    ) THEN
-UPDATE medic."cita"
-SET "idpaciente" = p_idPaciente,
-    "iddoctor" = p_idDoctor,
-    "motivo" = p_motivo,
-    "fecha_hora_inicio" = p_fecha_hora_inicio,
-    "fecha_hora_fin" = p_fecha_hora_fin,
-    "estado" = p_estado,
-    "descripcion" = p_descripcion
-WHERE "idcita" = p_idCita;
-ELSE
+    -- Validar que idpaciente e iddoctor no sean iguales
+    IF p_idPaciente = p_idDoctor THEN
+        p_resultado := 0; -- Los valores ingresados son incorrectos
+        RETURN;
+    END IF;
+
+    -- Validar que los campos requeridos no sean nulos
+    IF p_idPaciente IS NULL OR p_idDoctor IS NULL OR
+       p_motivo IS NULL OR p_fecha_hora_inicio IS NULL OR
+       p_fecha_hora_fin IS NULL THEN
+        p_resultado := 0; -- Los valores ingresados son incorrectos
+        RETURN;
+    END IF;
+
+    -- Validar actualización de citas canceladas
+    IF p_idCita IS NOT NULL THEN
+        IF NOT EXISTS (
+            SELECT 1
+            FROM medic."cita"
+            WHERE "idcita" = p_idCita
+        ) THEN
+            p_resultado := 3; -- La cita no existe
+            RETURN;
+        END IF;
+
+        IF EXISTS (
+            SELECT 1
+            FROM medic."cita"
+            WHERE "idcita" = p_idCita
+              AND "estado" = 'Cancelado'
+        ) THEN
+            p_resultado := 4; -- No se puede cambiar el estado a una cita cancelada
+            RETURN;
+        END IF;
+
+        -- Actualización
+        UPDATE medic."cita"
+        SET "idpaciente" = p_idPaciente,
+            "iddoctor" = p_idDoctor,
+            "motivo" = p_motivo,
+            "fecha_hora_inicio" = p_fecha_hora_inicio,
+            "fecha_hora_fin" = p_fecha_hora_fin,
+            "estado" = p_estado,
+            "descripcion" = p_descripcion
+        WHERE "idcita" = p_idCita;
+        p_resultado := 2; -- Se actualizó la cita correctamente
+    ELSE
+        -- Inserción
         INSERT INTO medic."cita"(
-            "idpaciente", "iddoctor", "motivo", "fecha_hora_inicio", "fecha_hora_fin", "estado", "descripcion"
+            "idpaciente", "iddoctor", "motivo",
+            "fecha_hora_inicio", "fecha_hora_fin",
+            "estado", "descripcion"
         ) VALUES (
-            p_idPaciente, p_idDoctor, p_motivo, p_fecha_hora_inicio, p_fecha_hora_fin, p_estado, p_descripcion
-        );
-END IF;
+                     p_idPaciente, p_idDoctor, p_motivo,
+                     p_fecha_hora_inicio, p_fecha_hora_fin,
+                     p_estado, p_descripcion
+                 );
+        p_resultado := 1; -- Se creó la cita correctamente
+    END IF;
 END;
 $$;
 

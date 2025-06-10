@@ -20,6 +20,14 @@ public class PermisoHistorialRepository {
 
     }
 
-    public void setPermisoHistorial(String sql) {}
+    public void setPermisoHistorial(String sql) {
+
+    }
+
+    public PermisoHistorialDTO getpermisoDoctor(Integer idDoctor, Integer idPaciente) {
+        String sql = "select p.* from medic.\"permisos_historial\" p where p.iddoctor = ? AND p.idpaciente = ?";
+
+        return jdbcTemplate.query(sql, dto.permisoHistorialRowMapper(), idDoctor, idPaciente).get(0);
+    }
 
 }
