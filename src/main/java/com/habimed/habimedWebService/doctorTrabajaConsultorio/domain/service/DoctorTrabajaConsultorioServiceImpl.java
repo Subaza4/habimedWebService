@@ -3,15 +3,18 @@ package com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.service;
 import java.util.List;
 
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.repository.DoctorTrabajaConsultorioRepository;
 
 @Service
+@RequiredArgsConstructor
+
 public class DoctorTrabajaConsultorioServiceImpl implements DoctorTrabajaConsultorioService {
 
-    private DoctorTrabajaConsultorioRepository doctorTrabajaConsultorioRepository;
+    private final DoctorTrabajaConsultorioRepository doctorTrabajaConsultorioRepository;
     
     @Override
     public List<DoctorTrabajaConsultorioDTO> getAllDoctorsTrabajaConsultorio(DoctorTrabajaConsultorioRequest request) {

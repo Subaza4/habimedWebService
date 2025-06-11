@@ -16,7 +16,7 @@ public class RecetaRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void getReceta(String sql) {
+    public void getAllReceta(String sql) {
 
     }
 

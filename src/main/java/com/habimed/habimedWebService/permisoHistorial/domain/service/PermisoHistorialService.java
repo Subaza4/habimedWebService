@@ -19,13 +19,4 @@ public interface PermisoHistorialService {
 
     PermisoHistorialDTO getpermisoDoctor (PermisoHistorialRequest request);
 
-    Consultorio getConsultoriosUsuario (PermisoHistorialRequest request);
-
-    List<Cita> getCitasPaciente (PermisoHistorialRequest request);
-
-    List<Receta> getRecetasPaciente (PermisoHistorialRequest request);
-
-    List<Recomendacion> getRecomendacionesPaciente (PermisoHistorialRequest request);
-
-    List<Diagnostico> getDiagnosticoPaciente (PermisoHistorialRequest request);
 }

@@ -2,18 +2,19 @@ package com.habimed.habimedWebService.cita.application;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.cita.dto.CitaResponseDto;
+import com.habimed.habimedWebService.cita.dto.CitaUpdateDto;
+import com.habimed.habimedWebService.exception.ResourceNotFoundException;
 import com.habimed.parameterREST.ResponseREST;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.habimed.habimedWebService.cita.domain.service.CitaService;
 import com.habimed.habimedWebService.cita.dto.CitaRequest;
 import com.habimed.habimedWebService.cita.dto.CitaDTO;
 import com.habimed.parameterREST.PeticionREST;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -26,71 +27,45 @@ public class CitaController extends PeticionREST {
         this.citaService = citaService;
     }
 
-    @PostMapping("getCitas")
-    public ResponseEntity<ResponseREST> getCitas(@RequestBody CitaRequest request) {
-        ResponseREST responseREST = new ResponseREST();
+    /*
+    * Segun el tipo de usuario se puede mostrar sus determanadas citas
+    * Eso ya con seguridad*/
+    @GetMapping("/me")
+    public ResponseEntity<List<CitaDTO>> getCitasPaciente(@RequestBody CitaRequest request) {       // No se para qué el req body
         List<CitaDTO> citas = citaService.getCitas(request);
-        if (citas.isEmpty()) {
-            responseREST.setStatus(STATUS_KO);
-            responseREST.setSalidaMsg("No se encontraron citas.");
-        } else {
-            responseREST.setStatus(STATUS_OK);
-            responseREST.setSalidaMsg("Citas encontradas exitosamente.");
-            responseREST.setSalida(citas);
-        }
-
-        return ResponseEntity.ok(responseREST);
+        return ResponseEntity.ok(citas);
     }
 
-    @PostMapping("getCita")
-    public ResponseEntity<ResponseREST> getCita(@RequestBody CitaRequest request) {
-        ResponseREST responseREST = new ResponseREST();
-        CitaDTO cita = citaService.getCita(request.getIdcita());
-        if (cita == null) {
-            responseREST.setStatus(STATUS_KO);
-            responseREST.setSalidaMsg("Cita no encontrada.");
-        } else {
-            responseREST.setStatus(STATUS_OK);
-            responseREST.setSalidaMsg("Cita encontrada exitosamente.");
-            responseREST.setSalida(cita);
-        }
-
-        return ResponseEntity.ok(responseREST);
+    /* Citas en las que aparece determinado usuario por id */
+    @GetMapping("/me/{id}")
+    public ResponseEntity<CitaDTO> getCitaById(@PathVariable Integer id) {
+        CitaDTO cita = citaService.getCitaById(id);
+        return ResponseEntity.ok(cita);
     }
-    
-    @PostMapping("setCita")
-    public ResponseEntity<ResponseREST> setCita(@RequestBody CitaRequest citaRequest) {
-        ResponseREST responseREST = new ResponseREST();
+
+    /* Crear una cita*/
+    @PostMapping
+    public ResponseEntity<Integer> setCita(@RequestBody CitaRequest citaRequest) {
         Integer idCita = citaService.setCita(citaRequest);
-        if (idCita == null) {
-            responseREST.setStatus(STATUS_KO);
-            responseREST.setSalidaMsg("Error al crear la cita.");
-        } else {
-            responseREST.setStatus(STATUS_OK);
-            responseREST.setSalidaMsg("Cita creada exitosamente.");
-            responseREST.setSalida(idCita);
-        }
-
-        return ResponseEntity.ok(responseREST);
+        return ResponseEntity.status(HttpStatus.CREATED).body(idCita);
     }
 
+    /* Actualizar una cita */
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<CitaResponseDto> updateCita(@PathVariable Integer id, @Valid @RequestBody CitaUpdateDto citaUpdateDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(citaService.updateCita(id, citaUpdateDto));
+    }
+
+    /* Eliminar una cita */
     @PostMapping("deleteCita")
-    public ResponseEntity<ResponseREST> deleteCita(@RequestBody CitaRequest request) {
+    public ResponseEntity<Boolean> deleteCita(@RequestBody CitaRequest request) {
         ResponseREST responseREST = new ResponseREST();
         try {
-            boolean deleted = citaService.deleteCita(request);
-            if (deleted) {
-                responseREST.setStatus(STATUS_OK);
-                responseREST.setSalidaMsg("Cita eliminada exitosamente.");
-            } else {
-                responseREST.setStatus(STATUS_KO);
-                responseREST.setSalidaMsg("Error al eliminar la cita.");
-            }
+            Boolean deleted = citaService.deleteCita(request);
+            return ResponseEntity.status(HttpStatus.OK).body(deleted);
         }catch (Exception e) {
-            responseREST.setStatus(STATUS_KO);
-            responseREST.setSalidaMsg("Error al eliminar la cita.");
-            responseREST.setSalida(e.getMessage());
+            throw new ResourceNotFoundException("Nose puede eliminar una cita que no existe.");
         }
-        return ResponseEntity.ok(responseREST);
+
     }
 }

@@ -12,7 +12,7 @@ import com.habimed.habimedWebService.consultorio.repository.ConsultorioRepositor
 @Service
 public class ConsultorioServiceImpl implements ConsultorioService {
 
-    private ConsultorioRepository consultorioRepository;
+    private final ConsultorioRepository consultorioRepository;
 
     @Autowired
     private ConsultorioServiceImpl(ConsultorioRepository consultorioRepository) {

@@ -32,6 +32,7 @@ public class Persona {
     private String correo;
     private String celular;
     private String direccion;
+
     @Past(message = "La fecha de nacimiento debe ser en el pasado")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date fecha_nacimiento;

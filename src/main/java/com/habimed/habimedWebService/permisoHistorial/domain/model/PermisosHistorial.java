@@ -2,9 +2,9 @@ package com.habimed.habimedWebService.permisoHistorial.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.el.parser.BooleanNode;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class PermisosHistorial {
     public Integer idpermisohistorial;
     public Integer iddoctor;
     public Integer idpaciente;
-    public Timestamp fechaotorgapermiso;
-    public Timestamp fechadeniegapermiso;
-    public BooleanNode estado;
+    public LocalDate fechaotorgapermiso;
+    public LocalDate fechadeniegapermiso;
+    public Boolean estado;
 }

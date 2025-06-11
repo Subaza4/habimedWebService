@@ -35,4 +35,6 @@ public class Cita {
 
     @Size(max = 20, message = "El estado de la cita debe tener máximo 20 caracteres.")
     private String estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
+
+    private String descripcion;
 }

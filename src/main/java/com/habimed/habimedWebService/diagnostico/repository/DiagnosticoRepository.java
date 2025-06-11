@@ -1,7 +1,9 @@
 package com.habimed.habimedWebService.diagnostico.repository;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,19 @@ public class DiagnosticoRepository {
     @Autowired
     public DiagnosticoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Optional<DiagnosticoDTO> getDiagnosticosById(DiagnosticoRequest request) {
+        // Implementación para obtener todos los diagnósticos
+        String sql = "SELECT * FROM medic.\"diagnostico\" WHERE id = ?";
+        try {
+            DiagnosticoDTO diagnostico = jdbcTemplate.queryForObject(sql, new Object[]{
+                    request.getIddiagnostico()}, dto.getRowMapper());
+            return Optional.ofNullable(diagnostico);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+
     }
 
     public List<DiagnosticoDTO> getAllDiagnosticos(DiagnosticoRequest request) {

@@ -54,28 +54,4 @@ public class PermisoHistorialServiceImpl implements PermisoHistorialService{
         }
     }
 
-    @Override
-    public Consultorio getConsultoriosUsuario(PermisoHistorialRequest request) {
-        return null;
-    }
-
-    @Override
-    public List<Cita> getCitasPaciente(PermisoHistorialRequest request) {
-        return List.of();
-    }
-
-    @Override
-    public List<Receta> getRecetasPaciente(PermisoHistorialRequest request) {
-        return List.of();
-    }
-
-    @Override
-    public List<Recomendacion> getRecomendacionesPaciente(PermisoHistorialRequest request) {
-        return List.of();
-    }
-
-    @Override
-    public List<Diagnostico> getDiagnosticoPaciente(PermisoHistorialRequest request) {
-        return List.of();
-    }
 }

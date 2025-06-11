@@ -85,14 +85,14 @@ public class PersonaRepository {
     }
 
     // Delete persona
-    public boolean deleteById(Long id) {
+    public Boolean deleteById(Long id) {
         try{
             String sql = "DELETE FROM medic.\"persona\" WHERE id = ?";
             int rowsAffected = jdbcTemplate.update(sql, id);
             return rowsAffected > 0;
         }catch (Exception e){
             e.printStackTrace();
-            return false;
+            return Boolean.FALSE;
         }
     }
 }
