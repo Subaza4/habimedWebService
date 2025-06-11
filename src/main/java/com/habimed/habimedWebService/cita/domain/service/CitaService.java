@@ -10,9 +10,9 @@ import com.habimed.habimedWebService.cita.dto.CitaUpdateDto;
 
 public interface CitaService {
     
-    List<CitaDTO> getCitas(CitaRequest request);
+    List<CitaResponseDto> getCitas(CitaRequest request);
 
-    CitaDTO getCitaById(Integer id);
+    CitaResponseDto getCitaById(Integer id);
 
     Integer setCita(CitaRequest cita);
 

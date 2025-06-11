@@ -1,6 +1,7 @@
 package com.habimed.habimedWebService.cita.domain.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.habimed.habimedWebService.cita.domain.model.Cita;
 import com.habimed.habimedWebService.cita.dto.CitaResponseDto;
@@ -26,13 +27,15 @@ public class CitaServiceImpl implements CitaService{
     private final ModelMapper modelMapper;
 
     @Override
-    public List<CitaDTO> getCitas(CitaRequest request) {
-        return citaRepository.getCitas(request);
+    public List<CitaResponseDto> getCitas(CitaRequest request) {
+        List<CitaDTO> cita =  citaRepository.getCitas(request);
+        return cita.stream().map(e -> modelMapper.map(e, CitaResponseDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public CitaDTO getCitaById(Integer id) {
-        return citaRepository.getCita(id);
+    public CitaResponseDto getCitaById(Integer id) {
+        CitaDTO cita = citaRepository.getCita(id);
+        return modelMapper.map(cita, CitaResponseDto.class);
     }
 
     @Override

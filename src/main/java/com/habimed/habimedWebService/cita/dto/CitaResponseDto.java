@@ -9,7 +9,16 @@ public class CitaResponseDto {
 
     private Integer idcita; // idcita INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 
-    //@Size(max = 50, message = "El motivo de la cita debe ser descrito en menos de 50 caracteres")
+    private Integer idservicio;
+
+    private Integer idconsultorio;
+
+    private Integer idmedico;
+
+    //@Size(min = 8, max = 8, message = "El DNI de la persona debe tener exactamente 8 dígitos.")
+    private String dniPersona;
+
+    //@Size(max = 255, message = "El motivo de la cita debe ser descrito en menos de 255 caracteres")
     private String motivo; // dni_persona VARCHAR(8) NOT NULL (Clave foránea)
 
     //@FutureOrPresent(message = "La fecha y hora de inicio de la cita debe ser en el presente o futuro.")

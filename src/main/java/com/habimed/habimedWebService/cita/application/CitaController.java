@@ -31,23 +31,31 @@ public class CitaController extends PeticionREST {
     * Segun el tipo de usuario se puede mostrar sus determanadas citas
     * Eso ya con seguridad*/
     @GetMapping("/me")
-    public ResponseEntity<List<CitaDTO>> getCitasPaciente(@RequestBody CitaRequest request) {       // No se para qué el req body
-        List<CitaDTO> citas = citaService.getCitas(request);
+    public ResponseEntity<List<CitaResponseDto>> getCitasPaciente(@RequestBody CitaRequest request) {       // No se para qué el req body
+        List<CitaResponseDto> citas = citaService.getCitas(request);
         return ResponseEntity.ok(citas);
     }
 
     /* Citas en las que aparece determinado usuario por id */
     @GetMapping("/me/{id}")
-    public ResponseEntity<CitaDTO> getCitaById(@PathVariable Integer id) {
-        CitaDTO cita = citaService.getCitaById(id);
-        return ResponseEntity.ok(cita);
+    public ResponseEntity<CitaResponseDto> getCitaById(@PathVariable Integer id) {
+        try {
+            CitaResponseDto cita = citaService.getCitaById(id);
+            return ResponseEntity.ok(cita);
+        }catch (Exception e){
+            throw new ResourceNotFoundException("No se encontró una cita con el id " + id);
+        }
     }
 
     /* Crear una cita*/
     @PostMapping
-    public ResponseEntity<Integer> setCita(@RequestBody CitaRequest citaRequest) {
-        Integer idCita = citaService.setCita(citaRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(idCita);
+    public ResponseEntity<Integer> addCita(@RequestBody CitaRequest citaRequest) {
+        try {
+            Integer idCita = citaService.setCita(citaRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(idCita);
+        }catch (Exception e){
+            throw new ResourceNotFoundException(e.getMessage());
+        }
     }
 
     /* Actualizar una cita */

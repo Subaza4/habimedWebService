@@ -27,6 +27,9 @@ public class Cita {
     @Size(min = 8, max = 8, message = "El DNI de la persona debe tener exactamente 8 dígitos.")
     private String dniPersona; // dni_persona VARCHAR(8) NOT NULL (Clave foránea)
 
+    @Size(min = 1, max = 255, message = "El motivo no debe exceder 255 caracteres")
+    private String motivo;
+
     @FutureOrPresent(message = "La fecha y hora de inicio de la cita debe ser en el presente o futuro.")
     private LocalDateTime fechaHoraInicio; // fecha_hora_inicio TIMESTAMP NOT NULL
 
