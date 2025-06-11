@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.consultorio.domain.service;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.usuario.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import com.habimed.habimedWebService.consultorio.repository.ConsultorioRepositor
 public class ConsultorioServiceImpl implements ConsultorioService {
 
     private ConsultorioRepository consultorioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private ConsultorioServiceImpl(ConsultorioRepository consultorioRepository) {
@@ -21,14 +23,23 @@ public class ConsultorioServiceImpl implements ConsultorioService {
 
     @Override
     public List<ConsultorioDTO> getAllConsultorios(ConsultorioRequest request) {
-        // Implementación para obtener todos los consultorios
-        return consultorioRepository.getAllConsultorios(request);
+        //Boolean usuarioLogueado = this.usuarioRepository.validateToken(request.getToken());
+        //if(usuarioLogueado){
+            //validar el tipo de usuario
+            // Implementación para obtener todos los consultorios
+            return consultorioRepository.getAllConsultorios(request);
+        //}
+        //return null;
     }
 
     @Override
-    public ConsultorioDTO getConsultorioById(Integer id) {
-        // Implementación para obtener un consultorio por ID
-        return consultorioRepository.getConsultorio(id);
+    public ConsultorioDTO getConsultorioById(ConsultorioRequest request) {
+        //Boolean usuarioLogueado = this.usuarioRepository.validateToken(request.getToken());
+        //if(usuarioLogueado){
+            // Implementación para obtener un consultorio por ID
+            return consultorioRepository.getConsultorio(request.getIdconsultorio());
+        //}
+        //return null;
     }
 
     @Override
@@ -38,11 +49,11 @@ public class ConsultorioServiceImpl implements ConsultorioService {
     }
 
     @Override
-    public boolean deleteConsultorio(Integer id) {
-        if( id == null ){
+    public boolean deleteConsultorio(ConsultorioRequest request) {
+        if( request.getIdconsultorio() == null ){
             return false;
         }else{
-            return consultorioRepository.deleteConsultorio(id);
+            return consultorioRepository.deleteConsultorio(request.getIdconsultorio());
         }
     }
     

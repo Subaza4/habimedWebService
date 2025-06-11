@@ -83,6 +83,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return respuesta;
     }
 
+    ////////////////////////////////////////////////////////////////////
     @Override
     public Boolean validateToken(String token){
         Boolean respuesta = false;

@@ -51,7 +51,7 @@ public class ConsultorioController extends PeticionREST {
     public ResponseEntity<ResponseREST> getConsultorio(@RequestBody(required = false) ConsultorioRequest request) {
         ResponseREST response = new ResponseREST();
         try{
-            ConsultorioDTO consultorio = consultorioService.getConsultorioById(request.getIdconsultorio());
+            ConsultorioDTO consultorio = consultorioService.getConsultorioById(request);
             if (consultorio == null) {
                 response.setStatus(STATUS_KO);
                 response.setSalidaMsg("No se encontró el consultorio.");
@@ -100,7 +100,7 @@ public class ConsultorioController extends PeticionREST {
     public ResponseEntity<ResponseREST> deleteConsultorio(@RequestBody ConsultorioRequest request) {
         ResponseREST response = new ResponseREST();
         try{
-            Boolean isDeleted = consultorioService.deleteConsultorio(request.getIdconsultorio());
+            Boolean isDeleted = consultorioService.deleteConsultorio(request);
             if(isDeleted) {
                 response.setStatus(STATUS_OK);
                 response.setSalidaMsg("Consultorio eliminado correctamente.");

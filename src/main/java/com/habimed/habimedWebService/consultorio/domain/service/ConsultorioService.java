@@ -8,10 +8,10 @@ public interface ConsultorioService {
     
     List<ConsultorioDTO> getAllConsultorios(ConsultorioRequest request);
 
-    ConsultorioDTO getConsultorioById(Integer id);
+    ConsultorioDTO getConsultorioById(ConsultorioRequest request);
     
     Integer setConsultorio(ConsultorioRequest request);
 
-    boolean deleteConsultorio(Integer id);
+    boolean deleteConsultorio(ConsultorioRequest request);
     
 }
