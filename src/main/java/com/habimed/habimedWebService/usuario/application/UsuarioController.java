@@ -166,4 +166,29 @@ public class UsuarioController extends PeticionREST{
         return ResponseEntity.ok(response);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////
+    /// Método para registrar un usuario nuevo
+    @PostMapping("/registreUsuario")
+    public ResponseEntity<ResponseREST> registreUsuario(@RequestBody UsuarioRequest request) {
+        ResponseREST response = new ResponseREST();
+        try{
+            Integer respuesta = this.usuarioService.setUsuario(request);
+            if (respuesta == 1) {
+                response.setStatus(STATUS_OK);
+                response.setSalidaMsg("Usuario registrado exitosamente");
+            } else if (respuesta == 2) {
+                response.setStatus(STATUS_OK);
+                response.setSalidaMsg("Ya existe una cuenta con ese usuario");
+            } else {
+                response.setStatus(STATUS_KO);
+                response.setSalidaMsg("Error al crear o actualizar el usuario");
+            }
+        }catch (Exception e) {
+            response.setStatus(STATUS_KO);
+            response.setSalidaMsg("Error al registrar el usuario");
+            response.setSalida(e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.ok(response);
+    }
 }

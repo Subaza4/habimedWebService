@@ -8,5 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Receta {
-    
+    private Integer idreceta;
+    private Integer idcita;
+    private String descripcion;
+    private String fecha_receta;
 }

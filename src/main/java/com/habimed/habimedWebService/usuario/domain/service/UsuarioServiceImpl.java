@@ -2,7 +2,9 @@ package com.habimed.habimedWebService.usuario.domain.service;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.usuario.domain.model.Usuario;
 import com.habimed.habimedWebService.usuario.dto.LoginRequest;
+import com.habimed.habimedWebService.usuario.dto.NewUsuarioRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,5 +95,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public UsuarioDTO getUsuarioByToken(String token){
         return this.usuarioRepository.getUsuarioByToken(token);
+    }
+
+    @Override
+    public UsuarioDTO registrarUsuarioIndp(NewUsuarioRequest request){
+        UsuarioDTO respuesta = new UsuarioDTO();
+        if(request.getPersona() != null || request.getUsuario() != null){
+
+        }
+        return respuesta;
     }
 }
