@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.consultorioTieneServicio.dto;
 
 import java.time.LocalDateTime;
 
+import com.habimed.habimedWebService.consultorioTieneServicio.domain.model.ConsultorioTieneServicio;
 import org.springframework.jdbc.core.RowMapper;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class ConsultorioTieneServicioDTO {
     private String estado;
     private String descripcion;
 
-    public RowMapper<ConsultorioTieneServicioDTO> consultorioTieneServicioRowMapper(){
+    public RowMapper<ConsultorioTieneServicioDTO> consultorioTieneServicioDTORowMapper(){
         return (rs, rowNum) -> {
             ConsultorioTieneServicioDTO dto = new ConsultorioTieneServicioDTO();
             dto.setIdCita(rs.getInt("idcita"));
@@ -32,6 +33,16 @@ public class ConsultorioTieneServicioDTO {
             dto.setFechaHoraFin(rs.getObject("fechahorafin", LocalDateTime.class));
             dto.setEstado(rs.getString("estado"));
             dto.setDescripcion(rs.getString("descripcion"));
+            return dto;
+        };
+    }
+
+    public RowMapper<ConsultorioTieneServicio> consultorioTieneServicioRowMapper(){
+        return (rs, rowNum) -> {
+            ConsultorioTieneServicio dto = new ConsultorioTieneServicio();
+            dto.setIdconsultorio(rs.getInt("idconsultorio"));
+            dto.setIdservicio(rs.getInt("idservicio"));
+
             return dto;
         };
     }

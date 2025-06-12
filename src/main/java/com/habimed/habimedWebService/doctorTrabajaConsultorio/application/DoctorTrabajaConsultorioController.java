@@ -75,7 +75,7 @@ public class DoctorTrabajaConsultorioController extends PeticionREST{
     {
         ResponseREST response = new ResponseREST();
         try{
-            boolean isDeleted = doctorTrabajaConsultorioService.deleteDoctorTrabajaConsultorio(request);
+            Boolean isDeleted = doctorTrabajaConsultorioService.deleteDoctorTrabajaConsultorio(request);
             if(isDeleted) {
                 response.setStatus(STATUS_OK);
                 response.setSalidaMsg("Doctor eliminado del consultorio correctamente");

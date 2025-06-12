@@ -33,7 +33,7 @@ public class RecetaServiceImpl implements RecetaService {
     }
 
     @Override
-    public boolean deleteReceta(RecetaRequest request) {
+    public Boolean deleteReceta(RecetaRequest request) {
         return false;
     }
 }

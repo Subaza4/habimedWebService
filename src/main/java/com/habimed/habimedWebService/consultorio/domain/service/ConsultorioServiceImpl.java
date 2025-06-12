@@ -38,7 +38,7 @@ public class ConsultorioServiceImpl implements ConsultorioService {
     }
 
     @Override
-    public boolean deleteConsultorio(Integer id) {
+    public Boolean deleteConsultorio(Integer id) {
         if( id == null ){
             return false;
         }else{

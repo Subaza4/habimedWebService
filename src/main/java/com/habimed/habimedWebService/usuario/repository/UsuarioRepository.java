@@ -81,12 +81,12 @@ public class UsuarioRepository {
         );
     }
 
-    public boolean deleteUsuario(Integer id){
+    public Boolean deleteUsuario(Integer id){
         String sql = "DELETE FROM medic.\"usuario\" WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
-    public boolean logoutUser(String token) {
+    public Boolean logoutUser(String token) {
         String sql = "{call medic.logout_usuario(?)}";
         
         try {

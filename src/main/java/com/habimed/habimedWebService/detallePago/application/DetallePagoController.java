@@ -92,7 +92,7 @@ public class DetallePagoController extends PeticionREST {
     public ResponseEntity<ResponseREST> deleteDetallePago(@RequestBody DetallePagoRequest request) {
         ResponseREST response = new ResponseREST();
         try{
-            boolean isDeleted = detallePagoService.deleteDetallePago(request);
+            Boolean isDeleted = detallePagoService.deleteDetallePago(request);
             if (isDeleted) {
                 response.setSalidaMsg("Detalle de pago eliminado correctamente.");
                 response.setStatus(STATUS_OK);

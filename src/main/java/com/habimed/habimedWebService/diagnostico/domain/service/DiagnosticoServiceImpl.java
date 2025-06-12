@@ -31,7 +31,7 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
         return diagnosticoRepository.setDiagnostico(request);
     }
 
-    public boolean deleteDiagnostico(Integer iddiagnostico) {
+    public Boolean deleteDiagnostico(Integer iddiagnostico) {
         return diagnosticoRepository.deleteDiagnostico(iddiagnostico);
     }
 }

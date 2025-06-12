@@ -29,7 +29,7 @@ public class EspecialidadServiceImpl implements EspecialidadService {
     }
 
     @Override
-    public boolean deleteEspecialidad(Integer idEspecialidad) {
+    public Boolean deleteEspecialidad(Integer idEspecialidad) {
         return especialidadRepository.deleteEspecialidad(idEspecialidad);
     }
 }

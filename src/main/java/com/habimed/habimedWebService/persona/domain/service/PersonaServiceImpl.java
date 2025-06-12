@@ -36,7 +36,7 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
-    public boolean deletePersona(Long id) {
+    public Boolean deletePersona(Long id) {
         return personaRepository.deleteById(id);
     }
 }

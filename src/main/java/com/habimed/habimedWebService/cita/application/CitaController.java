@@ -78,7 +78,7 @@ public class CitaController extends PeticionREST {
     public ResponseEntity<ResponseREST> deleteCita(@RequestBody CitaRequest request) {
         ResponseREST responseREST = new ResponseREST();
         try {
-            boolean deleted = citaService.deleteCita(request);
+            Boolean deleted = citaService.deleteCita(request);
             if (deleted) {
                 responseREST.setStatus(STATUS_OK);
                 responseREST.setSalidaMsg("Cita eliminada exitosamente.");

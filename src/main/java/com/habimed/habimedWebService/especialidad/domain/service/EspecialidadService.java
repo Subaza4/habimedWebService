@@ -13,5 +13,5 @@ public interface EspecialidadService {
 
     Integer setEspecialidad(EspecialidadRequest especialidad);
     
-    boolean deleteEspecialidad(Integer idEspecialidad);
+    Boolean deleteEspecialidad(Integer idEspecialidad);
 }

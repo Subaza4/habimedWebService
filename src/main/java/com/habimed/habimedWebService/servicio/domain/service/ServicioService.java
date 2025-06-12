@@ -11,5 +11,5 @@ public interface ServicioService {
 
     Integer setServicio(ServicioRequest request);
 
-    boolean deleteServicio(Integer idservicio);
+    Boolean deleteServicio(Integer idservicio);
 }

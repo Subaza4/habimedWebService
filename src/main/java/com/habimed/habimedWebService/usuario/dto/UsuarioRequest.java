@@ -15,12 +15,12 @@ public class UsuarioRequest extends RequestREST {
     private Integer idTipoUsuario;
     private String usuario;
     private String contrasenia;
-    private boolean estado;
+    private Boolean estado;
 
     public String buildConditions() {
         Map<String, String> conditions = getValuesOfConditions();
         StringBuilder conditionsString = new StringBuilder();
-        boolean isFirst = true;
+        Boolean isFirst = true;
         
         for (String key : conditions.keySet()) {
             if (isFirst) {

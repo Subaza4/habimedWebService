@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class DetallePago {
     private Long idDetallePago;
-    private Cita cita;
+    private Integer idcita;
     private BigDecimal monto;
     private String metodoPago;
     private String estadoPago;

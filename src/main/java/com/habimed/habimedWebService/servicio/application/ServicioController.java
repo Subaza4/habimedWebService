@@ -76,7 +76,7 @@ public class ServicioController extends PeticionREST{
     public ResponseEntity<ResponseREST> deleteServicio(@RequestBody ServicioRequest request) {
         ResponseREST response = new ResponseREST();
         try{
-            boolean resultado = servicioService.deleteServicio(request.getIdservicio());
+            Boolean resultado = servicioService.deleteServicio(request.getIdservicio());
             if(resultado) {
                 response.setStatus(STATUS_OK);
                 response.setSalidaMsg("Servicio eliminado exitosamente.");

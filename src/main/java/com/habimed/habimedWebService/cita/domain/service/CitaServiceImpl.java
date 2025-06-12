@@ -42,11 +42,12 @@ public class CitaServiceImpl implements CitaService{
     }
 
     @Override
-    public boolean deleteCita(CitaRequest cita) {
+    public Boolean deleteCita(CitaRequest cita) {
         if(cita.getIdcita() != null && cita.getIdcita() > 0){
             UsuarioDTO usuario = this.usuarioService.getUsuarioByToken(cita.getToken());
             if(usuario != null && usuario.getIdusuario() > 0){
-                return citaRepository.deleteCita(cita.getIdcita(), usuario.getIdusuario());
+                //return citaRepository.deleteCita(cita.getIdcita(), usuario.getIdusuario());
+                return citaRepository.deleteCita(cita.getIdcita());
             }
         }
         return false;

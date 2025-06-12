@@ -13,6 +13,6 @@ public interface HorarioDoctorService {
 
     Integer setHorario(HorarioDoctorRequest request);
 
-    boolean deleteHorario(Integer idhorariodoctor);
+    Boolean deleteHorario(Integer idhorariodoctor);
 
 }

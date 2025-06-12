@@ -74,7 +74,7 @@ public class EspecialidadRepository {
         return (Integer) result.get("p_resultado");
     }
 
-    public boolean deleteEspecialidad(Integer idEspecialidad) {
+    public Boolean deleteEspecialidad(Integer idEspecialidad) {
         String sql = "DELETE FROM medic.\"especialidad\" WHERE \"idespecialidad\" = ?";
         int rowsAffected = jdbcTemplate.update(sql, idEspecialidad);
         return rowsAffected > 0;

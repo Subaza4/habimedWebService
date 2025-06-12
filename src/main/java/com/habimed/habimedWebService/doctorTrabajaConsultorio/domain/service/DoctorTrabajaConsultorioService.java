@@ -13,6 +13,6 @@ public interface DoctorTrabajaConsultorioService {
 
     Integer setDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
 
-    boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+    Boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
     
 }

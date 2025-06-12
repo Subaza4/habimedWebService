@@ -15,7 +15,7 @@ public interface UsuarioService {
      */
     UsuarioDTO loginUser(LoginRequest usuario);
 
-    boolean logoutUser(String token);
+    Boolean logoutUser(String token);
 
     Boolean validateToken (String token);
 
@@ -38,7 +38,7 @@ public interface UsuarioService {
     /**
      * Eliminar un usuario por su dni
     */
-    boolean deleteUsuario(String dni);
+    Boolean deleteUsuario(String dni);
 
     UsuarioDTO getUsuarioByToken(String token);
 

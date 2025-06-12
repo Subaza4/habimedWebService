@@ -110,7 +110,7 @@ public class UsuarioController extends PeticionREST{
     @PostMapping("/deleteUsuario")
     public ResponseEntity<ResponseREST> deleteUsuario(@RequestBody String dni) {
         ResponseREST response = new ResponseREST();
-        boolean respuesta = this.usuarioService.deleteUsuario(dni);
+        Boolean respuesta = this.usuarioService.deleteUsuario(dni);
         if (respuesta) {
             response.setStatus(STATUS_OK);
             response.setSalidaMsg("Usuario eliminado exitosamente");

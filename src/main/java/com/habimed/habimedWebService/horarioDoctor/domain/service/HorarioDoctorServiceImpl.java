@@ -35,7 +35,7 @@ public class HorarioDoctorServiceImpl implements HorarioDoctorService {
     }
     
     @Override
-    public boolean deleteHorario(Integer idhorariodoctor) {
+    public Boolean deleteHorario(Integer idhorariodoctor) {
         return this.horarioDoctorRepository.deleteHorario(idhorariodoctor);
     }
 }

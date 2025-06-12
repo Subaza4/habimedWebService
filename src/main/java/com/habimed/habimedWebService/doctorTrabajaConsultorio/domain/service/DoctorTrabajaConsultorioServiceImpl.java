@@ -29,7 +29,7 @@ public class DoctorTrabajaConsultorioServiceImpl implements DoctorTrabajaConsult
     }
 
     @Override
-    public boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request) {
+    public Boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request) {
         return doctorTrabajaConsultorioRepository.deleteDoctorTrabajaConsultorio(request);
     }
     

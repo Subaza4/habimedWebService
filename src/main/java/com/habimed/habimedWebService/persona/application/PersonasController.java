@@ -142,7 +142,7 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
                 return ResponseEntity.ok(response);
             }
         
-            boolean eliminado = personaService.deletePersona(request.getDni());
+            Boolean eliminado = personaService.deletePersona(request.getDni());
             if(eliminado) {
                 response.setStatus(STATUS_OK);
                 response.setSalidaMsg("Persona eliminada exitosamente.");

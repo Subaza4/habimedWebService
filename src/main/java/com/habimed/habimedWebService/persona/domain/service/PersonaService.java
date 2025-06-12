@@ -34,5 +34,5 @@ public interface PersonaService {
      * @param dni The product ID to delete
      * @return true if deleted successfully, false otherwise
      */
-    boolean deletePersona(Long dni);
+    Boolean deletePersona(Long dni);
 }

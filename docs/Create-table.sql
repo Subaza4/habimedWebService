@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS "medic"."usuario" (
 );
 
 -- -----------------------------------------------------
--- Table "medic"."consultorio"
+-- Table "medic"."login"
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS "medic"."login"(
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

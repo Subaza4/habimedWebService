@@ -13,5 +13,5 @@ public interface DiagnosticoService {
 
     Integer setDiagnostico(DiagnosticoRequest request);
     
-    boolean deleteDiagnostico(Integer iddiagnostico);
+    Boolean deleteDiagnostico(Integer iddiagnostico);
 }

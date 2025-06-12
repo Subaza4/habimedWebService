@@ -3,6 +3,7 @@ package com.habimed.habimedWebService.detallePago.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.habimed.habimedWebService.detallePago.domain.model.DetallePago;
 import org.springframework.jdbc.core.RowMapper;
 
 import lombok.AllArgsConstructor;
@@ -43,6 +44,29 @@ public class DetallePagoDTO {
             detallePago.setApellidoPaciente(rs.getString("apellido_paciente"));
             detallePago.setNombreDoctor(rs.getString("nombre_doctor"));
             detallePago.setApellidoDoctor(rs.getString("apellido_doctor"));
+            return detallePago;
+        };
+    }
+
+    /**
+     * RowMapper para mapear los registros de la tabla detalle_pago a objetos DetallePago
+     * @return RowMapper configurado para DetallePago
+     */
+    public RowMapper<DetallePago> detallePagoRowMapper() {
+        return (rs, rowNum) -> {
+            DetallePago detallePago = new DetallePago();
+            // Mapear los campos directos de la tabla detalle_pago
+            detallePago.setIdDetallePago(rs.getLong("iddetallepago"));
+            detallePago.setMonto(rs.getBigDecimal("monto"));
+            detallePago.setMetodoPago(rs.getString("metodo_pago"));
+            detallePago.setEstadoPago(rs.getString("estado_pago"));
+            // Mapear fecha_pago si existe
+            java.sql.Timestamp fechaPagoTimestamp = rs.getTimestamp("fecha_pago");
+            if (fechaPagoTimestamp != null) {
+                detallePago.setFechaPago(fechaPagoTimestamp.toLocalDateTime());
+            }
+            detallePago.setIdcita(rs.getInt("idcita"));
+
             return detallePago;
         };
     }

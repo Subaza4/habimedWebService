@@ -112,7 +112,7 @@ public class ConsultorioTieneServicioController extends PeticionREST{
     public ResponseEntity<ResponseREST> deleteConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
         ResponseREST response = new ResponseREST();
         try{
-            boolean result = consultorioTieneServicioService.deleteConsultorioTieneServicio(request);
+            Boolean result = consultorioTieneServicioService.deleteConsultorioTieneServicio(request);
             if (result) {
                 response.setSalidaMsg("Consultorio y servicio eliminados correctamente.");
                 response.setStatus(STATUS_OK);

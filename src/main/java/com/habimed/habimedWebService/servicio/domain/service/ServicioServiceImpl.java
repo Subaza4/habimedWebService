@@ -38,7 +38,7 @@ public class ServicioServiceImpl implements ServicioService{
     }
 
     @Override
-    public boolean deleteServicio(Integer idservicio) {
+    public Boolean deleteServicio(Integer idservicio) {
         return servicioRepository.deleteServicio(idservicio);
     }
 }

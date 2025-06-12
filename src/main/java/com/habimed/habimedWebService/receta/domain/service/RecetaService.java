@@ -13,6 +13,6 @@ public interface RecetaService {
 
     Integer setReceta(RecetaRequest request);
 
-    boolean deleteReceta(RecetaRequest request);
+    Boolean deleteReceta(RecetaRequest request);
 
 }

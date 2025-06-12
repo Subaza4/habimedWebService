@@ -13,6 +13,6 @@ public interface CitaService {
 
     Integer setCita(CitaRequest cita);
 
-    boolean deleteCita(CitaRequest request);
+    Boolean deleteCita(CitaRequest request);
     
 }

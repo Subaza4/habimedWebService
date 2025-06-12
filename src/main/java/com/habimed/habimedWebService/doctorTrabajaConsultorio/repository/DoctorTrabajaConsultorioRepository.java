@@ -100,7 +100,7 @@ public class DoctorTrabajaConsultorioRepository {
         }
     }
 
-    public boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request) {
+    public Boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request) {
         StringBuilder sql = new StringBuilder();
         sql.append("DELETE FROM medic.\"doctor_trabaja_consultorio\" T ");
         sql.append(request.getConditions("T"));

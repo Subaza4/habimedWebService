@@ -65,7 +65,7 @@ public class ServicioRepository {
         }
     }
 
-    public boolean deleteServicio(Integer idservicio) {
+    public Boolean deleteServicio(Integer idservicio) {
         String sql = "DELETE FROM medic.\"servicio\" WHERE idservicio = ?";
         int rowsAffected = jdbcTemplate.update(sql, idservicio);
         return rowsAffected > 0;

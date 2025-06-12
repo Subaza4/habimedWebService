@@ -3,6 +3,7 @@ package com.habimed.habimedWebService.diagnostico.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
 import org.springframework.jdbc.core.RowMapper;
 
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class DiagnosticoDTO {
     private String nombredoctor;
     private String apellidodoctor;
 
-    public RowMapper<DiagnosticoDTO> getRowMapper() {
+    public RowMapper<DiagnosticoDTO> getRowMapperDTO() {
         return (rs, rowNum) -> {
             DiagnosticoDTO diagnostico = new DiagnosticoDTO();
             diagnostico.setIddiagnostico(rs.getLong("iddiagnostico"));
@@ -41,6 +42,18 @@ public class DiagnosticoDTO {
             diagnostico.setApellidopaciente(rs.getString("apellidopaciente"));
             diagnostico.setNombredoctor(rs.getString("nombredoctor"));
             diagnostico.setApellidodoctor(rs.getString("apellidodoctor"));
+            return diagnostico;
+        };
+    }
+
+    public RowMapper<Diagnostico> getRowMapper() {
+        return (rs, rowNum) -> {
+            Diagnostico diagnostico = new Diagnostico();
+            diagnostico.setIddiagnostico(rs.getInt("iddiagnostico"));
+            diagnostico.setIdcita(rs.getInt("idcita"));
+            diagnostico.setDescripcion(rs.getString("descripcion"));
+            diagnostico.setFecha_diagnostico(rs.getObject("fecha_diagnostico", LocalDate.class));
+
             return diagnostico;
         };
     }

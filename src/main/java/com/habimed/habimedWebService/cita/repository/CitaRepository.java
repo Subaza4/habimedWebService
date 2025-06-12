@@ -1,6 +1,9 @@
 package com.habimed.habimedWebService.cita.repository;
 
+import com.habimed.habimedWebService.cita.domain.model.Cita;
+import com.habimed.habimedWebService.cita.domain.model.EstadoCita;
 import com.habimed.habimedWebService.cita.dto.CitaDTO;
+import com.habimed.habimedWebService.cita.dto.CitaRepositoryDTO;
 import com.habimed.habimedWebService.cita.dto.CitaRequest;
 import java.util.List;
 
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.ConnectionCallback;
 
 import java.sql.CallableStatement;
-import java.sql.Timestamp;
 import java.sql.Types;
 
 @Repository
@@ -23,6 +25,125 @@ public class CitaRepository {
     @Autowired
     public CitaRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Cita> findAllCita(){
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM medic.\"cita\" ");
+        //concatenar condiciones
+        //sql.append(request.getConditions());
+        sql.append("ORDER BY idcita DESC");
+        List<Cita> citas = jdbcTemplate.query(sql.toString(), dto.getCitaRowMapper());
+        return citas;
+    }
+
+    public Cita getCitaById(Integer idCita) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM medic.\"cita\" ");
+        sql.append("WHERE idcita = ? ");
+
+        return jdbcTemplate.queryForObject(sql.toString(), dto.getCitaRowMapper(), idCita);
+    }
+
+    public List<Cita> findAllCitaByConditions(CitaRepositoryDTO request) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM medic.\"cita\" ");
+        //concatenar condiciones
+        sql.append(request.getConditions());
+        sql.append("ORDER BY idcita DESC");
+        sql.append(" LIMIT ? OFFSET ?");
+        Integer tamanioPagina = request.getTamanioPagina();
+        Integer pagina = (request.getPagina() -1 ) * tamanioPagina;
+        List<Cita> citas = jdbcTemplate.query(sql.toString(), dto.getCitaRowMapper(), pagina, tamanioPagina);
+        return citas;
+    }
+
+    /**
+     * Inserta una nueva cita en la base de datos
+     * @param request Objeto CitaRequest con los datos de la cita a insertar
+     * @return La cita creada con su ID generado
+     */
+    public Cita insertCita(CitaRequest request) {
+        // Validar que los campos requeridos no sean nulos
+        if (request.getIdpaciente() == null || request.getIddoctorconsultorio() == null ||
+                request.getFechainicio() == null) {
+            throw new IllegalArgumentException("Los campos idpaciente, iddoctorconsultorio, motivo y fechainicio son obligatorios");
+        }
+        
+        String sql = "INSERT INTO medic.\"cita\" (idpaciente, iddoctor, motivo, fecha_hora_inicio, " +
+                     "fecha_hora_fin, estado, descripcion) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idcita, idpaciente, iddoctor, motivo, " +
+                     "fecha_hora_inicio, fecha_hora_fin, estado, descripcion";
+        
+        // Utilizamos queryForObject para obtener la cita recién creada
+        return jdbcTemplate.queryForObject(sql, dto.getCitaRowMapper(),
+                request.getIdusuario(),
+                request.getIddoctorconsultorio(),
+                request.getMotivo(),
+                request.getFechainicio(),
+                request.getFechafin(),
+                request.getEstado() != null ? request.getEstado() : EstadoCita.PRE_RESERVA, // Valor por defecto si es nulo
+                request.getDescripcion()
+        );
+    }
+
+    /**
+     * Actualiza una cita existente en la base de datos
+     * @param request Objeto CitaRequest con los datos actualizados de la cita
+     * @return La cita actualizada
+     */
+    public Cita updateCita(CitaRequest request) {
+        if(request.getIdcita() == null || request.getIddoctorconsultorio() == null ||
+            request.getIdusuario() == null || request.getFechainicio() == null){
+        throw new IllegalArgumentException("Los campos identificadores de la cita, doctor, paciente y fecha de inicio son obligatorios");
+        }
+
+        String sql;
+        Object[] params;
+
+        if(request.getEstado() != null){
+            sql = "UPDATE medic.\"cita\" SET idpaciente = ?, iddoctor = ?, motivo = ?, fecha_hora_inicio = ?, " +
+                    "fecha_hora_fin = ?, estado = ?, descripcion = ? WHERE idcita = ? RETURNING idcita, idpaciente, " +
+                    "iddoctor, motivo, fecha_hora_inicio, fecha_hora_fin, estado, descripcion";
+
+            params = new Object[]{
+                request.getIdusuario(),
+                request.getIddoctorconsultorio(),
+                request.getMotivo(),
+                request.getFechainicio(),
+                request.getFechafin(),
+                request.getEstado(),
+                request.getDescripcion(),
+                request.getIdcita()
+            };
+        } else {
+            sql = "UPDATE medic.\"cita\" SET idpaciente = ?, iddoctor = ?, motivo = ?, fecha_hora_inicio = ?, " +
+                    "fecha_hora_fin = ?, descripcion = ? WHERE idcita = ? RETURNING idcita, idpaciente, iddoctor, " +
+                    "motivo, fecha_hora_inicio, fecha_hora_fin, estado, descripcion";
+
+            params = new Object[]{
+                request.getIdusuario(),
+                request.getIddoctorconsultorio(),
+                request.getMotivo(),
+                request.getFechainicio(),
+                request.getFechafin(),
+                request.getDescripcion(),
+                request.getIdcita()
+            };
+        }
+
+        // Ejecutar la actualización y obtener la cita actualizada
+        try {
+            return jdbcTemplate.queryForObject(sql, dto.getCitaRowMapper(), params);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar la cita: " + e.getMessage(), e);
+        }
+    }
+
+    //delete
+    public void deleteCitaById(Integer id) {
+        String sql = "DELETE FROM medic.\"cita\" WHERE idcita = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     public List<CitaDTO> getCitas(CitaRequest request) {
@@ -46,11 +167,12 @@ public class CitaRepository {
             "LEFT JOIN medic.\"consultorio\" cons ON dtc.\"idconsultorio\" = cons.\"idconsultorio\" " +
             "LEFT JOIN medic.\"persona\" d ON c.\"iddoctor\" = d.\"dni\" ";
         sql += request.getValuesOfConditions();
-        List<CitaDTO> citas = jdbcTemplate.query(sql, dto.getCitaRowMapper());
+        // paginacion
+        List<CitaDTO> citas = jdbcTemplate.query(sql, dto.getCitaDTORowMapper());
         return citas;
     }
 
-    public CitaDTO getCita(Integer id) {
+    public CitaDTO getCita(Integer idCita) {
         String sql = "SELECT " +
                 "c.\"idcita\", " +
                 "c.\"fecha_hora_inicio\" AS \"fechacita\", " +
@@ -71,7 +193,7 @@ public class CitaRepository {
             "LEFT JOIN medic.\"consultorio\" cons ON dtc.\"idconsultorio\" = cons.\"idconsultorio\" " +
             "LEFT JOIN medic.\"persona\" d ON c.\"iddoctor\" = d.\"dni\" WHERE c.idcita = ?";
 
-        CitaDTO cita = jdbcTemplate.queryForObject(sql, dto.getCitaRowMapper(), id);
+        CitaDTO cita = jdbcTemplate.queryForObject(sql, dto.getCitaDTORowMapper(), idCita);
         return cita;
     }
 
@@ -109,9 +231,9 @@ public class CitaRepository {
         }
     }
 
-    public boolean deleteCita(Integer id, Integer idDoctor) {
-        String sql = "DELETE FROM medic.\"cita\" WHERE idcita = ? AND iddoctor = ?";
-        int rowsAffected = jdbcTemplate.update(sql, id, idDoctor);
+    public Boolean deleteCita(Integer idCita) {
+        String sql = "DELETE FROM medic.\"cita\" WHERE idcita = ?";
+        int rowsAffected = jdbcTemplate.update(sql, idCita);
         return rowsAffected > 0;
     }
 }

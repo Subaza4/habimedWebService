@@ -20,7 +20,7 @@ public class UsuarioDTO {
     private String usuario;
     private String contrasenia;
     private String token;
-    private boolean estado;
+    private Boolean estado;
     private TipoUsuario tipoUsuario;
     
 
@@ -41,7 +41,7 @@ public class UsuarioDTO {
             return "";
         }
         StringBuilder sb = new StringBuilder(" WHERE ");
-        boolean first = true;
+        Boolean first = true;
         for (Map.Entry<String, String> entry : conditions.entrySet()) {
             if (!first) {
                 sb.append(" AND ");

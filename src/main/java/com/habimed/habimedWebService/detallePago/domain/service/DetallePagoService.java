@@ -11,6 +11,6 @@ public interface DetallePagoService {
     
     Integer setDetallePago(DetallePagoRequest request);
 
-    boolean deleteDetallePago(DetallePagoRequest request);
+    Boolean deleteDetallePago(DetallePagoRequest request);
 
 }

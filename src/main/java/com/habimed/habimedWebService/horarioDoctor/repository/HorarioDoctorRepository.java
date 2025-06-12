@@ -86,7 +86,7 @@ public class HorarioDoctorRepository {
         }
     }
 
-    public boolean deleteHorario(Integer idhorariodoctor) {
+    public Boolean deleteHorario(Integer idhorariodoctor) {
         String sql = "DELETE FROM medic.\"horariodoctor\" WHERE idhorariodoctor = ?";
         return jdbcTemplate.update(sql, idhorariodoctor) > 0;
     }

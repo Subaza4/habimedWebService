@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CitaRequest extends RequestREST {
     private Integer idcita;
+    private Integer idpaciente;
     private Integer idusuario;
     private Integer iddoctorconsultorio;
     private Timestamp fechainicio;
@@ -46,6 +47,9 @@ public class CitaRequest extends RequestREST {
         }
         if (estadopago != null && !estadopago.isEmpty()) {
             conditions.append(" AND dp.\"estado_pago\" = '").append(estadopago).append("'");
+        }
+        if(idpaciente != null){
+            conditions.append(" AND p.\"idpaciente\" = ").append(idpaciente);
         }
 
         return conditions.toString();

@@ -32,7 +32,7 @@ public class DetallePagoServiceImpl implements DetallePagoService {
     }
 
     @Override
-    public boolean deleteDetallePago(DetallePagoRequest request) {
+    public Boolean deleteDetallePago(DetallePagoRequest request) {
         // Implement the logic to delete a DetallePago based on the request
         return detallePagoRepository.deleteDetallePago(request);
     }

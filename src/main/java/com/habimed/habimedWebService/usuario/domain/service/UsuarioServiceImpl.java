@@ -60,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public boolean deleteUsuario(String dni) {
+    public Boolean deleteUsuario(String dni) {
         //return this.usuarioRepository.deleteUsuario(dni);
         return false;
     }
@@ -75,7 +75,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public boolean logoutUser (String token){
+    public Boolean logoutUser (String token){
         Boolean respuesta = false;
         if(token != null && !token.equals("")){
             respuesta = this.usuarioRepository.logoutUser(token);

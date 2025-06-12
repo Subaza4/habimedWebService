@@ -32,7 +32,7 @@ public class PersonaRequest extends RequestREST {
     public String buildConditions() {
         Map<String, String> conditions = getValuesOfConditions();
         StringBuilder conditionsString = new StringBuilder();
-        boolean isFirst = true;
+        Boolean isFirst = true;
         for (String key : conditions.keySet()) {
             if (isFirst) {
                 isFirst = false;
