@@ -19,10 +19,10 @@ import com.habimed.parameterREST.PeticionREST;
 
 @RestController
 @RequestMapping("/citas")
-public class CitaController extends PeticionREST {
+public class CitaController {
     
     private final CitaService citaService;
-    
+
     public CitaController(CitaService citaService) {
         this.citaService = citaService;
     }

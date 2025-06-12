@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/consultorio")
 @RequiredArgsConstructor
-public class ConsultorioController extends PeticionREST {
+public class ConsultorioController {
 
     private final ConsultorioService consultorioService;
     private final ModelMapper modelMapper;
