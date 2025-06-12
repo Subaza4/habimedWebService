@@ -3,115 +3,99 @@ package com.habimed.habimedWebService.consultorio.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
+import com.habimed.habimedWebService.exception.ResourceNotFoundException;
 import com.habimed.parameterREST.ResponseREST;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.habimed.habimedWebService.consultorio.domain.service.ConsultorioService;
 import com.habimed.habimedWebService.consultorio.dto.ConsultorioDTO;
 import com.habimed.habimedWebService.consultorio.dto.ConsultorioRequest;
 import com.habimed.parameterREST.PeticionREST;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/consultorio")
+@RequiredArgsConstructor
 public class ConsultorioController extends PeticionREST {
 
     private final ConsultorioService consultorioService;
-
-    public ConsultorioController(ConsultorioService consultorioService) {
-        this.consultorioService = consultorioService;
-    }
+    private final ModelMapper modelMapper;
 
 
-    @PostMapping("/getConsultorios")
-    public ResponseEntity<ResponseREST> getAllConsultorios(@RequestBody(required = false) ConsultorioRequest request) {
-        ResponseREST response = new ResponseREST();
+    @GetMapping
+    public ResponseEntity<List<ConsultorioDTO>> getAllConsultorios(@RequestBody(required = false) ConsultorioRequest request) {
         try{
             List<ConsultorioDTO> consultorios = consultorioService.getAllConsultorios(request);
-            if (consultorios.isEmpty()) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se encontraron consultorios.");
-            } else {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Consultorios encontrados exitosamente.");
-                response.setSalida(consultorios);
-            }
+            return ResponseEntity.ok(consultorios);
+
         } catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al obtener los consultorios.");
-            response.setSalida(e.getMessage());
+            // Otras excepciones pueden manejarse de otra forma.
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener consultorios", e);
         }
-        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/getConsultorio")
-    public ResponseEntity<ResponseREST> getConsultorio(@RequestBody(required = false) ConsultorioRequest request) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ConsultorioDTO> getConsultorio(@PathVariable Integer id) {
         ResponseREST response = new ResponseREST();
         try{
-            ConsultorioDTO consultorio = consultorioService.getConsultorioById(request.getIdconsultorio());
-            if (consultorio == null) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se encontró el consultorio.");
-                response.setSalida(new ArrayList<>());
-            } else {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Consultorio encontrado.");
-                response.setSalida(consultorio);
-            }
+            ConsultorioDTO consultorio = consultorioService.getConsultorioById(id);
+            return ResponseEntity.ok(consultorio);
         } catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al obtener el consultorio.");
-            response.setSalida(e.getMessage());
+            // Otras excepciones pueden manejarse de otra forma.
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener consultorios", e);
         }
-        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/setConsultorio")
-    public ResponseEntity<ResponseREST> setConsultorio(@RequestBody(required = false) ConsultorioRequest request) {
-        ResponseREST response = new ResponseREST();
+    @PostMapping
+    public ResponseEntity<Integer> createOrUpdateConsultorio(@RequestBody(required = false) ConsultorioRequest request) {
         try{
             Integer consultorio = consultorioService.setConsultorio(request);
             if (consultorio == 0) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se pudo crear el consultorio.");
+                //response.setSalidaMsg("No se pudo crear el consultorio.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(consultorio);
             } else if(consultorio == 1){
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Consultorio creado correctamente.");
+                //response.setSalidaMsg("Consultorio creado correctamente.");
+                return ResponseEntity.status(HttpStatus.CREATED).body(consultorio);
             }else if(consultorio == 2){
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("Consultorio actualizado correctamente.");
+                //response.setSalidaMsg("Consultorio actualizado correctamente.");
+                return ResponseEntity.status(HttpStatus.OK).body(consultorio);
             }else{
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("Error al guardar los datos del consultorio.");
-                response.setSalida(consultorio);
+                //response.setSalidaMsg("Error al guardar los datos del consultorio.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(consultorio);
             }
         }catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al crear el consultorio.");
-            response.setSalida(e.getMessage());
+            // Otras excepciones pueden manejarse de otra forma.
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener consultorios", e);
         }
-        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/deleteConsultorio")
-    public ResponseEntity<ResponseREST> deleteConsultorio(@RequestBody ConsultorioRequest request) {
-        ResponseREST response = new ResponseREST();
-        try{
-            Boolean isDeleted = consultorioService.deleteConsultorio(request.getIdconsultorio());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteConsultorio(@PathVariable Integer id) {
+        try {
+            Boolean isDeleted = consultorioService.deleteConsultorio(id);
+
             if(isDeleted) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Consultorio eliminado correctamente.");
+                //response.setSalidaMsg("Consultorio eliminado correctamente.");
+                return ResponseEntity.status(HttpStatus.OK).body(isDeleted);
             } else {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se pudo eliminar el consultorio.");
+                //response.setSalidaMsg("No se encontró el consultorio o no pudo ser eliminado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(isDeleted);
             }
-        }catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al eliminar el consultorio.");
+        } catch (Exception e) {
+            // response.setSalidaMsg("Error al eliminar el consultorio: " + e.getMessage());
+            // Otras excepciones pueden manejarse de otra forma.
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar el consultorio", e);
         }
-        return ResponseEntity.ok(response);
     }
+
 }
+
+
+
+
+
