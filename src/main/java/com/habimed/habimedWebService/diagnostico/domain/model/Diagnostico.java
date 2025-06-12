@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Diagnostico {
-    private Integer iddiagnostico;
-    private Integer idcita;
+    private Integer idDiagnostico;
+    private Integer idCita;
     private String descripcion;
-    private LocalDate fecha_diagnostico;
+    private LocalDate fechaDiagnostico;
 }

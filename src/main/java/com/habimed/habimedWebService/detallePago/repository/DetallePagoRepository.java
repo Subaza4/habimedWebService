@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
@@ -13,14 +14,11 @@ import com.habimed.habimedWebService.detallePago.dto.DetallePagoCreateDto;
 import com.habimed.habimedWebService.detallePago.dto.DetallePagoRequest;
 
 @Repository
+@RequiredArgsConstructor
 public class DetallePagoRepository {
     
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private DetallePagoCreateDto dto = new DetallePagoCreateDto();
-    
-    public DetallePagoRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public List<DetallePagoCreateDto> getDetallePago(DetallePagoRequest request) {
         StringBuilder sql = new StringBuilder(
@@ -64,7 +62,7 @@ public class DetallePagoRepository {
         try {
             // Crear un mapa para los parámetros de entrada/salida
             Map<String, Object> inParams = new HashMap<>();
-            inParams.put("p_idcita", request.getIdcita());
+            inParams.put("p_idcita", request.getIdCita());
             inParams.put("p_monto", request.getMonto());
             inParams.put("p_metodo_pago", request.getMetodoPago());
             inParams.put("p_estado_pago", request.getEstadoPago());

@@ -1,5 +1,6 @@
 package com.habimed.habimedWebService.detallePago.application;
 
+import com.habimed.habimedWebService.detallePago.domain.model.DetallePago;
 import com.habimed.parameterREST.ResponseREST;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class DetallePagoController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseREST> crearOActualizarDetallePago(
+    public ResponseEntity<DetallePago> crearOActualizarDetallePago(
             @Valid @RequestBody DetallePagoRequest request) {
 
         ResponseREST response = new ResponseREST();

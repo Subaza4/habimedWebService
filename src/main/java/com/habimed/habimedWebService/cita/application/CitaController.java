@@ -4,9 +4,14 @@ import java.util.List;
 
 import com.habimed.habimedWebService.cita.dto.CitaResponseDto;
 import com.habimed.habimedWebService.cita.dto.CitaUpdateDto;
+import com.habimed.habimedWebService.diagnostico.domain.service.DiagnosticoService;
+import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoDTO;
+import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoRequest;
+import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoResponseDto;
 import com.habimed.habimedWebService.exception.ResourceNotFoundException;
 import com.habimed.parameterREST.ResponseREST;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +19,15 @@ import org.springframework.web.bind.annotation.*;
 import com.habimed.habimedWebService.cita.domain.service.CitaService;
 import com.habimed.habimedWebService.cita.dto.CitaRequest;
 import com.habimed.parameterREST.PeticionREST;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
 @RequestMapping("/citas")
+@RequiredArgsConstructor
 public class CitaController {
     
     private final CitaService citaService;
-
-    public CitaController(CitaService citaService) {
-        this.citaService = citaService;
-    }
-
     /*
     * Segun el tipo de usuario se puede mostrar sus determanadas citas
     * Eso ya con seguridad*/
@@ -75,4 +77,5 @@ public class CitaController {
         }
 
     }
+
 }

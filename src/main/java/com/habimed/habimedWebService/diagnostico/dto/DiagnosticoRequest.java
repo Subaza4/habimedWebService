@@ -11,16 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiagnosticoRequest extends RequestREST {
-    private Integer iddiagnostico;
+public class DiagnosticoRequest {
     private Integer idcita;
     private String descripcion;
     private LocalDate fecha_diagnostico;
 
     public Map<String, String> getValuesOfConditions() {
         Map<String, String> conditions = new java.util.HashMap<>();
-        if (iddiagnostico != null && iddiagnostico > 0)
-            conditions.put("iddiagnostico", String.valueOf(iddiagnostico));
         if (idcita != null && idcita > 0)
             conditions.put("idcita", String.valueOf(idcita));
         if (descripcion != null && !descripcion.isEmpty())

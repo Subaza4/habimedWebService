@@ -4,14 +4,21 @@ import java.util.List;
 
 import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoDTO;
 import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoRequest;
+import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoResponseDto;
 
 public interface DiagnosticoService {
     
-    List<DiagnosticoDTO> getAllDiagnosticos(DiagnosticoRequest request);
+    List<DiagnosticoDTO> getAllDiagnosticosWithDetails(DiagnosticoRequest request);
 
-    DiagnosticoDTO getDiagnosticoById(Integer iddiagnostico);
+    DiagnosticoDTO getDiagnosticoByIdWithDetails(Integer idDiagnostico);
 
-    Integer setDiagnostico(DiagnosticoRequest request);
+    DiagnosticoResponseDto getDiagnosticoByIdDiagnostico(Integer idDiagnostico);
+
+    List<DiagnosticoResponseDto> getDiagnosticoByIdCita(Integer idCita);
+
+    DiagnosticoResponseDto addDiagnostico(DiagnosticoRequest request);
+
+    DiagnosticoResponseDto updateDiagnostico(Integer idDiagnostico, DiagnosticoRequest request);
     
-    boolean deleteDiagnostico(Integer iddiagnostico);
+    Boolean deleteDiagnostico(Integer iddiagnostico);
 }

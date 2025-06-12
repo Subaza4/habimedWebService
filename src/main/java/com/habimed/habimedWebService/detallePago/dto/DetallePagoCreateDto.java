@@ -3,6 +3,8 @@ package com.habimed.habimedWebService.detallePago.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.habimed.habimedWebService.detallePago.domain.model.EstadoPagoEnum;
+import com.habimed.habimedWebService.detallePago.domain.model.MetodoPagoEnum;
 import jakarta.validation.constraints.*;
 
 import lombok.AllArgsConstructor;
@@ -23,12 +25,10 @@ public class DetallePagoCreateDto {
     private BigDecimal monto;
 
     @NotBlank(message = "El método de pago no puede estar vacío")
-    @Size(max = 50, message = "El método de pago no puede exceder los 50 caracteres")
-    private String metodoPago;
+    private MetodoPagoEnum metodoPago;
 
     @NotBlank(message = "El estado de pago no puede estar vacío")
-    @Size(max = 50, message = "El estado de pago no puede exceder los 50 caracteres")
-    private String estadoPago = "PENDIENTE";
+    private EstadoPagoEnum estadoPago;
 
     @NotNull(message = "La fecha de pago no puede ser nula")
     private LocalDateTime fechaPago = LocalDateTime.now();

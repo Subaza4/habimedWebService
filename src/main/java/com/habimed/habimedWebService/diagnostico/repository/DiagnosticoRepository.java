@@ -22,12 +22,12 @@ public class DiagnosticoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<DiagnosticoDTO> getDiagnosticosById(DiagnosticoRequest request) {
+    public Optional<DiagnosticoDTO> getDiagnosticosById(Integer id) {
         // Implementación para obtener todos los diagnósticos
         String sql = "SELECT * FROM medic.\"diagnostico\" WHERE id = ?";
         try {
             DiagnosticoDTO diagnostico = jdbcTemplate.queryForObject(sql, new Object[]{
-                    request.getIddiagnostico()}, dto.getRowMapper());
+                    id}, dto.getRowMapper());
             return Optional.ofNullable(diagnostico);
         } catch (Exception e) {
             return Optional.empty();
@@ -53,6 +53,11 @@ public class DiagnosticoRepository {
             request.getDescripcion(),
             request.getFecha_diagnostico()
         }, Integer.class);
+//        if (added != null) {
+//            return added;
+//        }else{
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener consultorios", e);
+//        }
     }
 
     public boolean deleteDiagnostico(Integer iddiagnostico) {
