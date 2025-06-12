@@ -1,19 +1,18 @@
-package com.habimed.habimedWebService.detallePago.domain.model;
+package com.habimed.habimedWebService.detallePago.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.habimed.habimedWebService.cita.domain.model.Cita;
-
 import jakarta.validation.constraints.*;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class DetallePago {
-
-    private Integer idDetallePago;
+@AllArgsConstructor
+public class DetallePagoCreateDto {
 
     @NotNull(message = "La cita no puede ser nula")
     private Integer idCita;
@@ -23,13 +22,14 @@ public class DetallePago {
     @DecimalMin(value = "0.01", message = "El monto debe ser mayor a 0")
     private BigDecimal monto;
 
-    @NotNull(message = "El método de pago no puede estar vacío")
-    private MetodoPagoEnum metodoPago;
+    @NotBlank(message = "El método de pago no puede estar vacío")
+    @Size(max = 50, message = "El método de pago no puede exceder los 50 caracteres")
+    private String metodoPago;
 
-    @NotNull(message = "El estado de pago no puede estar vacío")
-    private EstadoPagoEnum estadoPago;
+    @NotBlank(message = "El estado de pago no puede estar vacío")
+    @Size(max = 50, message = "El estado de pago no puede exceder los 50 caracteres")
+    private String estadoPago = "PENDIENTE";
 
     @NotNull(message = "La fecha de pago no puede ser nula")
     private LocalDateTime fechaPago = LocalDateTime.now();
 }
-

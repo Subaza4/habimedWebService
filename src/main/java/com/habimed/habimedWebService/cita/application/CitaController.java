@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.habimed.habimedWebService.cita.domain.service.CitaService;
 import com.habimed.habimedWebService.cita.dto.CitaRequest;
-import com.habimed.habimedWebService.cita.dto.CitaDTO;
 import com.habimed.parameterREST.PeticionREST;
 
 

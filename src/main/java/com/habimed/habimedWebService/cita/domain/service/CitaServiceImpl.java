@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.cita.dto.CitaRequest;
-import com.habimed.habimedWebService.cita.dto.CitaDTO;
 import com.habimed.habimedWebService.cita.repository.CitaRepository;
 
 @Service
@@ -28,13 +27,13 @@ public class CitaServiceImpl implements CitaService{
 
     @Override
     public List<CitaResponseDto> getCitas(CitaRequest request) {
-        List<CitaDTO> cita =  citaRepository.getCitas(request);
+        List<Cita> cita =  citaRepository.getCitas(request);
         return cita.stream().map(e -> modelMapper.map(e, CitaResponseDto.class)).collect(Collectors.toList());
     }
 
     @Override
     public CitaResponseDto getCitaById(Integer id) {
-        CitaDTO cita = citaRepository.getCita(id);
+        Cita cita = citaRepository.getCita(id);
         return modelMapper.map(cita, CitaResponseDto.class);
     }
 

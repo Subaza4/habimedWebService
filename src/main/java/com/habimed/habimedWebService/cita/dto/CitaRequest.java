@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.habimed.habimedWebService.cita.domain.model.EstadoCitaEnum;
 import com.habimed.parameterREST.RequestREST;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +24,7 @@ public class CitaRequest extends RequestREST {
     private Timestamp fechafin;
     private String motivo;
     private String descripcion;
-    private String estado;
-    private String estadopago;
+    private EstadoCitaEnum estado;
 
     public String getValuesOfConditions() {
         StringBuilder conditions = new StringBuilder(" WHERE 1=1 ");
@@ -41,11 +41,8 @@ public class CitaRequest extends RequestREST {
         if (fechafin != null) {
             conditions.append(" AND c.\"fecha_hora_inicio\" <= '").append(fechafin).append("'");
         }
-        if (estado != null && !estado.isEmpty()) {
-            conditions.append(" AND c.\"estado\" = '").append(estado).append("'");
-        }
-        if (estadopago != null && !estadopago.isEmpty()) {
-            conditions.append(" AND dp.\"estado_pago\" = '").append(estadopago).append("'");
+        if (estado != null) {
+            conditions.append(" AND c.\"estado\" = '").append(estado.ordinal()).append("'");
         }
 
         return conditions.toString();

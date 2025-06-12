@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS "medic"."consultorio" (
     "nombre" VARCHAR(45) NOT NULL,
     "ubicacion" VARCHAR(45) NOT NULL,
     "direccion" VARCHAR(45) NULL,
-    "telefono" VARCHAR(8) NULL
+    "telefono" VARCHAR(9) NULL
 );
 
 -- Tabla doctor_trabaja_consultorio
@@ -207,8 +207,8 @@ CREATE TABLE IF NOT EXISTS "medic"."detalle_pago" (
     "iddetallepago" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "idcita" INT NOT NULL,
     "monto" DECIMAL(10, 2) NOT NULL,
-    "metodo_pago" VARCHAR(50) NOT NULL,
-    "estado_pago" VARCHAR(50) NOT NULL DEFAULT 'Pendiente',
+    "metodo_pago" INT NOT NULL,
+    "estado_pago" INT NOT NULL DEFAULT 'PENDIENTE',
     "fecha_pago" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "fk_detalle_pago_cita" FOREIGN KEY ("idcita")
         REFERENCES "medic"."cita" ("idcita")

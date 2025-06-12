@@ -1,6 +1,7 @@
 package com.habimed.habimedWebService.consultorioTieneServicio.dto;
 
 import com.habimed.parameterREST.RequestREST;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,17 +9,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConsultorioTieneServicioRequest extends RequestREST {
-    private Integer idconsultorio;
-    private Integer idservicio;
+public class ConsultorioTieneServicioRequest {
+    @NotNull(message = "Se requiere del id del Consultorio para eliminar la relación")
+    private Integer idConsultorio;
+    @NotNull(message = "Se requiere del id del Serviccio para eliminar la relación")
+    private Integer idServicio;
 
     public String getConditions(String alias) {
         StringBuilder conditions = new StringBuilder("WHERE 1=1");
-        if (idconsultorio != null) {
-            conditions.append(" AND ").append(alias).append(".\"idconsultorio\" = ").append(idconsultorio);
+        if (idConsultorio != null) {
+            conditions.append(" AND ").append(alias).append(".\"idconsultorio\" = ").append(idConsultorio);
         }
-        if (idservicio != null) {
-            conditions.append(" AND ").append(alias).append(".\"idservicio\" = ").append(idservicio);
+        if (idServicio != null) {
+            conditions.append(" AND ").append(alias).append(".\"idservicio\" = ").append(idServicio);
         }
         return conditions.toString();
     }

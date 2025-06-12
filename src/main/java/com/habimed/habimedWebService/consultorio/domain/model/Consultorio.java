@@ -28,7 +28,7 @@ public class Consultorio {
     @Size(max = 45, message = "La dirección no puede exceder los 45 caracteres")
     private String direccion;
 
-    @Size(min = 8, max = 8, message = "El teléfono debe tener exactamente 8 caracteres")
+    @Size(min = 8, max = 9, message = "El teléfono debe tener 8 o 9 caracteres")
     @Pattern(regexp = "^[0-9]+$", message = "El teléfono solo debe contener números")
     private String telefono;
 }

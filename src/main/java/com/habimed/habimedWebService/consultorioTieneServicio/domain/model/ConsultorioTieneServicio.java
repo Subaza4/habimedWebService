@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsultorioTieneServicio {
-    private Integer idconsultorio;
-    private Integer idservicio;
+    private Integer idConsultorio;
+    private Integer idServicio;
 }

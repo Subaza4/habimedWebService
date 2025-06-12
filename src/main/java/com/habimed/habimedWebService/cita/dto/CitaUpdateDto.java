@@ -1,5 +1,6 @@
 package com.habimed.habimedWebService.cita.dto;
 
+import com.habimed.habimedWebService.cita.domain.model.EstadoCitaEnum;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -19,8 +20,7 @@ public class CitaUpdateDto {
     @FutureOrPresent(message = "La fecha y hora de fin de la cita debe ser en el presente o futuro.")
     private LocalDateTime fechaHoraFin; // fecha_hora_fin TIMESTAMP NOT NULL
 
-    @Size(max = 20, message = "El estado de la cita debe tener máximo 20 caracteres.")
-    private String estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
+    private EstadoCitaEnum estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
 
     private String descripcion;
 }

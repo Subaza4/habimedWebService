@@ -2,16 +2,20 @@ package com.habimed.habimedWebService.consultorioTieneServicio.domain.service;
 
 import java.util.List;
 
-import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioDTO;
+import com.habimed.habimedWebService.consultorioTieneServicio.domain.model.ConsultorioTieneServicio;
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioRequest;
 
 public interface ConsultorioTieneServicioService {
     
-    List<ConsultorioTieneServicioDTO> getAllConsultoriosServicios(ConsultorioTieneServicioRequest request);
+    List<ConsultorioTieneServicio> getAllConsultoriosServicios(ConsultorioTieneServicioRequest request);
 
-    /*ConsultorioTieneServicioDTO getConsultoriosServiciosById(ConsultorioTieneServicioRequest request);*/
+    List<ConsultorioTieneServicio> getConsultoriosServiciosByIdConsultorio(Integer idConsultorio);
 
-    Integer setConsultorioTieneServicio(ConsultorioTieneServicioRequest request);
+    List<ConsultorioTieneServicio> getConsultoriosServiciosByIdServicio(Integer idServicio);
+
+    ConsultorioTieneServicio addConsultorioTieneServicio(ConsultorioTieneServicioRequest request);
+
+    //ConsultorioTieneServicio updateConsultoriosServicios(ConsultorioTieneServicioRequest );
     
     Boolean deleteConsultorioTieneServicio(ConsultorioTieneServicioRequest request);
 }

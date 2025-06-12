@@ -9,20 +9,20 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import com.habimed.habimedWebService.detallePago.dto.DetallePagoDTO;
+import com.habimed.habimedWebService.detallePago.dto.DetallePagoCreateDto;
 import com.habimed.habimedWebService.detallePago.dto.DetallePagoRequest;
 
 @Repository
 public class DetallePagoRepository {
     
     private JdbcTemplate jdbcTemplate;
-    private DetallePagoDTO dto = new DetallePagoDTO();
+    private DetallePagoCreateDto dto = new DetallePagoCreateDto();
     
     public DetallePagoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<DetallePagoDTO> getDetallePago(DetallePagoRequest request) {
+    public List<DetallePagoCreateDto> getDetallePago(DetallePagoRequest request) {
         StringBuilder sql = new StringBuilder(
             "SELECT " +
             "    dp.iddetallepago, " +
@@ -66,9 +66,9 @@ public class DetallePagoRepository {
             Map<String, Object> inParams = new HashMap<>();
             inParams.put("p_idcita", request.getIdcita());
             inParams.put("p_monto", request.getMonto());
-            inParams.put("p_metodo_pago", request.getMetodopago());
-            inParams.put("p_estado_pago", request.getEstadopago());
-            inParams.put("p_fecha_pago", request.getFechapago());
+            inParams.put("p_metodo_pago", request.getMetodoPago());
+            inParams.put("p_estado_pago", request.getEstadoPago());
+            inParams.put("p_fecha_pago", request.getFechaPago());
             inParams.put("p_resultado", Types.INTEGER);
 
             // Ejecutar el procedimiento almacenado
@@ -88,7 +88,7 @@ public class DetallePagoRepository {
         }
     }
 
-    public boolean deleteDetallePago(DetallePagoRequest request) {
+    public Boolean deleteDetallePago(Integer id) {
         // Implement the logic to delete a DetallePago based on the request
         /* String sql = "DELETE FROM detalle_pago WHERE id_detalle_pago = ?";
         int rowsAffected = jdbcTemplate.update(sql, request.getIddetallepago());
