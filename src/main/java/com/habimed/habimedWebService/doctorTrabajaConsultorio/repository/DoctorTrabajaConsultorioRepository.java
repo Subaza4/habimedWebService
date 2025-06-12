@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.doctorTrabajaConsultorio.repository;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,15 +15,12 @@ import java.sql.CallableStatement;
 import java.sql.Types;
 
 @Repository
+@RequiredArgsConstructor
 public class DoctorTrabajaConsultorioRepository {
     
     private final JdbcTemplate jdbcTemplate;
     private final DoctorTrabajaConsultorioDTO dto = new DoctorTrabajaConsultorioDTO();
 
-    @Autowired
-    public DoctorTrabajaConsultorioRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public List<DoctorTrabajaConsultorioDTO> getAllDoctorsTrabajaConsultorio(DoctorTrabajaConsultorioRequest request) {
         StringBuilder sql = new StringBuilder();

@@ -10,6 +10,10 @@ import com.habimed.habimedWebService.consultorioTieneServicio.domain.model.Consu
 import com.habimed.habimedWebService.consultorioTieneServicio.domain.service.ConsultorioTieneServicioService;
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioDTO;
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioRequest;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.domain.service.DoctorTrabajaConsultorioService;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioDTO;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioResponseDto;
 import com.habimed.habimedWebService.exception.ResourceNotFoundException;
 import com.habimed.parameterREST.ResponseREST;
 import jakarta.validation.Valid;
@@ -33,7 +37,7 @@ public class ConsultorioController {
     private final ConsultorioService consultorioService;
     private final ModelMapper modelMapper;
     private final ConsultorioTieneServicioService consultorioTieneServicioService;
-
+    private final DoctorTrabajaConsultorioService doctorTrabajaConsultorioService;
 
     @GetMapping
     public ResponseEntity<List<ConsultorioDTO>> getAllConsultorios(@RequestBody(required = false) ConsultorioRequest request) {
@@ -101,6 +105,7 @@ public class ConsultorioController {
         }
     }
 
+    /* Obtener todos los consultorios con sus servicios*/
     @GetMapping("/servicio")
     public ResponseEntity<List<ConsultorioTieneServicio>> getAllConsultoriosServicios(@Valid @RequestBody ConsultorioTieneServicioRequest request) {
         try{
@@ -113,6 +118,7 @@ public class ConsultorioController {
         }
     }
 
+    /* Obtener los servicios de un consultorio */
     @GetMapping("/servicio/{idConsultorio}")
     public ResponseEntity<List<ConsultorioTieneServicio>> getServiciosByConsultorio(@PathVariable Integer idConsultorio) {
         try{
@@ -124,8 +130,9 @@ public class ConsultorioController {
         }
     }
 
+    /* Agregar un servicio a un consultorio (el idConsultorio se manda por el body) */
     @PostMapping("/servicio")
-    public ResponseEntity<ConsultorioTieneServicio> setConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
+    public ResponseEntity<ConsultorioTieneServicio> addConsultorioTieneServicio(@Valid @RequestBody ConsultorioTieneServicioRequest request) {
         try {
             ConsultorioTieneServicio appended = consultorioTieneServicioService.addConsultorioTieneServicio(request);
             return ResponseEntity.ok(appended);
@@ -136,8 +143,9 @@ public class ConsultorioController {
         }
     }
 
+    /* Eliminar servicios de un consultorio */
     @DeleteMapping("/servicio/{id}")
-    public ResponseEntity<Boolean> deleteConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
+    public ResponseEntity<Boolean> deleteConsultorioTieneServicio(@Valid @RequestBody ConsultorioTieneServicioRequest request) {
         try{
             Boolean result = consultorioTieneServicioService.deleteConsultorioTieneServicio(request);
             return ResponseEntity.ok(result);
@@ -147,6 +155,41 @@ public class ConsultorioController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar la relación consultorio y servicio", e);
         }
     }
+
+
+    /* Obtener los profecionales que trabajan en un consultorio */
+    @GetMapping("/doctor")
+    public ResponseEntity<List<DoctorTrabajaConsultorioDTO>> getDoctores(@Valid @RequestBody DoctorTrabajaConsultorioRequest request) {
+        try{
+            List<DoctorTrabajaConsultorioDTO> doctores = doctorTrabajaConsultorioService.getAllDoctorsTrabajaConsultorioWithDetails(request);
+            return ResponseEntity.ok(doctores);
+        }catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener a los doctores del consultorio", e);
+        }
+    }
+
+    /* Agregar profecionales como trabajadores de un consultorio */
+    @PostMapping("/doctor")
+    public ResponseEntity<DoctorTrabajaConsultorioResponseDto> addDoctor(@Valid @RequestBody DoctorTrabajaConsultorioRequest request) {
+        try {
+            DoctorTrabajaConsultorioResponseDto resultado = doctorTrabajaConsultorioService.addDoctorTrabajaConsultorio(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+        }catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al añadir al doctor como trabajador", e);
+        }
+    }
+
+    /* Eliminar profecionales del consultorio (el IdDoctor se envía en el body) */
+    @DeleteMapping("/doctor")
+    public ResponseEntity<Boolean> deleteDoctor(@RequestBody DoctorTrabajaConsultorioRequest request) {
+        try {
+            Boolean isDeleted = doctorTrabajaConsultorioService.deleteDoctorTrabajaConsultorio(request);
+            return ResponseEntity.ok(isDeleted);
+        }catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar la relación consultorio y doctor", e);
+        }
+    }
+
 
 }
 

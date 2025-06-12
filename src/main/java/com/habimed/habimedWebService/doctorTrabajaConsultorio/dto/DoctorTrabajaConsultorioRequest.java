@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoctorTrabajaConsultorioRequest extends RequestREST {
+public class DoctorTrabajaConsultorioRequest {
     private int idDoctor;
     private int idConsultorio;
 

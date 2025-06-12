@@ -4,15 +4,20 @@ import java.util.List;
 
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioDTO;
 import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioRequest;
+import com.habimed.habimedWebService.doctorTrabajaConsultorio.dto.DoctorTrabajaConsultorioResponseDto;
 
 public interface DoctorTrabajaConsultorioService {
 
-    List<DoctorTrabajaConsultorioDTO> getAllDoctorsTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
-    
-    /*DoctorTrabajaConsultorioResponse getDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);*/
+    List<DoctorTrabajaConsultorioDTO> getAllDoctorsTrabajaConsultorioWithDetails(DoctorTrabajaConsultorioRequest request);
 
-    Integer setDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+    List<DoctorTrabajaConsultorioResponseDto> findAllDoctorsTrabajaConsultorio();
 
-    boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+    List<DoctorTrabajaConsultorioResponseDto> getDoctorConsultorioByIdConsultorio(Integer idConsultorio);
+
+    List<DoctorTrabajaConsultorioResponseDto> getDoctorConsultorioByIdDoctor(Integer idDoctor);
+
+    DoctorTrabajaConsultorioResponseDto addDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
+
+    Boolean deleteDoctorTrabajaConsultorio(DoctorTrabajaConsultorioRequest request);
     
 }
