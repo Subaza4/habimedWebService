@@ -1,11 +1,18 @@
 package com.habimed.habimedWebService.consultorio.application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
+import com.habimed.habimedWebService.consultorioTieneServicio.domain.model.ConsultorioTieneServicio;
+import com.habimed.habimedWebService.consultorioTieneServicio.domain.service.ConsultorioTieneServicioService;
+import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioDTO;
+import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioRequest;
 import com.habimed.habimedWebService.exception.ResourceNotFoundException;
 import com.habimed.parameterREST.ResponseREST;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -25,6 +32,7 @@ public class ConsultorioController {
 
     private final ConsultorioService consultorioService;
     private final ModelMapper modelMapper;
+    private final ConsultorioTieneServicioService consultorioTieneServicioService;
 
 
     @GetMapping
@@ -52,7 +60,7 @@ public class ConsultorioController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> createOrUpdateConsultorio(@RequestBody(required = false) ConsultorioRequest request) {
+    public ResponseEntity<Integer> createOrUpdateConsultorio(@Valid @RequestBody(required = false) ConsultorioRequest request) {
         try{
             Integer consultorio = consultorioService.setConsultorio(request);
             if (consultorio == 0) {
@@ -90,6 +98,53 @@ public class ConsultorioController {
             // response.setSalidaMsg("Error al eliminar el consultorio: " + e.getMessage());
             // Otras excepciones pueden manejarse de otra forma.
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar el consultorio", e);
+        }
+    }
+
+    @GetMapping("/servicio")
+    public ResponseEntity<List<ConsultorioTieneServicio>> getAllConsultoriosServicios(@Valid @RequestBody ConsultorioTieneServicioRequest request) {
+        try{
+            List<ConsultorioTieneServicio> consultoriosServicios = consultorioTieneServicioService.getAllConsultoriosServicios(request);
+            //response.setSalidaMsg("Consultorios y servicios obtenidos correctamente.");
+            return ResponseEntity.ok(consultoriosServicios);
+        } catch (Exception e) {
+            //response.setSalidaMsg("Error al obtener los consultorios y servicios.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener consultorios y servicios", e);
+        }
+    }
+
+    @GetMapping("/servicio/{idConsultorio}")
+    public ResponseEntity<List<ConsultorioTieneServicio>> getServiciosByConsultorio(@PathVariable Integer idConsultorio) {
+        try{
+            List<ConsultorioTieneServicio> consultoriosServicios = consultorioTieneServicioService.getConsultoriosServiciosByIdConsultorio(idConsultorio);
+            return ResponseEntity.ok(consultoriosServicios);
+        } catch (Exception e) {
+            //response.setSalidaMsg("Error al obtener los consultorios y servicios.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener los servicios del consultorio: " + idConsultorio, e);
+        }
+    }
+
+    @PostMapping("/servicio")
+    public ResponseEntity<ConsultorioTieneServicio> setConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
+        try {
+            ConsultorioTieneServicio appended = consultorioTieneServicioService.addConsultorioTieneServicio(request);
+            return ResponseEntity.ok(appended);
+
+        } catch (Exception e) {
+            //response.setSalidaMsg("Error al procesar la solicitud");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al agregar una relación consultorio y servicio", e);
+        }
+    }
+
+    @DeleteMapping("/servicio/{id}")
+    public ResponseEntity<Boolean> deleteConsultorioTieneServicio(@RequestBody ConsultorioTieneServicioRequest request) {
+        try{
+            Boolean result = consultorioTieneServicioService.deleteConsultorioTieneServicio(request);
+            return ResponseEntity.ok(result);
+
+        }catch (Exception e) {
+            //response.setSalidaMsg("Error al eliminar el consultorio y servicio.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar la relación consultorio y servicio", e);
         }
     }
 

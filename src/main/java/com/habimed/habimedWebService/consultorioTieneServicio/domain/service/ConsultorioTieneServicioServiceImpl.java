@@ -1,9 +1,11 @@
 package com.habimed.habimedWebService.consultorioTieneServicio.domain.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.habimed.habimedWebService.consultorioTieneServicio.domain.model.ConsultorioTieneServicio;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.habimed.habimedWebService.consultorioTieneServicio.dto.ConsultorioTieneServicioRequest;
@@ -14,6 +16,13 @@ import com.habimed.habimedWebService.consultorioTieneServicio.repository.Consult
 public class ConsultorioTieneServicioServiceImpl implements ConsultorioTieneServicioService{
     
     private final ConsultorioTieneServicioRepository repository;
+    private final ModelMapper modelMapper;
+
+    @Override
+    public List<ConsultorioTieneServicio> getAllConsultoriosServicios(ConsultorioTieneServicioRequest request) {
+        return repository.getAllConsultoriosServicios(request)
+                .stream().map(entity -> modelMapper.map(entity, ConsultorioTieneServicio.class)).collect(Collectors.toList());
+    }
 
     @Override
     public List<ConsultorioTieneServicio> getConsultoriosServiciosByIdConsultorio(Integer idConsultorio) {

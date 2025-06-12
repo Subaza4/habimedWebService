@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/consultorio")
+@RequestMapping("/consultorioServicio")
 public class ConsultorioTieneServicioController extends PeticionREST{
     
     private final ConsultorioTieneServicioService consultorioTieneServicioService;
