@@ -1,14 +1,14 @@
 package com.habimed.habimedWebService.resenia.dto;
 
 import lombok.Data;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 public class ReseniaFilterDto {
-    private Integer idresenia;
-    private Integer iddoctor;
-    private Double calificacion;
-    private String comentario;
-    private LocalDate fecha_resenia;
+    private Integer idDoctor;
+    private BigDecimal calificacionMinima;
+    private BigDecimal calificacionMaxima;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 }

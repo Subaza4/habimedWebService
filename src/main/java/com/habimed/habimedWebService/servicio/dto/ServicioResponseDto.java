@@ -1,17 +1,14 @@
 package com.habimed.habimedWebService.servicio.dto;
 
-import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
-import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
+import com.habimed.habimedWebService.especialidad.dto.EspecialidadResponseDto;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class ServicioResponseDto {
     private Integer idServicio;
-    private Especialidad especialidad;
+    private Integer idEspecialidad;
+    private EspecialidadResponseDto especialidad;
     private String nombre;
     private String descripcion;
     private String riesgos;
-    private List<Consultorio> consultorios;
 }

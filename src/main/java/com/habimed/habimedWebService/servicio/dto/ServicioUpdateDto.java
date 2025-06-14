@@ -1,17 +1,16 @@
 package com.habimed.habimedWebService.servicio.dto;
 
-import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
-import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
 import lombok.Data;
-
-import java.util.List;
+import jakarta.validation.constraints.Size;
 
 @Data
 public class ServicioUpdateDto {
-    private Integer idServicio;
-    private Especialidad especialidad;
+    @Size(max = 100, message = "El nombre no puede exceder 100 caracteres")
     private String nombre;
+
+    @Size(max = 500, message = "La descripción no puede exceder 500 caracteres")
     private String descripcion;
+
+    @Size(max = 500, message = "Los riesgos no pueden exceder 500 caracteres")
     private String riesgos;
-    private List<Consultorio> consultorios;
 }

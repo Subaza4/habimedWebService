@@ -1,16 +1,35 @@
 package com.habimed.habimedWebService.persona.dto;
 
 import lombok.Data;
-
-import java.sql.Date;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import java.time.LocalDate;
 
 @Data
 public class PersonaInsertDto {
+    @NotNull(message = "El DNI es obligatorio")
     private Long dni;
-    private String nombre;
+
+    @NotBlank(message = "Los nombres son obligatorios")
+    @Size(max = 45, message = "Los nombres no pueden exceder 45 caracteres")
+    private String nombres;
+
+    @NotBlank(message = "Los apellidos son obligatorios")
+    @Size(max = 45, message = "Los apellidos no pueden exceder 45 caracteres")
     private String apellidos;
+
+    @Email(message = "El correo debe tener un formato válido")
+    @Size(max = 45, message = "El correo no puede exceder 45 caracteres")
     private String correo;
+
+    @Pattern(regexp = "^\\d{9}$", message = "El celular debe tener 9 dígitos")
     private String celular;
+
+    @Size(max = 45, message = "La dirección no puede exceder 45 caracteres")
     private String direccion;
-    private Date fecha_nacimiento;
+
+    private LocalDate fechaNacimiento;
 }

@@ -1,13 +1,16 @@
 package com.habimed.habimedWebService.receta.dto;
 
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RecetaFilterDto {
-    private Long idReceta;
-    private Long idCita;
-    private String descripcion;
-    private LocalDate fechaReceta;
+    private Integer idCita;
+    private LocalDate fechaRecetaInicio;
+    private LocalDate fechaRecetaFin;
+    private String descripcionContiene;
 }

@@ -1,19 +1,16 @@
 package com.habimed.habimedWebService.usuario.dto;
 
-import com.habimed.habimedWebService.cita.domain.model.Cita;
-import com.habimed.habimedWebService.horarioDoctor.domain.model.HorarioDoctor;
-import com.habimed.habimedWebService.persona.domain.model.Persona;
+import com.habimed.habimedWebService.persona.dto.PersonaResponseDto;
+import com.habimed.habimedWebService.usuario.domain.model.TipoUsuarioEnum;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class UsuarioResponseDto {
-    private Persona persona;
-    private String correo;
-    private String contrasenia;
-    private Boolean estado = false;
-    private List<HorarioDoctor> horarios;
-    private List<Cita> citasComoPaciente;
-    private List<Cita> citasComoDoctor;
+    private Integer idUsuario;
+    private Long dniPersona;
+    private PersonaResponseDto persona;
+    private Integer tipoUsuarioId;
+    private TipoUsuarioEnum tipoUsuario;
+    private String usuario;
+    private Boolean estado;
 }

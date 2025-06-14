@@ -1,19 +1,18 @@
 package com.habimed.habimedWebService.usuario.dto;
 
-import com.habimed.habimedWebService.cita.domain.model.Cita;
-import com.habimed.habimedWebService.horarioDoctor.domain.model.HorarioDoctor;
-import com.habimed.habimedWebService.persona.domain.model.Persona;
 import lombok.Data;
-
-import java.util.List;
+import jakarta.validation.constraints.Size;
 
 @Data
 public class UsuarioUpdateDto {
-    private Persona persona;
-    private String correo;
+    @Size(max = 50, message = "El usuario no puede exceder 50 caracteres")
+    private String usuario;
+
+    @Size(max = 255, message = "La contraseña no puede exceder 255 caracteres")
     private String contrasenia;
-    private Boolean estado = false;
-    private List<HorarioDoctor> horarios;
-    private List<Cita> citasComoPaciente;
-    private List<Cita> citasComoDoctor;
+
+    @Size(max = 255, message = "El token no puede exceder 255 caracteres")
+    private String token;
+
+    private Boolean estado;
 }

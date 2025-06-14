@@ -4,10 +4,7 @@ import lombok.Data;
 
 @Data
 public class ConsultorioFilterDto {
-    private Integer idconsultorio;
-    private String ruc;
     private String nombre;
     private String ubicacion;
-    private String direccion;
-    private String telefono;
+    private String ruc;
 }

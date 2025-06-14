@@ -1,13 +1,10 @@
 package com.habimed.habimedWebService.diagnostico.dto;
 
 import lombok.Data;
-
-import java.time.LocalDate;
+import jakarta.validation.constraints.Size;
 
 @Data
 public class DiagnosticoUpdateDto {
-    private Integer idDiagnostico;
-    private Integer idCita;
+    @Size(max = 1000, message = "La descripción no puede exceder 1000 caracteres")
     private String descripcion;
-    private LocalDate fechaDiagnostico;
 }
