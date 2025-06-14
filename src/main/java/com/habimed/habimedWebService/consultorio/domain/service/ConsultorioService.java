@@ -1,17 +1,15 @@
 package com.habimed.habimedWebService.consultorio.domain.service;
+
 import java.util.List;
 
-import com.habimed.habimedWebService.consultorio.dto.ConsultorioDTO;
-import com.habimed.habimedWebService.consultorio.dto.ConsultorioRequest;
+import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
+import com.habimed.habimedWebService.consultorio.dto.*;
 
 public interface ConsultorioService {
-    
-    List<ConsultorioDTO> getAllConsultorios(ConsultorioRequest request);
-
-    ConsultorioDTO getConsultorioById(Integer id);
-    
-    Integer setConsultorio(ConsultorioRequest request);
-
-    Boolean deleteConsultorio(Integer id);
-    
+    List<Consultorio> findAll();
+    List<Consultorio> findAllWithConditions(ConsultorioFilterDto consultorioFilterDto);
+    ConsultorioResponseDto getById(Integer id);
+    ConsultorioResponseDto save(ConsultorioInsertDto consultorioInsertDto);
+    Boolean delete(Integer id);
+    ConsultorioResponseDto update(Integer id, ConsultorioUpdateDto consultorioUpdateDto);
 }

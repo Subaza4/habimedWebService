@@ -2,14 +2,14 @@ package com.habimed.habimedWebService.cita.domain.service;
 
 import java.util.List;
 
-import com.habimed.habimedWebService.cita.dto.CitaResponseDto;
-import com.habimed.habimedWebService.cita.dto.CitaUpdateDto;
+import com.habimed.habimedWebService.cita.domain.model.Cita;
+import com.habimed.habimedWebService.cita.dto.*;
 
 public interface CitaService {
     
-    List<CitaResponseDto> findAll();
+    List<Cita> findAll();
 
-    List<CitaResponseDto> findAllWithConditions(CitaFilterDto citaFilterDto);
+    List<Cita> findAllWithConditions(CitaFilterDto citaFilterDto);
 
     CitaResponseDto getById(Integer id);
 
