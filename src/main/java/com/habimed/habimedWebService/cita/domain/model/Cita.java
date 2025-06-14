@@ -1,42 +1,63 @@
 package com.habimed.habimedWebService.cita.domain.model;
 
+import com.habimed.habimedWebService.detallePago.domain.model.DetallePago;
+import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
+import com.habimed.habimedWebService.receta.domain.model.Receta;
+import com.habimed.habimedWebService.recomendacion.domain.model.Recomendacion;
+import com.habimed.habimedWebService.usuario.domain.model.Usuario;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-// Importaciones para las anotaciones de validación
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.FutureOrPresent; // Para fechas y horas en el futuro o presente
+import java.util.List;
 
-
-@Data                // Genera getters, setters, toString, equals y hashCode
-@NoArgsConstructor   // Genera un constructor sin argumentos
-@AllArgsConstructor  // Genera un constructor con todos los argumentos
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cita {
 
-    private Integer idcita; // idcita INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idcita")
+    private Integer idCita;
 
-    private Integer idservicio; // idservicio INT NOT NULL (Clave foránea)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idpaciente", referencedColumnName = "idusuario", insertable = false, updatable = false)
+    private Usuario paciente;
 
-    private Integer idconsultorio; // idconsultorio INT NOT NULL (Clave foránea)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iddoctor", referencedColumnName = "idusuario", insertable = false, updatable = false)
+    private Usuario doctor;
 
-    private Integer idmedico; // idmedico INT NOT NULL (Clave foránea)
-
-    @Size(min = 8, max = 8, message = "El DNI de la persona debe tener exactamente 8 dígitos.")
-    private String dniPersona; // dni_persona VARCHAR(8) NOT NULL (Clave foránea)
-
-    @Size(min = 1, max = 255, message = "El motivo no debe exceder 255 caracteres")
+    @Column(name = "motivo", nullable = false, length = 255)
     private String motivo;
 
-    @FutureOrPresent(message = "La fecha y hora de inicio de la cita debe ser en el presente o futuro.")
-    private LocalDateTime fechaHoraInicio; // fecha_hora_inicio TIMESTAMP NOT NULL
+    @Column(name = "fecha_hora_inicio", nullable = false)
+    private LocalDateTime fechaHoraInicio;
 
-    @FutureOrPresent(message = "La fecha y hora de fin de la cita debe ser en el presente o futuro.")
-    private LocalDateTime fechaHoraFin; // fecha_hora_fin TIMESTAMP NOT NULL
+    @Column(name = "fecha_hora_fin")
+    private LocalDateTime fechaHoraFin;
 
-    private EstadoCitaEnum estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
+    @Column(name = "estado", nullable = false)
+    private EstadoCitaEnum estado;
 
+    @Column(name = "descripcion", length = 500)
     private String descripcion;
+
+    // Relaciones One-to-Many
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Diagnostico> diagnosticos;
+
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Receta> recetas;
+
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recomendacion> recomendaciones;
+
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DetallePago> detallesPago;
 }

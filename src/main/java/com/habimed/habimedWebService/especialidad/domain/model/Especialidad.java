@@ -1,14 +1,28 @@
 package com.habimed.habimedWebService.especialidad.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.habimed.habimedWebService.servicio.domain.model.Servicio;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.List;
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Especialidad {
-    private Integer idEspecialidad; // idespecialidad INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
-    private String nombre;          // nombre VARCHAR(45) NOT NULL
-    private String descripcion;     // descripcion VARCHAR(255) NULL
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idespecialidad")
+    private Integer idEspecialidad;
+
+    @Column(name = "nombre", nullable = false, length = 45)
+    private String nombre;
+
+    @Column(name = "descripcion", length = 255)
+    private String descripcion;
+
+    @OneToMany(mappedBy = "especialidad", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Servicio> servicios;
 }
