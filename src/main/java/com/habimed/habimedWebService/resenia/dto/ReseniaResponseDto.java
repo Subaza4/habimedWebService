@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class ReseniaResponseDto {
     private Integer idResenia;
     private Integer idDoctor;
-    private UsuarioResponseDto doctor;
+    //private UsuarioResponseDto doctor;
     private BigDecimal calificacion;
     private String comentario;
     private LocalDate fechaResenia;

@@ -15,7 +15,7 @@ public class ReseniaInsertDto {
     @NotNull(message = "La calificación es obligatoria")
     @DecimalMin(value = "0.0", message = "La calificación debe ser mayor o igual a 0")
     @DecimalMax(value = "5.0", message = "La calificación debe ser menor o igual a 5")
-    private BigDecimal calificacion;
+    private Double calificacion;
 
     @Size(max = 1000, message = "El comentario no puede exceder 1000 caracteres")
     private String comentario;

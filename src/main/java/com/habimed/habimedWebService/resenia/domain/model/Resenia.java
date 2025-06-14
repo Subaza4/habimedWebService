@@ -23,7 +23,7 @@ public class Resenia {
     private Usuario doctor;
 
     @Column(name = "calificacion", nullable = false, precision = 2, scale = 1)
-    private BigDecimal calificacion;
+    private Double calificacion;
 
     @Column(name = "comentario", length = 1000)
     private String comentario;

@@ -7,8 +7,8 @@ import java.time.LocalDate;
 @Data
 public class ReseniaFilterDto {
     private Integer idDoctor;
-    private BigDecimal calificacionMinima;
-    private BigDecimal calificacionMaxima;
+    private Double calificacionMinima;
+    private Double calificacionMaxima;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 }
