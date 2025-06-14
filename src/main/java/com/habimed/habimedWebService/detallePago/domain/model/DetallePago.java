@@ -5,31 +5,36 @@ import java.time.LocalDateTime;
 
 import com.habimed.habimedWebService.cita.domain.model.Cita;
 
-import jakarta.validation.constraints.*;
+import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class DetallePago {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "iddetallepago")
     private Integer idDetallePago;
 
-    @NotNull(message = "La cita no puede ser nula")
-    private Integer idCita;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idcita", referencedColumnName = "idcita", insertable = false, updatable = false)
+    private Cita cita;
 
-    @NotNull(message = "El monto no puede ser nulo")
-    @Digits(integer = 10, fraction = 2, message = "El monto debe tener máximo 10 enteros y 2 decimales")
-    @DecimalMin(value = "0.01", message = "El monto debe ser mayor a 0")
+    @Column(name = "monto", nullable = false, precision = 10, scale = 2)
     private BigDecimal monto;
 
-    @NotNull(message = "El método de pago no puede estar vacío")
+    @Column(name = "metodo_pago", nullable = false)
+    @Enumerated(EnumType.STRING)
     private MetodoPagoEnum metodoPago;
 
-    @NotNull(message = "El estado de pago no puede estar vacío")
+    @Column(name = "estado_pago", nullable = false)
+    @Enumerated(EnumType.STRING)
     private EstadoPagoEnum estadoPago;
 
-    @NotNull(message = "La fecha de pago no puede ser nula")
+    @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago = LocalDateTime.now();
 }
 

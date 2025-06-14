@@ -1,25 +1,37 @@
 package com.habimed.habimedWebService.permisoHistorial.domain.model;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import com.habimed.habimedWebService.usuario.domain.model.Usuario;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDate;
 
+@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class PermisosHistorial {
-    /*
-     otorgar permiso a todo el historial del paciente le permite al doctor
-     Saber en qué consultorios se atendió
-     Consultar sus citas filtradas por consultorio
-     Revisar las recetas, recomendaciones, diagnosticos y detalles de la cita
-     */
-    public Integer idpermisohistorial;
-    public Integer iddoctor;
-    public Integer idpaciente;
-    public LocalDate fechaotorgapermiso;
-    public LocalDate fechadeniegapermiso;
-    public Boolean estado;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idpermisohistorial")
+    private Integer idPermisoHistorial;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iddoctor", referencedColumnName = "idusuario", insertable = false, updatable = false)
+    private Usuario doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idpaciente", referencedColumnName = "idusuario", insertable = false, updatable = false)
+    private Usuario paciente;
+
+    @Column(name = "fechaotorgapermiso", nullable = false)
+    private LocalDate fechaOtorgaPermiso = LocalDate.now();
+
+    @Column(name = "fechadeniegapermiso")
+    private LocalDate fechaDenegaPermiso;
+
+    @Column(name = "estado", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    private EstadoPermisosEnum estado;
 }
