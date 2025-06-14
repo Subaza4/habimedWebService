@@ -22,7 +22,7 @@ public class Resenia {
     @JoinColumn(name = "iddoctor", referencedColumnName = "idusuario", insertable = false, updatable = false)
     private Usuario doctor;
 
-    @Column(name = "calificacion", nullable = false, precision = 2, scale = 1)
+    @Column(name = "calificacion", nullable = false)
     private Double calificacion;
 
     @Column(name = "comentario", length = 1000)

@@ -4,7 +4,6 @@ package com.habimed.habimedWebService.permisoHistorial.application;
 import com.habimed.habimedWebService.permisoHistorial.domain.model.PermisosHistorial;
 import com.habimed.habimedWebService.permisoHistorial.domain.service.PermisoHistorialService;
 import com.habimed.habimedWebService.permisoHistorial.dto.*;
-import com.habimed.parameterREST.PeticionREST;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/permisos")
 @RequiredArgsConstructor
-public class PermisoHistorialController extends PeticionREST {
+public class PermisoHistorialController {
 
     private final PermisoHistorialService permisoHistorialService;
 

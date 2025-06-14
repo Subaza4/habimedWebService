@@ -16,12 +16,12 @@ public class ModelMapperConfig {
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
 
         // Conversión de Enum (Java) → Número (BD)
-        modelMapper.createTypeMap(DetallePago.class, Map.class)
+        /*modelMapper.createTypeMap(DetallePago.class, Map.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getMetodoPago().ordinal(),
                             (dest, v) -> ((Map<String, Object>) dest).put("metodo_pago", v));
                 });
-
+        */
         // Conversión de Número (BD) → Enum (Java)
         modelMapper.addConverter(ctx -> {
             Integer ordinal = (Integer) ctx.getSource();
