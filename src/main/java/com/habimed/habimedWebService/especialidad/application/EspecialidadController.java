@@ -2,6 +2,7 @@ package com.habimed.habimedWebService.especialidad.application;
 
 import java.util.List;
 
+import com.habimed.habimedWebService.especialidad.dto.EspecialidadResponseDto;
 import com.habimed.parameterREST.ResponseREST;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
