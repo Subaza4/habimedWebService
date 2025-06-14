@@ -1,20 +1,12 @@
 package com.habimed.habimedWebService.recomendacion.repository;
 
-import com.habimed.habimedWebService.recomendacion.dto.RecomendacionDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.habimed.habimedWebService.recomendacion.domain.model.Recomendacion;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RecomendacionRepository {
-
-    private JdbcTemplate jdbcTemplate;
-    private RecomendacionDTO dto = new RecomendacionDTO();
-
-    @Autowired
-    public RecomendacionRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
+@RequiredArgsConstructor
+public class RecomendacionRepository extends JpaRepository<Recomendacion, Integer> {
 
 }
