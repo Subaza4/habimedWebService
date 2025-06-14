@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class CitaController {
     
     private final CitaService citaService;
+
     /*
     * Segun el tipo de usuario se puede mostrar sus determanadas citas
     * Eso ya con seguridad*/
