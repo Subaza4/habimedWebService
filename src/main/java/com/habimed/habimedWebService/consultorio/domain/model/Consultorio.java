@@ -1,5 +1,6 @@
 package com.habimed.habimedWebService.consultorio.domain.model;
 
+import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
 import com.habimed.habimedWebService.servicio.domain.model.Servicio;
 import com.habimed.habimedWebService.usuario.domain.model.Usuario;
 import jakarta.persistence.*;
@@ -23,7 +24,7 @@ public class Consultorio {
     @Column(name = "ruc", length = 11)
     private String ruc;
 
-    @Column(name = "nombre", nullable = false
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "ubicacion", nullable = false)
@@ -35,14 +36,8 @@ public class Consultorio {
     @Column(name = "telefono", length = 9)
     private String telefono;
 
-    // Relación Many-to-Many con Usuario (doctores)
-    @ManyToMany
-    @JoinTable(
-            name = "doctor_trabaja_consultorio",
-            schema = "medic",
-            joinColumns = @JoinColumn(name = "idconsultorio"),
-            inverseJoinColumns = @JoinColumn(name = "iddoctor")
-    )
+    // Relación One-to-Many con Usuario (doctores)
+    @OneToMany(mappedBy = "consultorio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Usuario> doctores;
 
     // Relación Many-to-Many con Servicio

@@ -1,7 +1,9 @@
 package com.habimed.habimedWebService.servicio.domain.model;
 
+import com.habimed.habimedWebService.cita.domain.model.Cita;
 import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
 import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
+import com.habimed.habimedWebService.receta.domain.model.Receta;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,4 +35,7 @@ public class Servicio {
 
     @ManyToMany(mappedBy = "servicios")
     private List<Consultorio> consultorios;
+
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cita> citas;
 }

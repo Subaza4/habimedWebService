@@ -4,6 +4,7 @@ import com.habimed.habimedWebService.detallePago.domain.model.DetallePago;
 import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
 import com.habimed.habimedWebService.receta.domain.model.Receta;
 import com.habimed.habimedWebService.recomendacion.domain.model.Recomendacion;
+import com.habimed.habimedWebService.servicio.domain.model.Servicio;
 import com.habimed.habimedWebService.usuario.domain.model.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -61,4 +62,8 @@ public class Cita {
     // Relación One-to-One con DetallePago
     @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private DetallePago detallePago;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idservicio", referencedColumnName = "idservicio", insertable = false, updatable = false)
+    private Servicio servicio;
 }

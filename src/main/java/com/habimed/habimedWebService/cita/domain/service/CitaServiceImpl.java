@@ -33,38 +33,38 @@ public class CitaServiceImpl implements CitaService {
         List<Cita> citas = citaRepository.findAll();
         
         // Filtrar por campos del FilterDto si no son null
-        if (citaFilterDto.getIdcita() != null) {
+        if (citaFilterDto.getIdCita() != null) {
             citas = citas.stream()
-                    .filter(c -> c.getIdCita().equals(citaFilterDto.getIdcita()))
+                    .filter(c -> c.getIdCita().equals(citaFilterDto.getIdCita()))
                     .collect(Collectors.toList());
         }
         
-        if (citaFilterDto.getIdservicio() != null) {
+        if (citaFilterDto.getIdServicio() != null) {
             // Aquí necesitarías acceder al servicio a través de la relación
             // Por ahora filtro comentado hasta tener la relación correcta
-            // citas = citas.stream()
-            //         .filter(c -> c.getServicio() != null && c.getServicio().getId().equals(citaFilterDto.getIdservicio()))
-            //         .collect(Collectors.toList());
+             citas = citas.stream()
+                     .filter(c -> c.getServicio() != null && c.getServicio().getIdServicio().equals(citaFilterDto.getIdServicio()))
+                     .collect(Collectors.toList());
         }
         
-        if (citaFilterDto.getIdconsultorio() != null) {
+         if (citaFilterDto.getIdConsultorio() != null) {
             // Similar al servicio, necesitarías la relación con consultorio
-            // citas = citas.stream()
-            //         .filter(c -> c.getConsultorio() != null && c.getConsultorio().getId().equals(citaFilterDto.getIdconsultorio()))
-            //         .collect(Collectors.toList());
-        }
+             citas = citas.stream()
+                     .filter(c -> c.getDoctor().getConsultorio() != null && c.getDoctor().getConsultorio().getIdConsultorio().equals(citaFilterDto.getIdConsultorio()))
+                     .collect(Collectors.toList());
+         }
         
-        if (citaFilterDto.getIdmedico() != null) {
+        if (citaFilterDto.getIdMedico() != null) {
             citas = citas.stream()
-                    .filter(c -> c.getDoctor() != null && c.getDoctor().getIdUsuario().equals(citaFilterDto.getIdmedico()))
+                    .filter(c -> c.getDoctor() != null && c.getDoctor().getIdUsuario().equals(citaFilterDto.getIdMedico()))
                     .collect(Collectors.toList());
         }
-        
-        if (citaFilterDto.getDniPersona() != null && !citaFilterDto.getDniPersona().trim().isEmpty()) {
+
+        if (citaFilterDto.getDniPersona() != null && citaFilterDto.getDniPersona() > 0) {
             citas = citas.stream()
-                    .filter(c -> c.getPaciente() != null && 
+                    .filter(c -> c.getPaciente() != null &&
                             c.getPaciente().getPersona() != null &&
-                            c.getPaciente().getPersona().getDni().toString().equals(citaFilterDto.getDniPersona()))
+                            c.getPaciente().getPersona().getDni().equals(citaFilterDto.getDniPersona()))
                     .collect(Collectors.toList());
         }
         
