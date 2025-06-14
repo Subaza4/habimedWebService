@@ -15,7 +15,7 @@ public class CitaFilterDto {
 
     private Integer idMedico;
 
-    private String dniPersona;
+    private Long dniPersona;
 
     private String motivo;
 

@@ -1,6 +1,7 @@
 package com.habimed.habimedWebService.usuario.domain.model;
 
 import com.habimed.habimedWebService.cita.domain.model.Cita;
+import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
 import com.habimed.habimedWebService.horarioDoctor.domain.model.HorarioDoctor;
 import com.habimed.habimedWebService.persona.domain.model.Persona;
 import com.habimed.habimedWebService.usuario.domain.model.TipoUsuarioEnum;
@@ -47,4 +48,8 @@ public class Usuario {
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cita> citasComoDoctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idconsultorio", referencedColumnName = "idconsultorio", insertable = false, updatable = false)
+    private Consultorio consultorio;
 }
