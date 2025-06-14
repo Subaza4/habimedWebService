@@ -3,11 +3,9 @@ package com.habimed.habimedWebService.especialidad.application;
 import java.util.List;
 
 import com.habimed.parameterREST.ResponseREST;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
 import com.habimed.habimedWebService.especialidad.domain.service.EspecialidadService;
@@ -19,15 +17,12 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/especialidad")
+@RequiredArgsConstructor
 public class EspecialidadController extends PeticionREST{
 
     private final EspecialidadService especialidadService;
 
-    public EspecialidadController(EspecialidadServiceImpl especialidadService) {
-        this.especialidadService = especialidadService;
-    }
-
-    @PostMapping("/getEspecialidades")
+    @GetMapping
     public ResponseEntity<ResponseREST> getEspecialidades(@RequestBody @Valid EspecialidadRequest request) {
         ResponseREST response = new ResponseREST();
         try{
@@ -48,6 +43,15 @@ public class EspecialidadController extends PeticionREST{
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<EspecialidadResponseDto>> listarEspecialidades(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Boolean activa) {
+
+        List<EspecialidadResponseDto> especialidades = especialidadService.listarEspecialidades(nombre, activa);
+        return ResponseEntity.ok(especialidades);
+    }
+
     @PostMapping("getEspecialidad")
     public ResponseEntity<ResponseREST> getEspecialidad(@RequestBody EspecialidadRequest request) {
         ResponseREST response = new ResponseREST();
@@ -57,7 +61,7 @@ public class EspecialidadController extends PeticionREST{
                 response.setSalidaMsg("Necesario campo id para obtener la especialidad");
             }else{
                 Especialidad especialidad = especialidadService.getEspecialidad(request.getIdespecialidad());
-                if(especialidad != null && especialidad.getIdespecialidad() != null) {
+                if(especialidad != null && especialidad.getIdEspecialidad() != null) {
                     response.setStatus(STATUS_OK);
                     response.setSalida(especialidad);
                 } else {

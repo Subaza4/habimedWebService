@@ -23,7 +23,7 @@ public class EspecialidadDTO {
     public RowMapper<Especialidad> especialidadRowMapper() {
         return (rs, rowNum) -> {
             Especialidad especialidad = new Especialidad();
-            especialidad.setIdespecialidad(rs.getInt("idespecialidad"));
+            especialidad.setIdEspecialidad(rs.getInt("idespecialidad"));
             especialidad.setNombre(rs.getString("nombre"));
             especialidad.setDescripcion(rs.getString("descripcion"));
             

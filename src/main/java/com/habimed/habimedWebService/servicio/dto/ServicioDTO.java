@@ -32,7 +32,7 @@ public class ServicioDTO {
             servicio.setRiesgos(rs.getString("riesgos"));
             servicio.setIdespecialidad(rs.getInt("idespecialidad"));
             Especialidad especialidad1 = new Especialidad();
-            especialidad1.setIdespecialidad(rs.getInt("idespecialidad"));
+            especialidad1.setIdEspecialidad(rs.getInt("idespecialidad"));
             especialidad1.setNombre(rs.getString("especialidad_nombre"));
             especialidad1.setDescripcion(rs.getString("especialidad_descripcion"));
             return servicio;

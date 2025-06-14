@@ -66,7 +66,7 @@ public class CitaController {
     }
 
     /* Eliminar una cita */
-    @PostMapping("deleteCita")
+    @DeleteMapping("deleteCita")
     public ResponseEntity<Boolean> deleteCita(@RequestBody CitaRequest request) {
         ResponseREST responseREST = new ResponseREST();
         try {

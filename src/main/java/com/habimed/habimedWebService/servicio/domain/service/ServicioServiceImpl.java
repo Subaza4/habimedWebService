@@ -31,7 +31,7 @@ public class ServicioServiceImpl implements ServicioService{
     @Override
     public Integer setServicio(ServicioRequest request) {
         Especialidad especialidad = this.especialidadRepository.getEspecialidad(request.getIdespecialidad());
-        if(especialidad.getIdespecialidad() <= 0){
+        if(especialidad.getIdEspecialidad() <= 0){
             return 0;
         }
         return servicioRepository.setServicio(request);
