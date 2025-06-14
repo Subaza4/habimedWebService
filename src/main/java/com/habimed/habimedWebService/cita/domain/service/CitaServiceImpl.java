@@ -27,7 +27,7 @@ public class CitaServiceImpl implements CitaService{
 
     @Override
     public List<CitaResponseDto> getCitas(CitaRequest request) {
-        List<Cita> cita =  citaRepository.getCitas(request);
+        List<Cita> cita =  citaRepository.delete(new Cita());
         return cita.stream().map(e -> modelMapper.map(e, CitaResponseDto.class)).collect(Collectors.toList());
     }
 
