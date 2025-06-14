@@ -1,15 +1,18 @@
 package com.habimed.habimedWebService.horarioDoctor.dto;
 
-import com.habimed.habimedWebService.usuario.dto.UsuarioResponseDto;
 import lombok.Data;
-import com.medic.dto.usuario.UsuarioResponseDto;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.sql.Time;
 import java.time.LocalTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class HorarioDoctorResponseDto {
     private Integer idHorarioDoctor;
     private Integer idDoctor;
-    private UsuarioResponseDto doctor;
+    private String nombreDoctor;
     private String diaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFin;

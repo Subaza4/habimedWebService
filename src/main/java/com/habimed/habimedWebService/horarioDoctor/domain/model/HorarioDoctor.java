@@ -21,9 +21,9 @@ public class HorarioDoctor {
     @JoinColumn(name = "iddoctor", referencedColumnName = "idusuario", insertable = false, updatable = false)
     private Usuario doctor;
 
-//    @Column(nullable = false)
-//    @Enumerated(EnumType.STRING)
-//    private DiaEnum diaSemana;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DiaEnum diaSemana;
 
     @Column(name = "hora_inicio", nullable = false)
     private LocalDateTime horaInicio;

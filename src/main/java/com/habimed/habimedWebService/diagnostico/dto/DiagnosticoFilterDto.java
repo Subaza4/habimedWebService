@@ -9,8 +9,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiagnosticoFilterDto {
+    private Integer idDiagnostico;
     private Integer idCita;
+    private String descripcionContiene;
     private LocalDate fechaDiagnosticoInicio;
     private LocalDate fechaDiagnosticoFin;
-    private String descripcionContiene;
 }

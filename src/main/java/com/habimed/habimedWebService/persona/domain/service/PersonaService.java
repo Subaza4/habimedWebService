@@ -5,7 +5,6 @@ import java.util.List;
 import com.habimed.habimedWebService.persona.domain.model.Persona;
 import com.habimed.habimedWebService.persona.dto.*;
 
-
 public interface PersonaService {
     List<Persona> findAll();
     List<Persona> findAllWithConditions(PersonaFilterDto personaFilterDto);

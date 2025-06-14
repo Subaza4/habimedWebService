@@ -21,9 +21,9 @@ public class PersonaInsertDto {
     @Size(max = 45, message = "Los apellidos no pueden exceder 45 caracteres")
     private String apellidos;
 
-    @Email(message = "El correo debe tener un formato válido")
+    /*@Email(message = "El correo debe tener un formato válido")
     @Size(max = 45, message = "El correo no puede exceder 45 caracteres")
-    private String correo;
+    private String correo;*/
 
     @Pattern(regexp = "^\\d{9}$", message = "El celular debe tener 9 dígitos")
     private String celular;
