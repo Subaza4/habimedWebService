@@ -25,6 +25,7 @@ public class Usuario {
     @JoinColumn(name = "dnipersona", referencedColumnName = "dni", insertable = false, updatable = false)
     private Persona persona;
 
+    @Column(name = "tipousuario", nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoUsuarioEnum tipoUsuario;
 
