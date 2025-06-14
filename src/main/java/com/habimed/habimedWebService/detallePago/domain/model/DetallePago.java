@@ -19,7 +19,7 @@ public class DetallePago {
     @Column(name = "iddetallepago")
     private Integer idDetallePago;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idcita", referencedColumnName = "idcita", insertable = false, updatable = false)
     private Cita cita;
 

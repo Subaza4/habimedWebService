@@ -58,6 +58,7 @@ public class Cita {
     @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Recomendacion> recomendaciones;
 
-    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DetallePago> detallesPago;
+    // Relación One-to-One con DetallePago
+    @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private DetallePago detallePago;
 }
