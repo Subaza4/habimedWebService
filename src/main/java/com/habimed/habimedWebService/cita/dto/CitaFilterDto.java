@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class CitaFilterDto {
-    private Integer idcita;
+    private Integer idCita;
 
-    private Integer idservicio;
+    private Integer idServicio;
 
-    private Integer idconsultorio;
+    private Integer idConsultorio;
 
-    private Integer idmedico;
+    private Integer idMedico;
 
     private String dniPersona;
 
