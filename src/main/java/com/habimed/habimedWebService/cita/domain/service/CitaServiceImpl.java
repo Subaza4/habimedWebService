@@ -56,7 +56,7 @@ public class CitaServiceImpl implements CitaService{
     @Override
     public CitaResponseDto updateCita(Integer id, CitaUpdateDto cita) {
         Cita updated = new Cita();                          // falta implementar función en el repositorio para
-                                                            // poder actualizar cualquier campo que venga en el DTO
+        // poder actualizar cualquier campo que venga en el DTO
         return modelMapper.map(updated, CitaResponseDto.class);
     }
 }
