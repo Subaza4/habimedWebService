@@ -1,14 +1,13 @@
 package com.habimed.habimedWebService.cita.dto;
 
 import com.habimed.habimedWebService.cita.domain.model.EstadoCitaEnum;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 public class CitaResponseDto {
-
-    private Integer idcita; // idcita INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+    private Integer idcita;
 
     private Integer idservicio;
 
@@ -16,20 +15,15 @@ public class CitaResponseDto {
 
     private Integer idmedico;
 
-    //@Size(min = 8, max = 8, message = "El DNI de la persona debe tener exactamente 8 dígitos.")
     private String dniPersona;
 
-    //@Size(max = 255, message = "El motivo de la cita debe ser descrito en menos de 255 caracteres")
-    private String motivo; // dni_persona VARCHAR(8) NOT NULL (Clave foránea)
+    private String motivo;
 
-    //@FutureOrPresent(message = "La fecha y hora de inicio de la cita debe ser en el presente o futuro.")
-    private LocalDateTime fechaHoraInicio; // fecha_hora_inicio TIMESTAMP NOT NULL
+    private LocalDateTime fechaHoraInicio;
 
-    //@FutureOrPresent(message = "La fecha y hora de fin de la cita debe ser en el presente o futuro.")
-    private LocalDateTime fechaHoraFin; // fecha_hora_fin TIMESTAMP NOT NULL
+    private LocalDateTime fechaHoraFin;
 
-    //@Size(max = 20, message = "El estado de la cita debe tener máximo 20 caracteres.")
-    private EstadoCitaEnum estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
+    private EstadoCitaEnum estado;
 
     private String descripcion;
 }

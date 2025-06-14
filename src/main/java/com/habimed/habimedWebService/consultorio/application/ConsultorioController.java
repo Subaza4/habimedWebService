@@ -36,8 +36,6 @@ public class ConsultorioController {
 
     private final ConsultorioService consultorioService;
     private final ModelMapper modelMapper;
-    private final ConsultorioTieneServicioService consultorioTieneServicioService;
-    private final DoctorTrabajaConsultorioService doctorTrabajaConsultorioService;
 
     @GetMapping
     public ResponseEntity<List<ConsultorioDTO>> getAllConsultorios(@RequestBody(required = false) ConsultorioRequest request) {
