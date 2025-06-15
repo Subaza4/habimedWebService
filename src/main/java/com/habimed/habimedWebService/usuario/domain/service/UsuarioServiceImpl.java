@@ -86,89 +86,93 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponseDto save(UsuarioInsertDto usuarioInsertDto) {
-        // Validaciones específicas del contexto de Usuario
-        if (usuarioInsertDto.getDniPersona() == null) {
-            throw new RuntimeException("El DNI de la persona es obligatorio para crear un usuario");
-        }
-        
+//        // Validaciones específicas del contexto de Usuario
+//        if (usuarioInsertDto.getDniPersona() == null) {
+//            throw new RuntimeException("El DNI de la persona es obligatorio para crear un usuario");
+//        }
+//
         // Verificar que la persona existe
         Optional<Persona> persona = personaRepository.findById(usuarioInsertDto.getDniPersona());
         if (!persona.isPresent()) {
             throw new RuntimeException("No existe una persona con DNI: " + usuarioInsertDto.getDniPersona());
         }
-        
+
         Persona personaEntity = persona.get();
-        
+
         // Verificar que la persona no tenga ya un usuario del mismo tipo
-        List<Usuario> usuariosPersona = usuarioRepository.findAll().stream()
-                .filter(u -> u.getPersona() != null && 
+        Boolean tipoUsuarioExiste = usuarioRepository.findAll().stream()
+                .filter(u -> u.getPersona() != null &&
                         u.getPersona().getDni().equals(usuarioInsertDto.getDniPersona()))
-                .collect(Collectors.toList());
-        
-        TipoUsuarioEnum tipoUsuarioNuevo = convertirIdATipoUsuario(usuarioInsertDto.getTipoUsuarioId());
-        if (tipoUsuarioNuevo == null) {
-            throw new RuntimeException("Tipo de usuario no válido: " + usuarioInsertDto.getTipoUsuarioId());
+                .collect(Collectors.toList()).stream().anyMatch(u -> u.getTipoUsuario() == usuarioInsertDto.getTipoUsuario());
+
+        if (tipoUsuarioExiste){
+            throw new RuntimeException("La persona ya tiene un usuario de tipo: " + usuarioInsertDto.getTipoUsuario());
         }
-        
-        boolean tipoUsuarioExiste = usuariosPersona.stream()
-                .anyMatch(u -> u.getTipoUsuario() == tipoUsuarioNuevo);
-        
-        if (tipoUsuarioExiste) {
-            throw new RuntimeException("La persona ya tiene un usuario de tipo: " + tipoUsuarioNuevo);
-        }
-        
-        // Validar correo electrónico
-        if (usuarioInsertDto.getUsuario() == null || usuarioInsertDto.getUsuario().trim().isEmpty()) {
-            throw new RuntimeException("El correo electrónico es obligatorio");
-        }
-        
-        if (!validarEmail(usuarioInsertDto.getUsuario())) {
-            throw new RuntimeException("El formato del correo electrónico no es válido");
-        }
+
+//        TipoUsuarioEnum tipoUsuarioNuevo = convertirIdATipoUsuario(usuarioInsertDto.getTipoUsuarioId());
+//        if (tipoUsuarioNuevo == null) {
+//            throw new RuntimeException("Tipo de usuario no válido: " + usuarioInsertDto.getTipoUsuarioId());
+//        }
+//
+//        boolean tipoUsuarioExiste = usuariosPersona.stream()
+//                .anyMatch(u -> u.getTipoUsuario() == tipoUsuarioNuevo);
+//
+//        if (tipoUsuarioExiste) {
+//            throw new RuntimeException("La persona ya tiene un usuario de tipo: " + tipoUsuarioNuevo);
+//        }
+//
+//        // Validar correo electrónico
+//        if (usuarioInsertDto.getUsuario() == null || usuarioInsertDto.getUsuario().trim().isEmpty()) {
+//            throw new RuntimeException("El correo electrónico es obligatorio");
+//        }
+//
+//        if (!validarEmail(usuarioInsertDto.getUsuario())) {
+//            throw new RuntimeException("El formato del correo electrónico no es válido");
+//        }
         
         // Verificar que el correo no esté ya registrado
-        boolean emailExiste = usuarioRepository.findAll().stream()
+        Boolean emailExiste = usuarioRepository.findAll().stream()
                 .anyMatch(u -> u.getCorreo() != null && 
-                        u.getCorreo().toLowerCase().equals(usuarioInsertDto.getUsuario().toLowerCase().trim()));
+                        u.getCorreo().toLowerCase().equals(usuarioInsertDto.getCorreo().toLowerCase().trim()));
         
         if (emailExiste) {
             throw new RuntimeException("Ya existe un usuario registrado con el correo: " + 
-                    usuarioInsertDto.getUsuario().trim());
+                    usuarioInsertDto.getCorreo().trim());
         }
         
-        // Validar contraseña
-        if (usuarioInsertDto.getContrasenia() == null || usuarioInsertDto.getContrasenia().trim().isEmpty()) {
-            throw new RuntimeException("La contraseña es obligatoria");
-        }
-        
-        if (!validarContrasenia(usuarioInsertDto.getContrasenia())) {
-            throw new RuntimeException("La contraseña debe tener al menos 8 caracteres, " +
-                    "incluir mayúsculas, minúsculas, números y caracteres especiales");
-        }
-        
-        // Validaciones específicas por tipo de usuario
-        validarTipoUsuarioEspecifico(tipoUsuarioNuevo, personaEntity);
-        
-        Usuario usuario = new Usuario();
+//        // Validar contraseña
+//        if (usuarioInsertDto.getContrasenia() == null || usuarioInsertDto.getContrasenia().trim().isEmpty()) {
+//            throw new RuntimeException("La contraseña es obligatoria");
+//        }
+//
+//        if (!validarContrasenia(usuarioInsertDto.getContrasenia())) {
+//            throw new RuntimeException("La contraseña debe tener al menos 8 caracteres, " +
+//                    "incluir mayúsculas, minúsculas, números y caracteres especiales");
+//        }
+//
+//        // Validaciones específicas por tipo de usuario
+//        validarTipoUsuarioEspecifico(tipoUsuarioNuevo, personaEntity);
+
+        System.out.println("correo: " + usuarioInsertDto.getCorreo() +
+                            " DniPersona: " + usuarioInsertDto.getDniPersona());
+
+        Usuario usuario = modelMapper.map(usuarioInsertDto, Usuario.class);
         usuario.setPersona(personaEntity);
-        usuario.setTipoUsuario(tipoUsuarioNuevo);
-        usuario.setCorreo(usuarioInsertDto.getUsuario().toLowerCase().trim());
+
+        System.out.println(usuario.getPersona());
+
+//        usuario.setTipoUsuario(tipoUsuarioNuevo);
+//        usuario.setCorreo(usuarioInsertDto.getUsuario().toLowerCase().trim());
         
-        // Encriptar contraseña (si tienes PasswordEncoder configurado)
-        // usuario.setContrasenia(passwordEncoder.encode(usuarioInsertDto.getContrasenia()));
-        usuario.setContrasenia(usuarioInsertDto.getContrasenia()); // Temporal sin encriptar
+//        // Encriptar contraseña (si tienes PasswordEncoder configurado)
+//        // usuario.setContrasenia(passwordEncoder.encode(usuarioInsertDto.getContrasenia()));
+//        usuario.setContrasenia(usuarioInsertDto.getContrasenia()); // Temporal sin encriptar
         
         // Establecer estado por defecto
         usuario.setEstado(usuarioInsertDto.getEstado() != null ? usuarioInsertDto.getEstado() : false);
         
         Usuario savedUsuario = usuarioRepository.save(usuario);
-        
-        // Log de creación para auditoría
-        System.out.println("AUDITORÍA: Usuario creado - ID: " + savedUsuario.getIdUsuario() + 
-                " - Tipo: " + savedUsuario.getTipoUsuario() + 
-                " - Correo: " + savedUsuario.getCorreo() + 
-                " - DNI Persona: " + savedUsuario.getPersona().getDni());
-        
+
         return mapToResponseDto(savedUsuario);
     }
 

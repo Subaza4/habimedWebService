@@ -84,62 +84,62 @@ public class PersonaServiceImpl implements PersonaService {
 
     @Override
     public PersonaResponseDto save(PersonaInsertDto personaInsertDto) {
-        // Validaciones específicas del contexto de Persona
-        if (personaInsertDto.getDni() == null) {
-            throw new RuntimeException("El DNI es obligatorio");
-        }
-        
-        // Validar formato de DNI (8 dígitos)
-        if (!validarDNI(personaInsertDto.getDni())) {
-            throw new RuntimeException("El DNI debe tener exactamente 8 dígitos");
-        }
-        
-        // Verificar si ya existe una persona con ese DNI
-        if (personaRepository.existsById(personaInsertDto.getDni())) {
-            throw new RuntimeException("Ya existe una persona registrada con DNI: " + personaInsertDto.getDni());
-        }
-        
-        // Validar edad mínima (debe ser mayor de edad)
-        if (personaInsertDto.getFechaNacimiento() != null) {
-            if (!validarEdadMinima(personaInsertDto.getFechaNacimiento())) {
-                throw new RuntimeException("La persona debe ser mayor de edad (18 años)");
-            }
-            
-            // Validar que la fecha de nacimiento no sea futura
-            if (personaInsertDto.getFechaNacimiento().isAfter(LocalDate.now())) {
-                throw new RuntimeException("La fecha de nacimiento no puede ser futura");
-            }
-            
-            // Validar edad máxima razonable (150 años)
-            if (personaInsertDto.getFechaNacimiento().isBefore(LocalDate.now().minusYears(150))) {
-                throw new RuntimeException("La fecha de nacimiento no puede ser mayor a 150 años");
-            }
-        }
-        
-        // Validar formato de celular
-        if (personaInsertDto.getCelular() != null && !personaInsertDto.getCelular().trim().isEmpty()) {
-            if (!validarCelular(personaInsertDto.getCelular())) {
-                throw new RuntimeException("El número de celular debe tener 9 dígitos y comenzar con 9");
-            }
-        }
-        
-        // Validar nombres y apellidos (solo letras y espacios)
-        if (!validarNombreApellido(personaInsertDto.getNombres())) {
-            throw new RuntimeException("Los nombres solo pueden contener letras y espacios");
-        }
-        
-        if (!validarNombreApellido(personaInsertDto.getApellidos())) {
-            throw new RuntimeException("Los apellidos solo pueden contener letras y espacios");
-        }
-        
-        // Normalizar nombres y apellidos
-        personaInsertDto.setNombres(normalizarTexto(personaInsertDto.getNombres()));
-        personaInsertDto.setApellidos(normalizarTexto(personaInsertDto.getApellidos()));
-        
-        if (personaInsertDto.getDireccion() != null) {
-            personaInsertDto.setDireccion(normalizarTexto(personaInsertDto.getDireccion()));
-        }
-        
+//        // Validaciones específicas del contexto de Persona
+//        if (personaInsertDto.getDni() == null) {
+//            throw new RuntimeException("El DNI es obligatorio");
+//        }
+//
+//        // Validar formato de DNI (8 dígitos)
+//        if (!validarDNI(personaInsertDto.getDni())) {
+//            throw new RuntimeException("El DNI debe tener exactamente 8 dígitos");
+//        }
+//
+//        // Verificar si ya existe una persona con ese DNI
+//        if (personaRepository.existsById(personaInsertDto.getDni())) {
+//            throw new RuntimeException("Ya existe una persona registrada con DNI: " + personaInsertDto.getDni());
+//        }
+//
+//        // Validar edad mínima (debe ser mayor de edad)
+//        if (personaInsertDto.getFechaNacimiento() != null) {
+//            if (!validarEdadMinima(personaInsertDto.getFechaNacimiento())) {
+//                throw new RuntimeException("La persona debe ser mayor de edad (18 años)");
+//            }
+//
+//            // Validar que la fecha de nacimiento no sea futura
+//            if (personaInsertDto.getFechaNacimiento().isAfter(LocalDate.now())) {
+//                throw new RuntimeException("La fecha de nacimiento no puede ser futura");
+//            }
+//
+//            // Validar edad máxima razonable (150 años)
+//            if (personaInsertDto.getFechaNacimiento().isBefore(LocalDate.now().minusYears(150))) {
+//                throw new RuntimeException("La fecha de nacimiento no puede ser mayor a 150 años");
+//            }
+//        }
+//
+//        // Validar formato de celular
+//        if (personaInsertDto.getCelular() != null && !personaInsertDto.getCelular().trim().isEmpty()) {
+//            if (!validarCelular(personaInsertDto.getCelular())) {
+//                throw new RuntimeException("El número de celular debe tener 9 dígitos y comenzar con 9");
+//            }
+//        }
+//
+//        // Validar nombres y apellidos (solo letras y espacios)
+//        if (!validarNombreApellido(personaInsertDto.getNombres())) {
+//            throw new RuntimeException("Los nombres solo pueden contener letras y espacios");
+//        }
+//
+//        if (!validarNombreApellido(personaInsertDto.getApellidos())) {
+//            throw new RuntimeException("Los apellidos solo pueden contener letras y espacios");
+//        }
+//
+//        // Normalizar nombres y apellidos
+//        personaInsertDto.setNombres(normalizarTexto(personaInsertDto.getNombres()));
+//        personaInsertDto.setApellidos(normalizarTexto(personaInsertDto.getApellidos()));
+//
+//        if (personaInsertDto.getDireccion() != null) {
+//            personaInsertDto.setDireccion(normalizarTexto(personaInsertDto.getDireccion()));
+//        }
+//
         Persona persona = modelMapper.map(personaInsertDto, Persona.class);
         Persona savedPersona = personaRepository.save(persona);
         return mapToResponseDto(savedPersona);

@@ -9,7 +9,6 @@ public class UsuarioResponseDto {
     private Integer idUsuario;
     private Long dniPersona;
     private PersonaResponseDto persona;
-
     private TipoUsuarioEnum tipoUsuario;
     private String correo;
     private Boolean estado;

@@ -36,7 +36,7 @@ public class Usuario {
     @Column(name = "contrasenia", nullable = false, length = 255)
     private String contrasenia;
 
-    @Column(name = "estado")
+    @Column(name = "estado", nullable = false)
     private Boolean estado = false;
 
     // Relaciones inversas
@@ -50,6 +50,6 @@ public class Usuario {
     private List<Cita> citasComoDoctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idconsultorio", referencedColumnName = "idconsultorio", insertable = false, updatable = false)
+    @JoinColumn(name = "idconsultorio", referencedColumnName = "idconsultorio", insertable = false, updatable = false, nullable = true)
     private Consultorio consultorio;
 }
