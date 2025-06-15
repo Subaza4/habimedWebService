@@ -1,0 +1,823 @@
+{
+  "info": {
+    "name": "HabimedWebService API",
+    "_postman_id": "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección para probar todos los endpoints del servicio HabimedWebService"
+  },
+  "item": [
+    {
+      "name": "Citas",
+      "item": [
+        {
+          "name": "GET /api/citas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/citas", "host": ["{{baseUrl}}"], "path": ["api","citas"] }
+          }
+        },
+        {
+          "name": "GET /api/citas/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/citas/:id", "host": ["{{baseUrl}}"], "path": ["api","citas",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/citas/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCita\": 1,\n  \"idServicio\": 2,\n  \"idConsultorio\": 3,\n  \"idMedico\": 4,\n  \"dniPersona\": 12345678,\n  \"motivo\": \"Control anual\",\n  \"fechaHoraInicio\": \"2025-06-20T10:00:00\",\n  \"fechaHoraFin\": \"2025-06-20T10:30:00\",\n  \"estado\": \"PENDIENTE\",\n  \"descripcion\": \"Revisión general\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/citas/filter", "host": ["{{baseUrl}}"], "path": ["api","citas","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/citas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idcita\": 0,\n  \"idservicio\": 2,\n  \"idconsultorio\": 3,\n  \"idmedico\": 4,\n  \"dniPersona\": \"12345678\",\n  \"motivo\": \"Control anual\",\n  \"fechaHoraInicio\": \"2025-06-20T10:00:00\",\n  \"fechaHoraFin\": \"2025-06-20T10:30:00\",\n  \"estado\": \"PENDIENTE\",\n  \"descripcion\": \"Revisión general\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/citas", "host": ["{{baseUrl}}"], "path": ["api","citas"] }
+          }
+        },
+        {
+          "name": "PATCH /api/citas/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idcita\": 1,\n  \"idservicio\": 2,\n  \"idconsultorio\": 3,\n  \"idmedico\": 4,\n  \"dniPersona\": \"12345678\",\n  \"motivo\": \"Control actualizado\",\n  \"fechaHoraInicio\": \"2025-06-20T11:00:00\",\n  \"fechaHoraFin\": \"2025-06-20T11:30:00\",\n  \"estado\": \"CONFIRMADA\",\n  \"descripcion\": \"Hora ajustada\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/citas/:id", "host": ["{{baseUrl}}"], "path": ["api","citas",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/citas/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/citas/:id", "host": ["{{baseUrl}}"], "path": ["api","citas",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Consultorios",
+      "item": [
+        {
+          "name": "GET /api/consultorios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/consultorios", "host": ["{{baseUrl}}"], "path": ["api","consultorios"] }
+          }
+        },
+        {
+          "name": "GET /api/consultorios/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/consultorios/:id", "host": ["{{baseUrl}}"], "path": ["api","consultorios",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/consultorios/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Consultorio Central\",\n  \"ubicacion\": \"Av. Principal 123\",\n  \"ruc\": \"20123456789\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultorios/filter", "host": ["{{baseUrl}}"], "path": ["api","consultorios","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/consultorios",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ruc\": \"20123456789\",\n  \"nombre\": \"Consultorio Central\",\n  \"ubicacion\": \"Av. Principal 123\",\n  \"direccion\": \"Miraflores, Lima\",\n  \"telefono\": \"987654321\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultorios", "host": ["{{baseUrl}}"], "path": ["api","consultorios"] }
+          }
+        },
+        {
+          "name": "PATCH /api/consultorios/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ruc\": \"20123456789\",\n  \"nombre\": \"Consultorio Actualizado\",\n  \"ubicacion\": \"Av. Secundaria 456\",\n  \"direccion\": \"San Isidro, Lima\",\n  \"telefono\": \"912345678\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/consultorios/:id", "host": ["{{baseUrl}}"], "path": ["api","consultorios",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/consultorios/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/consultorios/:id", "host": ["{{baseUrl}}"], "path": ["api","consultorios",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DetallePagos",
+      "item": [
+        {
+          "name": "GET /api/detalle-pagos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/detalle-pagos", "host": ["{{baseUrl}}"], "path": ["api","detalle-pagos"] }
+          }
+        },
+        {
+          "name": "GET /api/detalle-pagos/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/detalle-pagos/:id", "host": ["{{baseUrl}}"], "path": ["api","detalle-pagos",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/detalle-pagos/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDetallePago\": 1,\n  \"montoMin\": 50.00,\n  \"montoMax\": 500.00,\n  \"metodoPago\": \"TARJETA\",\n  \"estadoPago\": \"PAGADO\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/detalle-pagos/filter", "host": ["{{baseUrl}}"], "path": ["api","detalle-pagos","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/detalle-pagos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monto\": 150.00,\n  \"metodoPago\": \"TARJETA\",\n  \"estadoPago\": \"PENDIENTE\",\n  \"fechaPago\": \"2025-06-14T14:30:00\",\n  \"cita\": { \"idcita\": 5 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/detalle-pagos", "host": ["{{baseUrl}}"], "path": ["api","detalle-pagos"] }
+          }
+        },
+        {
+          "name": "PATCH /api/detalle-pagos/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monto\": 150.00,\n  \"metodoPago\": \"EFECTIVO\",\n  \"estadoPago\": \"PAGADO\",\n  \"fechaPago\": \"2025-06-14T15:00:00\",\n  \"cita\": { \"idcita\": 5 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/detalle-pagos/:id", "host": ["{{baseUrl}}"], "path": ["api","detalle-pagos",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/detalle-pagos/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/detalle-pagos/:id", "host": ["{{baseUrl}}"], "path": ["api","detalle-pagos",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Diagnosticos",
+      "item": [
+        {
+          "name": "GET /api/diagnosticos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/diagnosticos", "host": ["{{baseUrl}}"], "path": ["api","diagnosticos"] }
+          }
+        },
+        {
+          "name": "GET /api/diagnosticos/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/diagnosticos/:id", "host": ["{{baseUrl}}"], "path": ["api","diagnosticos",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/diagnosticos/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDiagnostico\": 1,\n  \"idCita\": 5,\n  \"descripcionContiene\": \"dolor\",\n  \"fechaDiagnosticoInicio\": \"2025-01-01\",\n  \"fechaDiagnosticoFin\": \"2025-12-31\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/diagnosticos/filter", "host": ["{{baseUrl}}"], "path": ["api","diagnosticos","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/diagnosticos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCita\": 5,\n  \"descripcion\": \"Paciente con dolor crónico de espalda\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/diagnosticos", "host": ["{{baseUrl}}"], "path": ["api","diagnosticos"] }
+          }
+        },
+        {
+          "name": "PATCH /api/diagnosticos/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDiagnostico\": 1,\n  \"idCita\": 5,\n  \"descripcion\": \"Dolor aliviado después de fisioterapia\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/diagnosticos/:id", "host": ["{{baseUrl}}"], "path": ["api","diagnosticos",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/diagnosticos/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/diagnosticos/:id", "host": ["{{baseUrl}}"], "path": ["api","diagnosticos",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Especialidades",
+      "item": [
+        {
+          "name": "GET /api/especialidades",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/especialidades", "host": ["{{baseUrl}}"], "path": ["api","especialidades"] }
+          }
+        },
+        {
+          "name": "GET /api/especialidades/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/especialidades/:id", "host": ["{{baseUrl}}"], "path": ["api","especialidades",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/especialidades/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreContiene\": \"derma\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/especialidades/filter", "host": ["{{baseUrl}}"], "path": ["api","especialidades","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/especialidades",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dermatología\",\n  \"descripcion\": \"Especialidad que trata enfermedades de la piel\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/especialidades", "host": ["{{baseUrl}}"], "path": ["api","especialidades"] }
+          }
+        },
+        {
+          "name": "PATCH /api/especialidades/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dermatología Avanzada\",\n  \"descripcion\": \"Incluye tratamientos láser\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/especialidades/:id", "host": ["{{baseUrl}}"], "path": ["api","especialidades",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/especialidades/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/especialidades/:id", "host": ["{{baseUrl}}"], "path": ["api","especialidades",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HorarioDoctor",
+      "item": [
+        {
+          "name": "GET /api/horario_Doctor",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/horario_Doctor", "host": ["{{baseUrl}}"], "path": ["api","horario_Doctor"] }
+          }
+        },
+        {
+          "name": "GET /api/horario_Doctor/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/horario_Doctor/:id", "host": ["{{baseUrl}}"], "path": ["api","horario_Doctor",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/horario_Doctor/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDoctor\": 4,\n  \"diaSemana\": \"Lunes\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/horario_Doctor/filter", "host": ["{{baseUrl}}"], "path": ["api","horario_Doctor","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/horario_Doctor",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDoctor\": 4,\n  \"diaSemana\": \"Lunes\",\n  \"horaInicio\": \"2025-06-16T08:00:00\",\n  \"horaFin\": \"2025-06-16T12:00:00\",\n  \"duracionMinutos\": 30\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/horario_Doctor", "host": ["{{baseUrl}}"], "path": ["api","horario_Doctor"] }
+          }
+        },
+        {
+          "name": "PATCH /api/horario_Doctor/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDoctor\": 4,\n  \"diaSemana\": \"Martes\",\n  \"horaInicio\": \"2025-06-17T08:00:00\",\n  \"horaFin\": \"2025-06-17T12:00:00\",\n  \"duracionMinutos\": 45\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/horario_Doctor/:id", "host": ["{{baseUrl}}"], "path": ["api","horario_Doctor",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/horario_Doctor/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/horario_Doctor/:id", "host": ["{{baseUrl}}"], "path": ["api","horario_Doctor",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permisos",
+      "item": [
+        {
+          "name": "GET /permisos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/permisos", "host": ["{{baseUrl}}"], "path": ["permisos"] }
+          }
+        },
+        {
+          "name": "GET /permisos/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/permisos/:id", "host": ["{{baseUrl}}"], "path": ["permisos",":id"] }
+          }
+        },
+        {
+          "name": "POST /permisos/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idPermiso\": 1,\n  \"idDoctor\": 4,\n  \"idPaciente\": 7\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/permisos/filter", "host": ["{{baseUrl}}"], "path": ["permisos","filter"] }
+          }
+        },
+        {
+          "name": "POST /permisos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idpermisohistorial\": 0,\n  \"iddoctor\": 4,\n  \"idpaciente\": 7,\n  \"fechaotorgapermiso\": \"2025-06-14\",\n  \"fechadeniegapermiso\": null,\n  \"estado\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/permisos", "host": ["{{baseUrl}}"], "path": ["permisos"] }
+          }
+        },
+        {
+          "name": "PATCH /permisos/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idpermisohistorial\": 1,\n  \"iddoctor\": 4,\n  \"idpaciente\": 7,\n  \"fechaotorgapermiso\": \"2025-06-14\",\n  \"fechadeniegapermiso\": \"2025-06-15\",\n  \"estado\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/permisos/:id", "host": ["{{baseUrl}}"], "path": ["permisos",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /permisos/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/permisos/:id", "host": ["{{baseUrl}}"], "path": ["permisos",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Personas",
+      "item": [
+        {
+          "name": "GET /api/personas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/personas", "host": ["{{baseUrl}}"], "path": ["api","personas"] }
+          }
+        },
+        {
+          "name": "GET /api/personas/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/personas/:id", "host": ["{{baseUrl}}"], "path": ["api","personas",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/personas/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dni\": 12345678,\n  \"nombres\": \"Juan\",\n  \"apellidos\": \"Pérez\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/personas/filter", "host": ["{{baseUrl}}"], "path": ["api","personas","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/personas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dni\": 12345678,\n  \"nombres\": \"Juan\",\n  \"apellidos\": \"Pérez\",\n  \"celular\": \"987654321\",\n  \"direccion\": \"Miraflores, Lima\",\n  \"fechaNacimiento\": \"1980-05-20\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/personas", "host": ["{{baseUrl}}"], "path": ["api","personas"] }
+          }
+        },
+        {
+          "name": "PATCH /api/personas/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dni\": 12345678,\n  \"nombres\": \"Juan Carlos\",\n  \"apellidos\": \"Pérez Gómez\",\n  \"celular\": \"912345678\",\n  \"direccion\": \"San Isidro, Lima\",\n  \"fechaNacimiento\": \"1980-05-20\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/personas/:id", "host": ["{{baseUrl}}"], "path": ["api","personas",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/personas/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/personas/:id", "host": ["{{baseUrl}}"], "path": ["api","personas",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recetas",
+      "item": [
+        {
+          "name": "GET /api/recetas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/recetas", "host": ["{{baseUrl}}"], "path": ["api","recetas"] }
+          }
+        },
+        {
+          "name": "GET /api/recetas/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/recetas/:id", "host": ["{{baseUrl}}"], "path": ["api","recetas",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/recetas/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idReceta\": 1,\n  \"idCita\": 5\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recetas/filter", "host": ["{{baseUrl}}"], "path": ["api","recetas","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/recetas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCita\": 5,\n  \"descripcion\": \"Tomar 1 tableta cada 8 horas durante 5 días\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recetas", "host": ["{{baseUrl}}"], "path": ["api","recetas"] }
+          }
+        },
+        {
+          "name": "PATCH /api/recetas/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idReceta\": 1,\n  \"idCita\": 5,\n  \"descripcion\": \"Ajustar dosis a 2 tabletas diarias\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recetas/:id", "host": ["{{baseUrl}}"], "path": ["api","recetas",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/recetas/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/recetas/:id", "host": ["{{baseUrl}}"], "path": ["api","recetas",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recomendaciones",
+      "item": [
+        {
+          "name": "GET /api/recomendaciones",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/recomendaciones", "host": ["{{baseUrl}}"], "path": ["api","recomendaciones"] }
+          }
+        },
+        {
+          "name": "GET /api/recomendaciones/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/recomendaciones/:id", "host": ["{{baseUrl}}"], "path": ["api","recomendaciones",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/recomendaciones/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idRecomendacion\": 1,\n  \"idCita\": 5\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recomendaciones/filter", "host": ["{{baseUrl}}"], "path": ["api","recomendaciones","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/recomendaciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCita\": 5,\n  \"descripcion\": \"Aplicar compresas frías cada 4 horas\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recomendaciones", "host": ["{{baseUrl}}"], "path": ["api","recomendaciones"] }
+          }
+        },
+        {
+          "name": "PATCH /api/recomendaciones/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idRecomendacion\": 1,\n  \"idCita\": 5,\n  \"descripcion\": \"Aplicar compresas calientes antes de dormir\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/recomendaciones/:id", "host": ["{{baseUrl}}"], "path": ["api","recomendaciones",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/recomendaciones/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/recomendaciones/:id", "host": ["{{baseUrl}}"], "path": ["api","recomendaciones",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resenias",
+      "item": [
+        {
+          "name": "GET /api/resenias",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/resenias", "host": ["{{baseUrl}}"], "path": ["api","resenias"] }
+          }
+        },
+        {
+          "name": "GET /api/resenias/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/resenias/:id", "host": ["{{baseUrl}}"], "path": ["api","resenias",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/resenias/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idResenia\": 1,\n  \"idDoctor\": 4,\n  \"calificacionMin\": 3.0,\n  \"calificacionMax\": 5.0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/resenias/filter", "host": ["{{baseUrl}}"], "path": ["api","resenias","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/resenias",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDoctor\": 4,\n  \"calificacion\": 4.5,\n  \"comentario\": \"Excelente atención\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/resenias", "host": ["{{baseUrl}}"], "path": ["api","resenias"] }
+          }
+        },
+        {
+          "name": "PATCH /api/resenias/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idResenia\": 1,\n  \"idDoctor\": 4,\n  \"calificacion\": 5.0,\n  \"comentario\": \"Mejoró aún más la experiencia\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/resenias/:id", "host": ["{{baseUrl}}"], "path": ["api","resenias",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/resenias/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/resenias/:id", "host": ["{{baseUrl}}"], "path": ["api","resenias",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Servicios",
+      "item": [
+        {
+          "name": "GET /api/servicios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/servicios", "host": ["{{baseUrl}}"], "path": ["api","servicios"] }
+          }
+        },
+        {
+          "name": "GET /api/servicios/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/servicios/:id", "host": ["{{baseUrl}}"], "path": ["api","servicios",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/servicios/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idServicio\": 1,\n  \"idEspecialidad\": 2,\n  \"nombreContiene\": \"consulta\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/servicios/filter", "host": ["{{baseUrl}}"], "path": ["api","servicios","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/servicios",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idEspecialidad\": 2,\n  \"nombre\": \"Consulta Médica\",\n  \"descripcion\": \"Evaluación general\",\n  \"riesgos\": \"Ninguno\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/servicios", "host": ["{{baseUrl}}"], "path": ["api","servicios"] }
+          }
+        },
+        {
+          "name": "PATCH /api/servicios/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idServicio\": 1,\n  \"idEspecialidad\": 2,\n  \"nombre\": \"Consulta Premium\",\n  \"descripcion\": \"Incluye ecografía\",\n  \"riesgos\": \"Sensibilidad a gel\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/servicios/:id", "host": ["{{baseUrl}}"], "path": ["api","servicios",":id"] }
+          }
+        },
+        {
+          "name": "DELETE /api/servicios/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/servicios/:id", "host": ["{{baseUrl}}"], "path": ["api","servicios",":id"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "GET /api/usuarios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api","usuarios"] }
+          }
+        },
+        {
+          "name": "GET /api/usuarios/:id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/:id", "host": ["{{baseUrl}}"], "path": ["api","usuarios",":id"] }
+          }
+        },
+        {
+          "name": "POST /api/usuarios/filter",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dniPersona\": 12345678,\n  \"tipoUsuarioId\": 1,\n  \"usuarioContiene\": \"admin\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/usuarios/filter", "host": ["{{baseUrl}}"], "path": ["api","usuarios","filter"] }
+          }
+        },
+        {
+          "name": "POST /api/usuarios",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dniPersona\": 12345678,\n  \"tipoUsuarioId\": 1,\n  \"usuario\": \"admin\",\n  \"contrasenia\": \"pa$$w0rd\",\n  \"token\": null,\n  \"estado\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api","usuarios"] }
+          }
+        },
+        {
+          "name": "PATCH /api/usuarios/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dniPersona\": 12345678,\n  \"tipoUsuarioId\": 2,\n  \"usuario\": \"usuario_mod\",\n  \"contrasenia\": \"nuevaClave123\",\n  \"token\": \"nuevoToken\",\n  \"estado\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/usuarios/:id", "host": ["{{baseUrl}}"], "path": ["api","usuarios",":id"] }
+          }  
+        },
+        {
+          "name": "DELETE /api/usuarios/:id",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/:id", "host": ["{{baseUrl}}"], "path": ["api","usuarios",":id"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}
