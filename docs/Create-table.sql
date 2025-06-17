@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "medic"."persona" (
     "dni" BIGINT NOT NULL,
     "nombres" VARCHAR(45) NOT NULL,
     "apellidos" VARCHAR(45) NOT NULL,
-    "correo" VARCHAR(45),
+    --"correo" VARCHAR(45),
     "celular" VARCHAR(9) NULL,
     "direccion" VARCHAR(45) NULL,
     "fecha_nacimiento" DATE NULL,

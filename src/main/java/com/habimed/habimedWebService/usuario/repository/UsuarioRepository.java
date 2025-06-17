@@ -4,9 +4,12 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.List;
+import java.util.Optional;
 
+import com.habimed.habimedWebService.usuario.domain.model.Usuario;
 import com.habimed.habimedWebService.usuario.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
@@ -161,5 +164,7 @@ public class UsuarioRepository {
         return jdbcTemplate.query(sql, dto.usuarioRowMapper(), token).get(0);
 
     }
+
+
 
 }

@@ -2,25 +2,24 @@ package com.habimed.habimedWebService.persona.application;
 
 import com.habimed.habimedWebService.persona.domain.model.Persona;
 import com.habimed.habimedWebService.persona.domain.service.PersonaService;
-import com.habimed.habimedWebService.persona.dto.PersonaRequest;
+import com.habimed.habimedWebService.persona.dto.PersonaFilterDto;
+import com.habimed.habimedWebService.persona.dto.PersonaInsertDto;
+import com.habimed.habimedWebService.persona.dto.PersonaUpdateDto;
+import com.habimed.parameterREST.ApiResponse;
 import com.habimed.parameterREST.PeticionREST; // Mantén esta si tu clase base la usa
 import com.habimed.parameterREST.ResponseREST; // Importa tu clase ResponseREST
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity; // Para devolver la respuesta HTTP completa
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList; // Para listas vacías
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/seguridad")
+@RequestMapping("/persona")
 public class PersonasController extends PeticionREST { // Si PeticionREST no es estrictamente necesario o no aporta al JSON, considera quitarlo.
 
     private final PersonaService personaService;
@@ -30,119 +29,106 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
         this.personaService = personaService;
     }
 
-    @PostMapping("/getPersonas")
-    public ResponseEntity<ResponseREST> getPersonas(@RequestBody PersonaRequest request) {
-        ResponseREST response = new ResponseREST();
-        try{
-            List<Persona> personas = personaService.getAllPersonas(request);
+    @GetMapping("getPersonas")
+    public ResponseEntity<ApiResponse<List<Persona>>> findAllPersonas(@RequestBody PersonaFilterDto request) {
+        try {
+            List<Persona> personas = personaService.findAll(request);
             if (personas.isEmpty()) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se encontraron personas");
-                response.setSalida(new ArrayList<>());
-            } else {
-                response.setStatus(STATUS_OK);
-                response.setSalida(personas);
-                response.setSalidaMsg("Personas encontradas exitosamente."); // Opcional
+                return ResponseEntity.ok(
+                        ApiResponse.success(new ArrayList<>(), "No se encontraron personas")
+                );
             }
-            return ResponseEntity.ok(response);
-        }catch(Exception e){
-            response.setStatus(STATUS_KO);
+            return ResponseEntity.ok(
+                    ApiResponse.success(personas, "Personas encontradas exitosamente")
+            );
+
+        } catch (Exception e) {
             System.out.println("Ocurrió un error al obtener las personas: " + e.getMessage());
-            response.setSalidaMsg("Ocurrió un error al obtener las personas");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Ocurrió un error al obtener las personas"));
         }
     }
 
-    @PostMapping("/getPersona")
-    public ResponseEntity<ResponseREST> getPersona(@RequestBody PersonaRequest request) {
+    @GetMapping("/{dni}")
+    public ResponseEntity<ApiResponse<Persona>> findById(@PathVariable Long dni) {
         ResponseREST response = new ResponseREST();
-        if (request == null || request.getDni() == null) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("DNI no proporcionado o inválido.");
-            response.setSalida(null); // O un objeto vacío si prefieres, ej: new Object()
-            return ResponseEntity.ok(response);
+        if (dni == null || dni < 10000000) {
+            return ResponseEntity.ok(
+                    ApiResponse.success(null,
+                            "El DNI debe tener un valor mayor a 10000000"));
         }else{
             try{
-                Optional<Persona> persona = personaService.getPersonaById(request.getDni()); // Asume que PersonaRequest tiene un método getDni()
+                Optional<Persona> persona = personaService.findById(dni);
                 if (persona.isPresent()) {
-                    response.setStatus(STATUS_OK);
-                    response.setSalida(persona.get());
-                    response.setSalidaMsg("Persona encontrada exitosamente.");
-                    return ResponseEntity.ok(response);
+                    return ResponseEntity.ok(ApiResponse.success(persona.get(), "Persona encontrada exitosamente"));
                 } else {
-                    response.setStatus(STATUS_KO);
-                    response.setSalidaMsg("No se encontró persona con DNI: " + request.getDni());
-                    response.setSalida(null); // O un objeto vacío si prefieres, ej: new Object()
-                    return ResponseEntity.ok(response);
+                    return ResponseEntity.ok(ApiResponse.success(null, "No se encontró a la persona"));
                 }
             }catch (Exception e) {
-                response.setStatus(STATUS_KO);
-                System.out.println("Ocurrió un error al obtener los datos de la persona: " + e.getMessage());
-                response.setSalidaMsg("Ocurrió un error al obtener los datos de la persona");
-                return ResponseEntity.ok(response);
+                System.out.println("Ocurrió un error al obtener las personas: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(ApiResponse.error("Ocurrió un error al obtener la persona"));
             }
         }
     }
 
-    @PostMapping("/setPersona")
-    public ResponseEntity<ResponseREST> setPersona(@RequestBody PersonaRequest request) {
+    @PostMapping("/savePersona")
+    public ResponseEntity<ApiResponse<Persona>> setPersona(@RequestBody PersonaInsertDto request) {
         ResponseREST response = new ResponseREST();
         
         if (request == null || request.getDni() == null) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("El parámetro persona no puede ser nulo o el DNI no puede ser nulo.");
-            response.setSalida(null);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(ApiResponse.error("El DNI no puede ser nulo"));
         }
 
         try{
-            int resultado = personaService.setPersona(request);
-            Map<String, Object> salidaMap = new HashMap<>();
-            salidaMap.put("resultado", resultado);
-
-            switch (resultado) {
-                case 0:
-                    response.setStatus(STATUS_KO);
-                    response.setSalidaMsg("Error: DNI no proporcionado.");
-                    response.setSalida(salidaMap);
-                    break;
-                case 1:
-                    response.setStatus(STATUS_OK);
-                    response.setSalidaMsg("Persona registrada exitosamente.");
-                    response.setSalida(salidaMap);
-                    break;
-                case 2:
-                    response.setStatus(STATUS_OK);
-                    response.setSalidaMsg("Persona actualizada exitosamente.");
-                    response.setSalida(salidaMap);
-                    break;
-                default:
-                    response.setStatus(STATUS_KO);
-                    response.setSalidaMsg("Error desconocido al procesar la solicitud.");
-                    response.setSalida(salidaMap);
+            //Insert
+            Persona _persona = personaService.savePersona(request);
+            if(_persona != null) {
+                return ResponseEntity.ok(ApiResponse.success(_persona,"Persona registrada correctamente"));
+            }else{
+                return ResponseEntity.ok(ApiResponse.success(null, "No se pudo registrar la persona"));
             }
-
-            return ResponseEntity.ok(response);
         }catch (Exception e) {
-            System.out.println("[setPersona] Error en la peticion: ");
             e.printStackTrace();
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg(e.getMessage());
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
         }
     }
 
-    @PostMapping("/deletePersona")
-    public ResponseEntity<ResponseREST> deletePersona(@RequestBody PersonaRequest request){
+    @PatchMapping("/savePersona/{dni}")
+    public ResponseEntity<ApiResponse<Persona>> updatePersona(@RequestBody PersonaUpdateDto request, @PathVariable Long dni) {
+        ResponseREST response = new ResponseREST();
+
+        if (request == null || dni == null || dni < 10000000) {
+            return ResponseEntity.ok(ApiResponse.error("El DNI no puede ser nulo"));
+        }
+
+        try{
+            //Update
+            Persona _persona = personaService.updatePersona(request, dni);
+            if(_persona != null) {
+                return ResponseEntity.ok(ApiResponse.success(_persona, "Persona registrada correctamente"));
+            }else{
+                return ResponseEntity.ok(ApiResponse.success(null, "No se pudo registrar la persona"));
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
+        }
+    }
+
+    @DeleteMapping("/{dni}")
+    public ResponseEntity<ResponseREST> deletePersona(@PathVariable Long dni){
         ResponseREST response = new ResponseREST();
         try {
-            if(request.getDni() == null){
+            if(dni == null){
                 response.setStatus(STATUS_KO);
                 response.setSalidaMsg("El DNI no puede ser nulo.");
                 return ResponseEntity.ok(response);
             }
         
-            boolean eliminado = personaService.deletePersona(request.getDni());
+            boolean eliminado = personaService.deletePersona(dni);
             if(eliminado) {
                 response.setStatus(STATUS_OK);
                 response.setSalidaMsg("Persona eliminada exitosamente.");

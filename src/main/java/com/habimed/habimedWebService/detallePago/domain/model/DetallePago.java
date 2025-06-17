@@ -16,7 +16,7 @@ public class DetallePago {
     private Long idDetallePago;
     private Cita cita;
     private BigDecimal monto;
-    private String metodoPago;
-    private String estadoPago;
+    private MetodoPagoEnum metodoPago;
+    private EstadoPagoEnum estadoPago;
     private LocalDateTime fechaPago;
 }

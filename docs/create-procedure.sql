@@ -5,7 +5,7 @@ CREATE OR REPLACE PROCEDURE medic.upsert_persona(
     IN p_dni BIGINT,
     IN p_nombres VARCHAR,
     IN p_apellidos VARCHAR,
-    IN p_correo VARCHAR,
+    --IN p_correo VARCHAR,
     IN p_celular VARCHAR,
     IN p_direccion VARCHAR,
     IN p_fecha_nacimiento DATE,
@@ -26,7 +26,7 @@ BEGIN
         UPDATE medic."persona"
         SET "nombres" = p_nombres,
             "apellidos" = p_apellidos,
-            "correo" = p_correo,
+            --"correo" = p_correo,
             "celular" = p_celular,
             "direccion" = p_direccion,
             "fecha_nacimiento" = p_fecha_nacimiento
@@ -35,9 +35,9 @@ BEGIN
     ELSE
         -- Caso contrario, se insertará un nuevo registro en la tabla y se retornará el valor de 1
         INSERT INTO medic."persona"(
-            "dni", "nombres", "apellidos", "correo", "celular", "direccion", "fecha_nacimiento"
+            "dni", "nombres", "apellidos", "celular", "direccion", "fecha_nacimiento"
         ) VALUES (
-            p_dni, p_nombres, p_apellidos, p_correo, p_celular, p_direccion, p_fecha_nacimiento
+            p_dni, p_nombres, p_apellidos, p_celular, p_direccion, p_fecha_nacimiento
         );
         p_resultado := 1; -- Nuevo registro insertado
     END IF;
