@@ -4,10 +4,7 @@ import java.util.List;
 
 import com.habimed.habimedWebService.cita.dto.CitaRequest;
 import com.habimed.habimedWebService.usuario.domain.model.Usuario;
-import com.habimed.habimedWebService.usuario.dto.LoginRequest;
-import com.habimed.habimedWebService.usuario.dto.NewUsuarioRequest;
-import com.habimed.habimedWebService.usuario.dto.UsuarioDTO;
-import com.habimed.habimedWebService.usuario.dto.UsuarioRequest;
+import com.habimed.habimedWebService.usuario.dto.*;
 
 public interface UsuarioService {
     /*
@@ -23,22 +20,29 @@ public interface UsuarioService {
      * Retorna la lista de usuarios filtrados por parametros (tipo, nombre, correo, estado)
      * @return
      */
-    List<UsuarioDTO> getListUsuarios(UsuarioRequest request);
+    List<UsuarioResponseDto> findAllUsuarios(UsuarioFilterDto request);
 
     /**
      * Obtener los datos un usuario por su id o username
     */
-    UsuarioDTO getUsuario(Long dni);
+    UsuarioResponseDto findByIdUsuario(Integer id);
+
+    /**
+     * Crear de un usuario
+    */
+    UsuarioResponseDto saveUsuario(UsuarioInsertDto usuario);
 
     /**
      * Actualizar los datos de un usuario
-    */
-    Integer setUsuario(UsuarioRequest usuario);
+     * @param usuario
+     * @return
+     */
+    UsuarioResponseDto updateUsuario(UsuarioInsertDto usuario);
 
     /**
-     * Eliminar un usuario por su dni
+     * Eliminar un usuario por su idusuario
     */
-    boolean deleteUsuario(String dni);
+    Boolean deleteUsuario(Integer idusuario);
 
     UsuarioDTO getUsuarioByToken(String token);
 

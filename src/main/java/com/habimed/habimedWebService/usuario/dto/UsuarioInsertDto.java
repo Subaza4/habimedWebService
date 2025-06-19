@@ -25,5 +25,5 @@ public class UsuarioInsertDto {
 //    @Size(max = 255, message = "El token no puede exceder 255 caracteres")
 //    private String token;
     @NotNull(message = "El estado es obligatorio")
-    private Boolean estado = false;
+    private Boolean estado = true;
 }

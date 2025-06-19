@@ -48,9 +48,7 @@ public class PersonaRepository {
 
         params.add(limit);
         params.add(offset);
-        System.out.println(sql.toString());
-        System.out.println(params.toString());
-        System.out.println(limit.toString() + " - " + offset.toString());
+
         return jdbcTemplate.query(sql.toString(), params.toArray(), personaRowMapper());
     }
 

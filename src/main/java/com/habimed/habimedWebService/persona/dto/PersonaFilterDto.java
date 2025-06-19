@@ -25,7 +25,7 @@ public class PersonaFilterDto extends RequestREST {
         }
         if (this.dni != null && this.dni > 0) {
             sql.append(" AND dni = ?");
-            params.add("%" + this.dni + "%");
+            params.add(this.dni);
         }
 
         if (this.correo != null && !this.correo.isEmpty()) {

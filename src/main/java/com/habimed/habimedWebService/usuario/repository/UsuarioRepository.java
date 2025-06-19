@@ -3,13 +3,16 @@ package com.habimed.habimedWebService.usuario.repository;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.habimed.habimedWebService.usuario.domain.model.TipoUsuarioEnum;
 import com.habimed.habimedWebService.usuario.domain.model.Usuario;
 import com.habimed.habimedWebService.usuario.dto.LoginRequest;
+import com.habimed.habimedWebService.usuario.dto.UsuarioFilterDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
@@ -18,12 +21,48 @@ import com.habimed.habimedWebService.usuario.dto.UsuarioRequest;
 
 @Repository
 public class UsuarioRepository {
+
+    @Value("${habimed.default.pagina}")
+    private static Integer NumElementos;
+    @Value("${habimed.default.numelementos}")
+    private static Integer NumPagina;
+
     private final JdbcTemplate jdbcTemplate;
     private final UsuarioDTO dto = new UsuarioDTO();
 
     @Autowired
     public UsuarioRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Usuario> findAllUsuarios(UsuarioFilterDto request) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT u.dnipersona, u.tipousuario, u.usuario, u.estado, ");
+        sql.append("tu.nombre as tipo_usuario_nombre ");
+        sql.append("FROM medic.usuario u WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+
+        request.buildWhereClause("u", sql, params);
+
+        sql.append(" ORDER BY u.dnipersona DESC LIMIT ? OFFSET ?");
+        Integer limit = request.getNum_elementos() > 0 ? request.getNum_elementos() : NumElementos;
+        Integer offset = request.getPagina() > 0 ? (request.getPagina() -1) : NumPagina;
+        params.add(limit);
+        params.add(offset);
+
+        return jdbcTemplate.query(sql.toString(), usuarioRowMapper(), params.toArray());
+    }
+
+    public Optional<Usuario> findByIdUsuario(Integer id){
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT u.dnipersona, u.tipousuario, u.usuario, u.estado, ");
+        sql.append("tu.nombre as tipo_usuario_nombre ");
+        sql.append("FROM medic.usuario u WHERE u.idusuario = ? ");
+        try{
+            return Optional.of(jdbcTemplate.queryForObject(sql.toString(), usuarioRowMapper(), id));
+        }catch(Exception e){
+            return Optional.empty();
+        }
     }
 
     // Obtener un usuario o varios usuarios
@@ -57,7 +96,7 @@ public class UsuarioRepository {
     }
 
     // Save usuario usando un stored procedure y obteniendo un parámetro de salida
-    public Integer setUsuario(UsuarioRequest usuario) {
+    public Integer setUsuario(Usuario usuario) {
         return jdbcTemplate.execute(
             (CallableStatementCreator) connection -> {
                 CallableStatement cs = connection.prepareCall(
@@ -69,7 +108,7 @@ public class UsuarioRepository {
                 // Parámetros de entrada
                 cs.setNull(2, Types.INTEGER);  // p_idusuario (null para inserción)
                 cs.setLong(3, usuario.getDniPersona());  // p_dnipersona
-                cs.setInt(4, usuario.getIdTipoUsuario());  // p_tipousuario
+                cs.setString(4, String.valueOf(usuario.getTipoUsuario()));  // p_tipousuario cambiar por un string
                 cs.setString(5, usuario.getUsuario());  // p_usuario
                 cs.setString(6, usuario.getContrasenia());  // p_contrasenia_plain
                 cs.setBoolean(7, false);  // p_actualizar_contrasenia
@@ -85,7 +124,7 @@ public class UsuarioRepository {
     }
 
     public boolean deleteUsuario(Integer id){
-        String sql = "DELETE FROM medic.\"usuario\" WHERE id = ?";
+        String sql = "DELETE FROM medic.usuario WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
@@ -166,5 +205,18 @@ public class UsuarioRepository {
     }
 
 
+    private RowMapper<Usuario> usuarioRowMapper() {
+        return (rs, rowNum) -> {
+            Usuario usuario = new Usuario();
+            usuario.setDniPersona(rs.getLong("dnipersona"));
+            usuario.setTipoUsuario(TipoUsuarioEnum.valueOf(rs.getString("tipousuario")));
+            usuario.setUsuario(rs.getString("usuario"));
+            // Por seguridad, no devolvemos la contraseña en consultas normales
+            usuario.setEstado(rs.getBoolean("estado"));
+            usuario.setContrasenia("***"); // Valor enmascarado
+
+            return usuario;
+        };
+    }
 
 }

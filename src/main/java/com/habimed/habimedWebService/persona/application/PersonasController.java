@@ -9,6 +9,7 @@ import com.habimed.parameterREST.ApiResponse;
 import com.habimed.parameterREST.PeticionREST; // Mantén esta si tu clase base la usa
 import com.habimed.parameterREST.ResponseREST; // Importa tu clase ResponseREST
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity; // Para devolver la respuesta HTTP completa
@@ -51,11 +52,10 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
 
     @GetMapping("/{dni}")
     public ResponseEntity<ApiResponse<Persona>> findById(@PathVariable Long dni) {
-        ResponseREST response = new ResponseREST();
+        ApiResponse response = new ApiResponse();
         if (dni == null || dni < 10000000) {
-            return ResponseEntity.ok(
-                    ApiResponse.success(null,
-                            "El DNI debe tener un valor mayor a 10000000"));
+            response.error("El DNI debe tener un valor mayor a 10000000");
+            return ResponseEntity.badRequest().body(response);
         }else{
             try{
                 Optional<Persona> persona = personaService.findById(dni);
@@ -73,15 +73,11 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
     }
 
     @PostMapping("/savePersona")
-    public ResponseEntity<ApiResponse<Persona>> setPersona(@RequestBody PersonaInsertDto request) {
-        ResponseREST response = new ResponseREST();
-        
-        if (request == null || request.getDni() == null) {
+    public ResponseEntity<ApiResponse<Persona>> savePersona(@RequestBody PersonaInsertDto request) {
+        if (request == null || request.getDni() == null)
             return ResponseEntity.ok(ApiResponse.error("El DNI no puede ser nulo"));
-        }
 
         try{
-            //Insert
             Persona _persona = personaService.savePersona(request);
             if(_persona != null) {
                 return ResponseEntity.ok(ApiResponse.success(_persona,"Persona registrada correctamente"));
@@ -90,17 +86,14 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
             }
         }catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
         }
     }
 
     @PatchMapping("/savePersona/{dni}")
     public ResponseEntity<ApiResponse<Persona>> updatePersona(@RequestBody PersonaUpdateDto request, @PathVariable Long dni) {
-        ResponseREST response = new ResponseREST();
-
         if (request == null || dni == null || dni < 10000000) {
-            return ResponseEntity.ok(ApiResponse.error("El DNI no puede ser nulo"));
+            return new ResponseEntity<>(ApiResponse.error("El DNI debe tener un valor mayor a 10000000"), HttpStatus.BAD_REQUEST);
         }
 
         try{
@@ -113,36 +106,30 @@ public class PersonasController extends PeticionREST { // Si PeticionREST no es 
             }
         }catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
         }
     }
 
     @DeleteMapping("/{dni}")
-    public ResponseEntity<ResponseREST> deletePersona(@PathVariable Long dni){
-        ResponseREST response = new ResponseREST();
+    public ResponseEntity<ApiResponse> deletePersona(@PathVariable Long dni){
+        ApiResponse response = new ApiResponse();
         try {
             if(dni == null){
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("El DNI no puede ser nulo.");
-                return ResponseEntity.ok(response);
+                response.error("El DNI no puede ser nulo.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         
-            boolean eliminado = personaService.deletePersona(dni);
-            if(eliminado) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Persona eliminada exitosamente.");
+            if(personaService.deletePersona(dni)) {
+                response.success(true,"Persona eliminada exitosamente.");
             } else {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se encontró la persona a eliminar.");
+                response.success(false,"No se encontró la persona a eliminar.");
             }
-            return ResponseEntity.ok(response);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         
         } catch (Exception e) {
             e.printStackTrace();
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Ocurrió un error al eliminar la persona.");
-            return ResponseEntity.ok(response);
+            response.error("Ocurrió un error al eliminar la persona.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
