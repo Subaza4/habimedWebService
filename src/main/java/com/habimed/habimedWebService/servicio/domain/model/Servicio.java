@@ -1,22 +1,41 @@
 package com.habimed.habimedWebService.servicio.domain.model;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.habimed.habimedWebService.cita.domain.model.Cita;
+import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
+import com.habimed.habimedWebService.especialidad.domain.model.Especialidad;
+import com.habimed.habimedWebService.receta.domain.model.Receta;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data                // Genera getters, setters, toString, equals y hashCode
-@NoArgsConstructor   // Genera un constructor sin argumentos
-@AllArgsConstructor  // Genera un constructor con todos los argumentos
+import java.util.List;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Servicio {
 
-    private Integer idservicio; // idservicio INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idservicio")
+    private Integer idServicio;
 
-    private Integer idespecialidad; // idespecialidad INT NOT NULL (Clave foránea)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idespecialidad", referencedColumnName = "idespecialidad", insertable = false, updatable = false)
+    private Especialidad especialidad;
 
-    private String nombre; // nombre VARCHAR(100) NOT NULL
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
 
-    private String descripcion; // descripcion VARCHAR(500) NULL
+    @Column(name = "descripcion", length = 500)
+    private String descripcion;
 
-    private String riesgos; // riesgos VARCHAR(500) NULL
+    @Column(name = "riesgos", length = 500)
+    private String riesgos;
+
+    @ManyToMany(mappedBy = "servicios")
+    private List<Consultorio> consultorios;
+
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cita> citas;
 }

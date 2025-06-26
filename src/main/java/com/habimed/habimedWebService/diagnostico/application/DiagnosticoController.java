@@ -1,53 +1,96 @@
 package com.habimed.habimedWebService.diagnostico.application;
 
-import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoDTO;
-import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoRequest;
-import com.habimed.parameterREST.ResponseREST;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
+import com.habimed.habimedWebService.diagnostico.dto.*;
+import com.habimed.habimedWebService.diagnostico.dto.DiagnosticoResponseDto;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.habimed.habimedWebService.diagnostico.domain.service.DiagnosticoService;
-import com.habimed.parameterREST.PeticionREST;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/citas")
-public class DiagnosticoController extends PeticionREST {
+@RequestMapping("/api/diagnosticos")
+@RequiredArgsConstructor
+public class DiagnosticoController {
 
     private final DiagnosticoService diagnosticoService;
 
-    @Autowired
-    public DiagnosticoController(DiagnosticoService diagnosticoService) {
-        this.diagnosticoService = diagnosticoService;
-    }
-
-    /*
-      getDiagnostico solo por id de la cita y el id del doctor
-     */
-    @PostMapping("/getDiagnosticos")
-    public ResponseEntity<ResponseREST> getDiagnosticos(DiagnosticoRequest request) {
-        ResponseREST response = new ResponseREST();
-        List<DiagnosticoDTO> result = diagnosticoService.getAllDiagnosticos(request);
+    @GetMapping
+    public ResponseEntity<List<Diagnostico>> getAllDiagnosticos() {
         try {
-            response.setSalida(result);
-            response.setStatus("success");
+            List<Diagnostico> diagnosticos = diagnosticoService.findAll();
+            return ResponseEntity.ok(diagnosticos);
         } catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al obtener los diagnósticos: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(response);
     }
 
-    /*
-      SetDiagnostico solo puede realizar el usuario del doctor que atiende a la persona que reservó su cita
-     */
+    @PostMapping("/filter")
+    public ResponseEntity<List<Diagnostico>> getDiagnosticosWithFilter(@Valid @RequestBody DiagnosticoFilterDto filterDto) {
+        try {
+            List<Diagnostico> diagnosticos = diagnosticoService.findAllWithConditions(filterDto);
+            return ResponseEntity.ok(diagnosticos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DiagnosticoResponseDto> getDiagnosticoById(@PathVariable Integer id) {
+        try {
+            DiagnosticoResponseDto diagnostico = diagnosticoService.getById(id);
+            if (diagnostico != null) {
+                return ResponseEntity.ok(diagnostico);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-    /*
-      No se puede eliminar un diagnostico
-     */
+    @PostMapping
+    public ResponseEntity<DiagnosticoResponseDto> createDiagnostico(@Valid @RequestBody DiagnosticoInsertDto diagnosticoInsertDto) {
+        try {
+            DiagnosticoResponseDto createdDiagnostico = diagnosticoService.save(diagnosticoInsertDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdDiagnostico);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<DiagnosticoResponseDto> updateDiagnostico(
+            @PathVariable Integer id,
+            @Valid @RequestBody DiagnosticoUpdateDto diagnosticoUpdateDto) {
+        try {
+            DiagnosticoResponseDto updatedDiagnostico = diagnosticoService.update(id, diagnosticoUpdateDto);
+            if (updatedDiagnostico != null) {
+                return ResponseEntity.ok(updatedDiagnostico);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDiagnostico(@PathVariable Integer id) {
+        try {
+            Boolean deleted = diagnosticoService.delete(id);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

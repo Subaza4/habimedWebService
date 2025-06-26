@@ -1,94 +1,94 @@
 package com.habimed.habimedWebService.horarioDoctor.application;
 
+import com.habimed.habimedWebService.horarioDoctor.domain.model.HorarioDoctor;
 import com.habimed.habimedWebService.horarioDoctor.domain.service.HorarioDoctorService;
-import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorDTO;
-import com.habimed.habimedWebService.horarioDoctor.dto.HorarioDoctorRequest;
-import com.habimed.parameterREST.PeticionREST;
-import com.habimed.parameterREST.ResponseREST;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.habimed.habimedWebService.horarioDoctor.dto.*;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/consultorio")
-public class HorarioDoctorController extends PeticionREST {
+@RequestMapping("/api/horario_Doctor")
+@RequiredArgsConstructor
+public class HorarioDoctorController {
 
     private final HorarioDoctorService horarioDoctorService;
 
-    @Autowired
-    public HorarioDoctorController(HorarioDoctorService horarioDoctorService) {
-        this.horarioDoctorService = horarioDoctorService;
+    @GetMapping
+    public ResponseEntity<List<HorarioDoctor>> getAllHorarioDoctor() {
+        try {
+            List<HorarioDoctor> horarioDoctorServiceAll = horarioDoctorService.findAll();
+            return ResponseEntity.ok(horarioDoctorServiceAll);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @PostMapping("/getHorariosDoctor")
-    public ResponseEntity<ResponseREST> getHorariosDoctor(@RequestBody HorarioDoctorRequest request) {
-        ResponseREST response = new ResponseREST();
-        try{
-            List<HorarioDoctorDTO> lineas = horarioDoctorService.getAllHorarios(request);
-            if(lineas.isEmpty()) {
-                response.setStatus(STATUS_OK);
-                response.setSalida(lineas);
-                response.setSalidaMsg("Horarios del doctor obtenidos correctamente");
-            }else{
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("No se encontraron horarios del doctor");
-                response.setSalida(lineas);
-            }
-        }catch(Exception e){
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al obtener los horarios del doctor");
-            response.setSalida(e.getMessage());
+    @PostMapping("/filter")
+    public ResponseEntity<List<HorarioDoctor>> getHorarioDoctorWithFilter(@Valid @RequestBody HorarioDoctorFilterDto filterDto) {
+        try {
+            List<HorarioDoctor> especialidades = horarioDoctorService.findAllWithConditions(filterDto);
+            return ResponseEntity.ok(especialidades);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/setHorariosDoctor")
-    public ResponseEntity<ResponseREST> setHorariosDoctor(@RequestBody HorarioDoctorRequest request){
-        ResponseREST response = new ResponseREST();
-        try{
-            Integer resultado = this.horarioDoctorService.setHorario(request);
-            if(resultado == 0) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("Error: El horario se solapa con otro existente para este doctor");
-            } else if(resultado == 1) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Horario agregado correctamente");
-            } else if (resultado == 2) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Horario actualizado correctamente");
-            } else if(resultado == 3){
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("Error de solapamiento de horarios");
+    @GetMapping("/{id}")
+    public ResponseEntity<HorarioDoctorResponseDto> getHorarioDoctorById(@PathVariable Integer id) {
+        try {
+            HorarioDoctorResponseDto especialidad = horarioDoctorService.getById(id);
+            if (especialidad != null) {
+                return ResponseEntity.ok(especialidad);
+            } else {
+                return ResponseEntity.notFound().build();
             }
-        }catch(Exception e){
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al procesar el horario del doctor");
-            response.setSalida(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/deleteHorariosDoctor")
-    public ResponseEntity<ResponseREST> deleteHorariosDoctor(@RequestBody HorarioDoctorRequest request){
-        ResponseREST response = new ResponseREST();
-        try{
-            Boolean isDeleted = this.horarioDoctorService.deleteHorario(request.getIdhorariodoctor());
-            if(isDeleted) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Horario del doctor eliminado correctamente");
-            }else{
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se pudo eliminar el horario del doctor");
-            }
-        }catch(Exception e){
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al obtener los horarios del doctor");
+    @PostMapping
+    public ResponseEntity<HorarioDoctorResponseDto> createHorarioDoctor(@Valid @RequestBody HorarioDoctorInsertDto horarioDoctorInsertDto) {
+        try {
+            HorarioDoctorResponseDto createdEspecialidad = horarioDoctorService.save(horarioDoctorInsertDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdEspecialidad);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<HorarioDoctorResponseDto> updateHorarioDoctor(
+            @PathVariable Integer id,
+            @Valid @RequestBody HorarioDoctorUpdateDto especialidadUpdateDto) {
+        try {
+            HorarioDoctorResponseDto updatedEspecialidad = horarioDoctorService.update(id, especialidadUpdateDto);
+            if (updatedEspecialidad != null) {
+                return ResponseEntity.ok(updatedEspecialidad);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteHorarioDoctor(@PathVariable Integer id) {
+        try {
+            Boolean deleted = horarioDoctorService.delete(id);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

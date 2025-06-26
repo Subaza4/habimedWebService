@@ -1,94 +1,95 @@
 package com.habimed.habimedWebService.servicio.application;
 
-import com.habimed.habimedWebService.servicio.dto.ServicioDTO;
-import com.habimed.parameterREST.ResponseREST;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.habimed.habimedWebService.servicio.dto.*;
+import com.habimed.habimedWebService.servicio.domain.model.Servicio;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import com.habimed.habimedWebService.servicio.domain.service.ServicioService;
-import com.habimed.habimedWebService.servicio.dto.ServicioRequest;
-import com.habimed.parameterREST.PeticionREST;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
-@RequestMapping("/servicio")
-public class ServicioController extends PeticionREST{
-    
-    private ServicioService servicioService;
-    
-    public ServicioController(ServicioService servicioService) {
-        this.servicioService = servicioService;
+@RequestMapping("/api/servicios")
+@RequiredArgsConstructor
+public class ServicioController {
+
+    final private ServicioService servicioService;
+
+    @GetMapping
+    public ResponseEntity<List<Servicio>> getAllServicios() {
+        try {
+            List<Servicio> servicios = servicioService.findAll();
+            return ResponseEntity.ok(servicios);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @PostMapping("/getServicios")
-    public ResponseEntity<ResponseREST> getServicios(@RequestBody ServicioRequest request) {
-        ResponseREST response = new ResponseREST();
-        try{
-            List<ServicioDTO> servicios = servicioService.getAllServicios(request);
-            if(servicios.isEmpty()) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se encontraron servicios");
-            } else {
-                response.setStatus(STATUS_OK);
-                response.setSalida(servicios);
-                response.setSalidaMsg("Servicios encontrados exitosamente.");
-            }
-        }catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al procesar la solicitud.");
+    @PostMapping("/filter")
+    public ResponseEntity<List<Servicio>> getServiciosWithFilter(@Valid @RequestBody ServicioFilterDto filterDto) {
+        try {
+            List<Servicio> servicios = servicioService.findAllWithConditions(filterDto);
+            return ResponseEntity.ok(servicios);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(response);
     }
-    
-    @PostMapping("setServicio")
-    public ResponseEntity<ResponseREST> setServicio(@RequestBody ServicioRequest request) {
-        ResponseREST response = new ResponseREST();
-        try{
-            Integer respuesta = servicioService.setServicio(request);
-            if(respuesta == 1) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("servicio creado exitosamente.");
-            } else if(respuesta == 2) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("servicio actualizado exitosamente.");
-            } else if(respuesta == 0) {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("Tipo de servicio no existe.");
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ServicioResponseDto> getServicioById(@PathVariable Integer id) {
+        try {
+            ServicioResponseDto servicio = servicioService.getById(id);
+            if (servicio != null) {
+                return ResponseEntity.ok(servicio);
             } else {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("Error al procesar la solicitud.");
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al procesar la solicitud.");
-        }
-        return ResponseEntity.ok(response);
-    }
-    
-    @PostMapping("deleteServicio")
-    public ResponseEntity<ResponseREST> deleteServicio(@RequestBody ServicioRequest request) {
-        ResponseREST response = new ResponseREST();
-        try{
-            boolean resultado = servicioService.deleteServicio(request.getIdservicio());
-            if(resultado) {
-                response.setStatus(STATUS_OK);
-                response.setSalidaMsg("Servicio eliminado exitosamente.");
-            } else {
-                response.setStatus(STATUS_KO);
-                response.setSalidaMsg("No se pudo eliminar el servicio.");
+                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            response.setStatus(STATUS_KO);
-            response.setSalidaMsg("Error al procesar la solicitud.");
-            response.setSalida(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<ServicioResponseDto> createServicio(@Valid @RequestBody ServicioInsertDto servicioInsertDto) {
+        try {
+            ServicioResponseDto createdServicio = servicioService.save(servicioInsertDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdServicio);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ServicioResponseDto> updateServicio(
+            @PathVariable Integer id,
+            @Valid @RequestBody ServicioUpdateDto servicioUpdateDto) {
+        try {
+            ServicioResponseDto updatedServicio = servicioService.update(id, servicioUpdateDto);
+            if (updatedServicio != null) {
+                return ResponseEntity.ok(updatedServicio);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteServicio(@PathVariable Integer id) {
+        try {
+            Boolean deleted = servicioService.delete(id);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

@@ -2,134 +2,93 @@ package com.habimed.habimedWebService.persona.application;
 
 import com.habimed.habimedWebService.persona.domain.model.Persona;
 import com.habimed.habimedWebService.persona.domain.service.PersonaService;
-import com.habimed.habimedWebService.persona.dto.PersonaFilterDto;
-import com.habimed.habimedWebService.persona.dto.PersonaInsertDto;
-import com.habimed.habimedWebService.persona.dto.PersonaUpdateDto;
-import com.habimed.parameterREST.ApiResponse;
-import com.habimed.parameterREST.PeticionREST; // Mantén esta si tu clase base la usa
-import com.habimed.parameterREST.ResponseREST; // Importa tu clase ResponseREST
 
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.habimed.habimedWebService.persona.dto.*;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity; // Para devolver la respuesta HTTP completa
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList; // Para listas vacías
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/persona")
-public class PersonasController extends PeticionREST { // Si PeticionREST no es estrictamente necesario o no aporta al JSON, considera quitarlo.
+@RequestMapping("/api/personas")
+@RequiredArgsConstructor
+public class PersonasController {
 
     private final PersonaService personaService;
 
-    @Autowired
-    public PersonasController(PersonaService personaService) {
-        this.personaService = personaService;
+    @GetMapping
+    public ResponseEntity<List<Persona>> getAllPersonas() {
+        try {
+            List<Persona> personas = personaService.findAll();
+            return ResponseEntity.ok(personas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @GetMapping("getPersonas")
-    public ResponseEntity<ApiResponse<List<Persona>>> findAllPersonas(@RequestBody PersonaFilterDto request) {
+    @PostMapping("/filter")
+    public ResponseEntity<List<Persona>> getPersonasWithFilter(@Valid @RequestBody PersonaFilterDto filterDto) {
         try {
-            List<Persona> personas = personaService.findAll(request);
-            if (personas.isEmpty()) {
-                return ResponseEntity.ok(
-                        ApiResponse.success(new ArrayList<>(), "No se encontraron personas")
-                );
-            }
-            return ResponseEntity.ok(
-                    ApiResponse.success(personas, "Personas encontradas exitosamente")
-            );
-
+            List<Persona> personas = personaService.findAllWithConditions(filterDto);
+            return ResponseEntity.ok(personas);
         } catch (Exception e) {
-            System.out.println("Ocurrió un error al obtener las personas: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("Ocurrió un error al obtener las personas"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/{dni}")
-    public ResponseEntity<ApiResponse<Persona>> findById(@PathVariable Long dni) {
-        ApiResponse response = new ApiResponse();
-        if (dni == null || dni < 10000000) {
-            response.error("El DNI debe tener un valor mayor a 10000000");
-            return ResponseEntity.badRequest().body(response);
-        }else{
-            try{
-                Optional<Persona> persona = personaService.findById(dni);
-                if (persona.isPresent()) {
-                    return ResponseEntity.ok(ApiResponse.success(persona.get(), "Persona encontrada exitosamente"));
-                } else {
-                    return ResponseEntity.ok(ApiResponse.success(null, "No se encontró a la persona"));
-                }
-            }catch (Exception e) {
-                System.out.println("Ocurrió un error al obtener las personas: " + e.getMessage());
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(ApiResponse.error("Ocurrió un error al obtener la persona"));
+    public ResponseEntity<PersonaResponseDto> getPersonaByDni(@PathVariable Long dni) {
+        try {
+            PersonaResponseDto persona = personaService.getById(dni);
+            if (persona != null) {
+                return ResponseEntity.ok(persona);
+            } else {
+                return ResponseEntity.notFound().build();
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PostMapping("/savePersona")
-    public ResponseEntity<ApiResponse<Persona>> savePersona(@RequestBody PersonaInsertDto request) {
-        if (request == null || request.getDni() == null)
-            return ResponseEntity.ok(ApiResponse.error("El DNI no puede ser nulo"));
-
-        try{
-            Persona _persona = personaService.savePersona(request);
-            if(_persona != null) {
-                return ResponseEntity.ok(ApiResponse.success(_persona,"Persona registrada correctamente"));
-            }else{
-                return ResponseEntity.ok(ApiResponse.success(null, "No se pudo registrar la persona"));
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
+    @PostMapping
+    public ResponseEntity<PersonaResponseDto> createPersona(@Valid @RequestBody PersonaInsertDto personaInsertDto) {
+        try {
+            PersonaResponseDto createdPersona = personaService.save(personaInsertDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdPersona);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PatchMapping("/savePersona/{dni}")
-    public ResponseEntity<ApiResponse<Persona>> updatePersona(@RequestBody PersonaUpdateDto request, @PathVariable Long dni) {
-        if (request == null || dni == null || dni < 10000000) {
-            return new ResponseEntity<>(ApiResponse.error("El DNI debe tener un valor mayor a 10000000"), HttpStatus.BAD_REQUEST);
-        }
-
-        try{
-            //Update
-            Persona _persona = personaService.updatePersona(request, dni);
-            if(_persona != null) {
-                return ResponseEntity.ok(ApiResponse.success(_persona, "Persona registrada correctamente"));
-            }else{
-                return ResponseEntity.ok(ApiResponse.success(null, "No se pudo registrar la persona"));
+    @PatchMapping("/{dni}")
+    public ResponseEntity<PersonaResponseDto> updatePersona(
+            @PathVariable Long dni,
+            @Valid @RequestBody PersonaUpdateDto personaUpdateDto) {
+        try {
+            PersonaResponseDto updatedPersona = personaService.update(dni, personaUpdateDto);
+            if (updatedPersona != null) {
+                return ResponseEntity.ok(updatedPersona);
+            } else {
+                return ResponseEntity.notFound().build();
             }
-        }catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("Ocurrió un error al guardar a la persona"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @DeleteMapping("/{dni}")
-    public ResponseEntity<ApiResponse> deletePersona(@PathVariable Long dni){
-        ApiResponse response = new ApiResponse();
+    public ResponseEntity<Void> deletePersona(@PathVariable Long dni) {
         try {
-            if(dni == null){
-                response.error("El DNI no puede ser nulo.");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
-        
-            if(personaService.deletePersona(dni)) {
-                response.success(true,"Persona eliminada exitosamente.");
+            Boolean deleted = personaService.delete(dni);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
             } else {
-                response.success(false,"No se encontró la persona a eliminar.");
+                return ResponseEntity.notFound().build();
             }
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        
         } catch (Exception e) {
-            e.printStackTrace();
-            response.error("Ocurrió un error al eliminar la persona.");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.habimed.habimedWebService.usuario.dto;
 
 import com.habimed.habimedWebService.usuario.domain.model.TipoUsuarioEnum;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
@@ -25,5 +27,5 @@ public class UsuarioInsertDto {
 //    @Size(max = 255, message = "El token no puede exceder 255 caracteres")
 //    private String token;
     @NotNull(message = "El estado es obligatorio")
-    private Boolean estado = true;
+    private Boolean estado = false;
 }

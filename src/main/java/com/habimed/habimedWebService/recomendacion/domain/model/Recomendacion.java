@@ -1,17 +1,29 @@
 package com.habimed.habimedWebService.recomendacion.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.habimed.habimedWebService.cita.domain.model.Cita;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
+@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Recomendacion {
-    private Integer idrecomendacion;
-    private Integer idcita;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idrecomendacion")
+    private Integer idRecomendacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idcita", referencedColumnName = "idcita", insertable = false, updatable = false)
+    private Cita cita;
+
+    @Column(name = "descripcion", nullable = false, length = 1000)
     private String descripcion;
-    private Timestamp fecha_recomendacion;
+
+    @Column(name = "fecha_recomendacion", nullable = false)
+    private LocalDate fechaRecomendacion = LocalDate.now();
 }

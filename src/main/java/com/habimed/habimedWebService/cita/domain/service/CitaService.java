@@ -3,20 +3,19 @@ package com.habimed.habimedWebService.cita.domain.service;
 import java.util.List;
 
 import com.habimed.habimedWebService.cita.domain.model.Cita;
-import com.habimed.habimedWebService.cita.dto.CitaRequest;
-import com.habimed.habimedWebService.cita.dto.CitaDTO;
-import com.habimed.habimedWebService.cita.dto.CitaResponseDto;
-import com.habimed.habimedWebService.cita.dto.CitaUpdateDto;
+import com.habimed.habimedWebService.cita.dto.*;
 
 public interface CitaService {
     
-    List<CitaDTO> getCitas(CitaRequest request);
+    List<Cita> findAll();
 
-    CitaDTO getCitaById(Integer id);
+    List<Cita> findAllWithConditions(CitaFilterDto citaFilterDto);
 
-    Integer setCita(CitaRequest cita);
+    CitaResponseDto getById(Integer id);
 
-    Boolean deleteCita(CitaRequest request);
+    CitaResponseDto save(CitaInsertDto citaInsertDto);
 
-    CitaResponseDto updateCita(Integer id, CitaUpdateDto cita);
+    Boolean delete(Integer id);
+
+    CitaResponseDto update(Integer id, CitaUpdateDto citaUpdateDto);
 }

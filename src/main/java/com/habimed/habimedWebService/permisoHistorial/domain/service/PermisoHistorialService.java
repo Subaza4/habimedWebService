@@ -1,22 +1,15 @@
 package com.habimed.habimedWebService.permisoHistorial.domain.service;
 
-import com.habimed.habimedWebService.cita.domain.model.Cita;
-import com.habimed.habimedWebService.consultorio.domain.model.Consultorio;
-import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
-import com.habimed.habimedWebService.permisoHistorial.dto.PermisoHistorialDTO;
-import com.habimed.habimedWebService.permisoHistorial.dto.PermisoHistorialRequest;
-import com.habimed.habimedWebService.receta.domain.model.Receta;
-import com.habimed.habimedWebService.recomendacion.domain.model.Recomendacion;
+import com.habimed.habimedWebService.permisoHistorial.domain.model.PermisosHistorial;
+import com.habimed.habimedWebService.permisoHistorial.dto.*;
 
 import java.util.List;
 
 public interface PermisoHistorialService {
-    List<PermisoHistorialDTO> getPermisosHistorial(PermisoHistorialRequest request);
-
-    Integer setPermisoHistorial(PermisoHistorialRequest request);
-
-    Boolean deletePermisoHistorial(PermisoHistorialRequest request);
-
-    PermisoHistorialDTO getpermisoDoctor (PermisoHistorialRequest request);
-
+    List<PermisosHistorial> findAll();
+    List<PermisosHistorial> findAllWithConditions(PermisoHistorialFilterDto permisoHistorialFilterDto);
+    PermisoHistorialResponseDto getById(Integer id);
+    PermisoHistorialResponseDto save(PermisoHistorialnsertDto permisoHistorialnsertDto);
+    Boolean delete(Integer id);
+    PermisoHistorialResponseDto update(Integer id, PermisoHistoriaUpdateDto permisoHistoriaUpdateDto);
 }

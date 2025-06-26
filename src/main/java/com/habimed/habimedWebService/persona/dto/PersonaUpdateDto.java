@@ -24,5 +24,5 @@ public class PersonaUpdateDto {
     @Size(max = 45, message = "La dirección no puede exceder 45 caracteres")
     private String direccion;
 
-    private LocalDate fecha_nacimiento;
+    private LocalDate fechaNacimiento;
 }
