@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class PermisosHistorial {
     public Integer idpermisohistorial;
     public Integer iddoctor;
     public Integer idpaciente;
-    public LocalDate fechaotorgapermiso;
-    public LocalDate fechadeniegapermiso;
-    public Boolean estado;
+    public Timestamp fechaotorgapermiso;
+    public Timestamp fechadeniegapermiso;
+    public EstadoPermisosEnum estado;
 }

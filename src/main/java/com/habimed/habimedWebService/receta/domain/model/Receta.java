@@ -4,14 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Receta {
-    private Long idReceta;
-    private Long idCita;
+    private Integer idreceta;
+    private Integer idcita;
     private String descripcion;
-    private LocalDate fechaReceta;
+    private String fecha_receta;
 }

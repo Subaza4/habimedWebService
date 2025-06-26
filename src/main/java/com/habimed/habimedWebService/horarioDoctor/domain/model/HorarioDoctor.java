@@ -20,11 +20,13 @@ public class HorarioDoctor {
 
     private Integer iddoctor; // iddoctor INT NOT NULL (Clave foránea)
 
+    // Podrías añadir un @Pattern si quieres restringir a días específicos (ej. "Lunes|Martes|...")
     private String diaSemana; // dia_semana VARCHAR(15) NOT NULL
 
     private LocalTime horaInicio; // hora_inicio TIME NOT NULL
 
     private LocalTime horaFin; // hora_fin TIME NOT NULL
 
+    // Puedes añadir @Min(1) si la duración debe ser al menos 1 minuto
     private Integer duracionMinutos; // duracion_minutos INT NULL (aunque en tu DDL es NULL, se hace NOT NULL aquí para sentido de negocio)
 }

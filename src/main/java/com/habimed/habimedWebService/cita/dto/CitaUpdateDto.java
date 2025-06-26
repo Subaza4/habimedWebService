@@ -1,26 +1,29 @@
 package com.habimed.habimedWebService.cita.dto;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import com.habimed.habimedWebService.cita.domain.model.EstadoCitaEnum;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 public class CitaUpdateDto {
-    @Size(max = 50, message = "El motivo de la cita debe ser descrito en menos de 50 caracteres")
-    private String motivo; // dni_persona VARCHAR(8) NOT NULL (Clave foránea)
+    private Integer idcita;
 
-    @FutureOrPresent(message = "La fecha y hora de inicio de la cita debe ser en el presente o futuro.")
-    private LocalDateTime fechaHoraInicio; // fecha_hora_inicio TIMESTAMP NOT NULL
+    private Integer idservicio;
 
-    @FutureOrPresent(message = "La fecha y hora de fin de la cita debe ser en el presente o futuro.")
-    private LocalDateTime fechaHoraFin; // fecha_hora_fin TIMESTAMP NOT NULL
+    private Integer idconsultorio;
 
-    @Size(max = 20, message = "El estado de la cita debe tener máximo 20 caracteres.")
-    private String estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
+    private Integer idmedico;
+
+    private String dniPersona;
+
+    private String motivo;
+
+    private LocalDateTime fechaHoraInicio;
+
+    private LocalDateTime fechaHoraFin;
+
+    private EstadoCitaEnum estado;
 
     private String descripcion;
 }

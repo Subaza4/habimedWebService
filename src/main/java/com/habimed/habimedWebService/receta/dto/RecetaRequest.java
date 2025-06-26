@@ -1,23 +1,33 @@
 package com.habimed.habimedWebService.receta.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.habimed.parameterREST.RequestREST;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecetaRequest extends RequestREST {
+    private Integer idreceta;
+    private Integer idcita;
+    private Integer descripcion;
+    private String fecha_receta;
 
-    private Long idReceta;
-    private Long idCita;
-    @Size(max = 1000)
-    private String descripcion;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate fechaReceta;
+    public String getConditions(String alias) {
+        StringBuilder conditions = new StringBuilder("WHERE 1=1");
+        if (idreceta != null) {
+            conditions.append(" AND ").append(alias).append(".\"idreceta\" = ").append(idreceta);
+        }
+        if (idcita != null) {
+            conditions.append(" AND ").append(alias).append(".\"idcita\" = ").append(idcita);
+        }
+        if (descripcion != null) {
+            conditions.append(" AND ").append(alias).append(".\"descripcion\" = ").append(descripcion);
+        }
+        if (fecha_receta != null) {
+            conditions.append(" AND ").append(alias).append(".\"fecha_receta\" = '").append(fecha_receta).append("'");
+        }
+        return conditions.toString();
+    }
 }
