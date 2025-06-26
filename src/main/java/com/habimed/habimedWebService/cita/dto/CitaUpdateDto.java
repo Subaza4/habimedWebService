@@ -2,23 +2,14 @@ package com.habimed.habimedWebService.cita.dto;
 
 import com.habimed.habimedWebService.cita.domain.model.EstadoCitaEnum;
 import lombok.Data;
-
+import jakarta.validation.constraints.Future;
 import java.time.LocalDateTime;
 
 @Data
 public class CitaUpdateDto {
-    private Integer idcita;
-
-    private Integer idservicio;
-
-    private Integer idconsultorio;
-
-    private Integer idmedico;
-
-    private String dniPersona;
-
     private String motivo;
 
+    @Future(message = "La fecha debe ser futura")
     private LocalDateTime fechaHoraInicio;
 
     private LocalDateTime fechaHoraFin;

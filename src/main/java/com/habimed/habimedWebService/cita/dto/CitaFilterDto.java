@@ -8,22 +8,11 @@ import java.time.LocalDateTime;
 @Data
 public class CitaFilterDto {
     private Integer idCita;
-
+    private Integer idPaciente;
+    private Integer idDoctor;
     private Integer idServicio;
-
     private Integer idConsultorio;
-
-    private Integer idMedico;
-
-    private Long dniPersona;
-
-    private String motivo;
-
-    private LocalDateTime fechaHoraInicio;
-
-    private LocalDateTime fechaHoraFin;
-
     private EstadoCitaEnum estado;
-
-    private String descripcion;
+    private LocalDateTime fechaDesde;
+    private LocalDateTime fechaHasta;
 }

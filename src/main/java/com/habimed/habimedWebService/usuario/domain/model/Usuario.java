@@ -39,6 +39,9 @@ public class Usuario {
     @Column(name = "estado", nullable = false)
     private Boolean estado = false;
 
+    @Column(name = "codigo_cmp", unique = true, nullable = true, length = 20)
+    private String codigoCMP; // Código del Colegio Médico del Perú
+
     // Relaciones inversas
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HorarioDoctor> horarios;

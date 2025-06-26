@@ -1,36 +1,66 @@
 package com.habimed.habimedWebService.cita.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.habimed.habimedWebService.detallePago.domain.model.DetallePago;
+import com.habimed.habimedWebService.diagnostico.domain.model.Diagnostico;
+import com.habimed.habimedWebService.receta.domain.model.Receta;
+import com.habimed.habimedWebService.recomendacion.domain.model.Recomendacion;
+import com.habimed.habimedWebService.servicio.domain.model.Servicio;
+import com.habimed.habimedWebService.usuario.domain.model.Usuario;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-// Importaciones para las anotaciones de validación
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.FutureOrPresent; // Para fechas y horas en el futuro o presente
-
-
-@Data                // Genera getters, setters, toString, equals y hashCode
-@NoArgsConstructor   // Genera un constructor sin argumentos
-@AllArgsConstructor  // Genera un constructor con todos los argumentos
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cita {
 
-    private Integer idcita; // idcita INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idcita")
+    private Integer idCita;
 
-    private Integer idservicio; // idservicio INT NOT NULL (Clave foránea)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idpaciente", referencedColumnName = "idusuario", nullable = false)
+    private Usuario paciente;
 
-    private Integer idconsultorio; // idconsultorio INT NOT NULL (Clave foránea)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iddoctor", referencedColumnName = "idusuario", nullable = false)
+    private Usuario doctor;
 
-    private Integer idmedico; // idmedico INT NOT NULL (Clave foránea)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idservicio", referencedColumnName = "idservicio", nullable = false)
+    private Servicio servicio;
 
-    private String dniPersona; // dni_persona VARCHAR(8) NOT NULL (Clave foránea)
+    @Column(name = "motivo", nullable = false, length = 500)
+    private String motivo;
 
-    private LocalDateTime fechaHoraInicio; // fecha_hora_inicio TIMESTAMP NOT NULL
+    @Column(name = "fecha_hora_inicio", nullable = false)
+    private LocalDateTime fechaHoraInicio;
 
-    private LocalDateTime fechaHoraFin; // fecha_hora_fin TIMESTAMP NOT NULL
+    @Column(name = "fecha_hora_fin", nullable = false)
+    private LocalDateTime fechaHoraFin;
 
-    private String estado; // estado VARCHAR(20) NOT NULL (Ej: 'Programada', 'Confirmada', 'Cancelada', 'Completada')
+    @Column(name = "estado", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EstadoCitaEnum estado = EstadoCitaEnum.SOLICITADA;
 
+    @Column(name = "descripcion", length = 1000)
     private String descripcion;
+
+    // Relaciones inversas
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Diagnostico> diagnosticos;
+
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Receta> recetas;
+
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recomendacion> recomendaciones;
+
+    @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private DetallePago detallePago;
 }
